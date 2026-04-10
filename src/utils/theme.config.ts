@@ -42,6 +42,12 @@ export interface ThemeTokens {
   contentMaxWidth: string;
   /** Letter-spacing for headings */
   headingLetterSpacing: string;
+  /** Button text color on gradient backgrounds */
+  buttonTextColor: string;
+  /** Button text shadow for readability */
+  buttonTextShadow: string;
+  /** Scanline opacity for decorative effects */
+  scanlineOpacity: string;
 }
 
 export interface ThemeDefinition {
@@ -77,6 +83,9 @@ export const CSS_VAR_MAP: Record<keyof ThemeTokens, string> = {
   bodyLineHeight: "--body-line-height",
   contentMaxWidth: "--content-max-width",
   headingLetterSpacing: "--heading-letter-spacing",
+  buttonTextColor: "--button-text-color",
+  buttonTextShadow: "--button-text-shadow",
+  scanlineOpacity: "--scanline-opacity",
 };
 
 export const THEME_DEFINITIONS: Record<ThemeStyle, ThemeDefinition> = {
@@ -106,6 +115,9 @@ export const THEME_DEFINITIONS: Record<ThemeStyle, ThemeDefinition> = {
       bodyLineHeight: "1.8",
       contentMaxWidth: "720px",
       headingLetterSpacing: "-0.02em",
+      buttonTextColor: "#141414",
+      buttonTextShadow: "none",
+      scanlineOpacity: "0",
     },
     dark: {
       bgPrimary: "#0E0E0C",
@@ -130,6 +142,9 @@ export const THEME_DEFINITIONS: Record<ThemeStyle, ThemeDefinition> = {
       bodyLineHeight: "1.8",
       contentMaxWidth: "720px",
       headingLetterSpacing: "-0.02em",
+      buttonTextColor: "inherit",
+      buttonTextShadow: "none",
+      scanlineOpacity: "0",
     },
   },
 
@@ -160,6 +175,9 @@ export const THEME_DEFINITIONS: Record<ThemeStyle, ThemeDefinition> = {
       bodyLineHeight: "1.65",
       contentMaxWidth: "1100px",
       headingLetterSpacing: "-0.03em",
+      buttonTextColor: "#0f0f0f",
+      buttonTextShadow: "none",
+      scanlineOpacity: "0",
     },
     dark: {
       bgPrimary: "#080C10",
@@ -186,6 +204,9 @@ export const THEME_DEFINITIONS: Record<ThemeStyle, ThemeDefinition> = {
       bodyLineHeight: "1.65",
       contentMaxWidth: "1100px",
       headingLetterSpacing: "-0.03em",
+      buttonTextColor: "#fff",
+      buttonTextShadow: "none",
+      scanlineOpacity: "0",
     },
   },
 
@@ -216,6 +237,9 @@ export const THEME_DEFINITIONS: Record<ThemeStyle, ThemeDefinition> = {
       bodyLineHeight: "1.7",
       contentMaxWidth: "960px",
       headingLetterSpacing: "-0.01em",
+      buttonTextColor: "#1A202C",
+      buttonTextShadow: "none",
+      scanlineOpacity: "0",
     },
     dark: {
       bgPrimary: "#0F172A",
@@ -241,6 +265,9 @@ export const THEME_DEFINITIONS: Record<ThemeStyle, ThemeDefinition> = {
       bodyLineHeight: "1.7",
       contentMaxWidth: "960px",
       headingLetterSpacing: "-0.01em",
+      buttonTextColor: "#fff",
+      buttonTextShadow: "none",
+      scanlineOpacity: "0",
     },
   },
 
@@ -274,6 +301,10 @@ export const THEME_DEFINITIONS: Record<ThemeStyle, ThemeDefinition> = {
       bodyLineHeight: "1.75",
       contentMaxWidth: "900px",
       headingLetterSpacing: "0.02em",
+      buttonTextColor: "#fff",
+      buttonTextShadow:
+        "0 2px 6px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 0, 0, 0.4)",
+      scanlineOpacity: "0.03",
     },
     dark: {
       bgPrimary: "#1A0033",
@@ -301,6 +332,10 @@ export const THEME_DEFINITIONS: Record<ThemeStyle, ThemeDefinition> = {
       bodyLineHeight: "1.75",
       contentMaxWidth: "900px",
       headingLetterSpacing: "0.02em",
+      buttonTextColor: "#fff",
+      buttonTextShadow:
+        "0 2px 6px rgba(0, 0, 0, 0.6), 0 0 12px rgba(0, 0, 0, 0.4)",
+      scanlineOpacity: "0.03",
     },
   },
 };

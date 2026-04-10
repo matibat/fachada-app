@@ -149,7 +149,7 @@
 [data-theme="modern-tech"] .theme-btn-primary {
   background: var(--gradient);
   border-color: transparent;
-  color: #fff;
+  color: var(--button-text-color);
 }
 
 [data-theme="modern-tech"] .theme-btn-primary:hover {
@@ -295,9 +295,9 @@
 [data-theme="vaporwave"] .theme-btn-primary {
   background: var(--gradient);
   border-color: transparent;
-  color: #fff;
+  color: var(--button-text-color);
   font-weight: 700;
-  text-shadow: none;
+  text-shadow: var(--button-text-shadow);
   border-radius: var(--border-radius);
 }
 
@@ -322,7 +322,7 @@
 /* Skills badges: gradient background */
 [data-theme="vaporwave"] .theme-badge {
   background: var(--gradient);
-  color: #fff;
+  color: var(--button-text-color);
   border: none;
   font-weight: 700;
   font-size: 0.75rem;
@@ -343,8 +343,8 @@
     0deg,
     transparent,
     transparent 2px,
-    rgba(0, 0, 0, 0.03) 2px,
-    rgba(0, 0, 0, 0.03) 4px
+    rgba(0, 0, 0, var(--scanline-opacity)) 2px,
+    rgba(0, 0, 0, var(--scanline-opacity)) 4px
   );
   pointer-events: none;
 }

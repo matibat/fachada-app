@@ -31,7 +31,7 @@ const { title, description, stack, coverImage, liveUrl, githubUrl, slug } = Astr
         <Badge variant="primary">{tech}</Badge>
       ))}
     </div>
-    <div class="flex gap-3 pt-2">
+    <div class="flex flex-wrap gap-3 pt-2">
       <Button href={`/projects/${slug.replace('.md', '')}`} variant="primary" size="sm">
         View Case Study
       </Button>

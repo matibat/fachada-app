@@ -28,16 +28,17 @@ test("Given default theme, When user switches to Modern Tech, Then visual style 
       .getPropertyValue("--bg-primary")
       .trim(),
   );
-  const themeBefore = await page
-    .locator("html")
-    .getAttribute("data-theme");
+  const themeBefore = await page.locator("html").getAttribute("data-theme");
 
   // Open the style switcher and select "Modern Tech"
   await page.getByRole("button", { name: /change theme style/i }).click();
   await page.locator("button", { hasText: "Modern Tech" }).first().click();
 
   // data-theme attribute must reflect the new selection
-  await expect(page.locator("html")).toHaveAttribute("data-theme", "modern-tech");
+  await expect(page.locator("html")).toHaveAttribute(
+    "data-theme",
+    "modern-tech",
+  );
   expect(themeBefore).not.toBe("modern-tech");
 
   // At least one CSS custom property visible to the user must differ
