@@ -15,12 +15,12 @@ const {
   class: className = '',
 } = Astro.props;
 
-const baseClasses = 'inline-flex items-center justify-center font-medium rounded-lg transition-colors focus:outline-none focus:ring-2 focus:ring-offset-2';
+const baseClasses = 'theme-btn inline-flex items-center justify-center font-medium transition-colors focus:outline-none focus:ring-2';
 
 const variantClasses = {
-  primary: 'bg-blue-600 text-white hover:bg-blue-700 focus:ring-blue-500',
-  secondary: 'bg-violet-600 text-white hover:bg-violet-700 focus:ring-violet-500',
-  outline: 'border-2 border-gray-300 text-gray-700 hover:bg-gray-50 focus:ring-gray-500 dark:border-gray-600 dark:text-gray-300 dark:hover:bg-gray-800',
+  primary: 'theme-btn-primary',
+  secondary: 'theme-btn-secondary',
+  outline: 'theme-btn-outline',
 };
 
 const sizeClasses = {
@@ -38,6 +38,49 @@ const Element = href ? 'a' : 'button';
   href={href}
   type={!href ? type : undefined}
   class={classes}
+  data-theme-variant={variant}
 >
   <slot />
 </Element>
+
+<style>
+  .theme-btn {
+    border-radius: var(--border-radius);
+    border: 1px solid transparent;
+    transition: var(--transition);
+  }
+
+  .theme-btn-primary {
+    background-color: var(--accent);
+    color: var(--bg-primary);
+    border-color: var(--accent);
+    box-shadow: 0 4px 10px var(--shadow);
+  }
+
+  .theme-btn-primary:hover {
+    background-color: var(--accent-hover);
+    border-color: var(--accent-hover);
+  }
+
+  .theme-btn-secondary {
+    background-color: var(--accent-secondary, var(--accent));
+    color: var(--bg-primary);
+    border-color: var(--accent-secondary, var(--accent));
+  }
+
+  .theme-btn-secondary:hover {
+    filter: brightness(0.95);
+  }
+
+  .theme-btn-outline {
+    background-color: transparent;
+    color: var(--text-primary);
+    border-color: var(--border);
+  }
+
+  .theme-btn-outline:hover {
+    background-color: var(--bg-secondary);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+</style>

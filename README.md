@@ -1,19 +1,47 @@
 # Fachada Portfolio Template
 
-A modern, SEO-optimized portfolio template built with Astro 6, React, and Tailwind CSS. Features dark mode, comprehensive testing, and automated deployment.
+A modern, SEO-optimized portfolio template built with Astro 6, React, and Tailwind CSS. Features **4 visual themes**, dark mode, comprehensive testing, and automated deployment.
 
 ## ✨ Features
 
 - 🚀 **Astro 6** - Lightning-fast static site generation with island architecture
-- ⚛️ **React Islands** - Interactive components where needed (ThemeToggle)
-- 🎨 **Tailwind CSS v3** - Utility-first styling with dark mode support
+- ⚛️ **React Islands** - Interactive components where needed (ThemeToggle, ThemeSwitcher)
+- 🎨 **4 Theme Styles** - Minimalista, Modern Tech, Profesional, Vaporwave
+- 🌈 **Tailwind CSS v3** - Utility-first styling with CSS custom properties
+- 🌙 **Light/Dark Mode** - Toggle with localStorage persistence, system preference support
+- 🎯 **Configurable Themes** - Lock themes or let users choose via widget
 - 🧪 **Vitest + Testing Library** - Comprehensive test coverage (15+ tests)
 - 📊 **SEO Optimized** - Meta tags, OG images, JSON-LD structured data, sitemap, robots.txt
-- 🌙 **Dark Mode** - Toggle with localStorage persistence
 - 📝 **Content Collections** - Type-safe blog posts and projects with Astro v6 glob loaders
 - 🔄 **CI/CD** - GitHub Actions for automated testing and Firebase deployment
 - ⚙️ **Configuration-Driven** - Rebrand from a single config file
 - 🏗️ **Makefile Automation** - Common tasks automated (dev, build, test, deploy)
+
+## 🎨 Theme System
+
+Choose from 4 carefully designed visual styles:
+
+- **Minimalista** - Clean, professional, timeless elegance
+- **Modern Tech** - Futuristic with glow effects and gradients
+- **Profesional** - Corporate modern with structured layout
+- **Vaporwave** - Retro-futuristic 80s/90s aesthetic
+
+Each theme supports both light and dark modes. See [docs/THEME-CONFIGURATION.md](docs/THEME-CONFIGURATION.md) for full details.
+
+### Quick Theme Setup
+
+Edit `src/profile.config.ts`:
+
+```typescript
+export const profileConfig = {
+  theme: {
+    style: "minimalista", // Your chosen theme
+    defaultMode: "system", // 'light' | 'dark' | 'system'
+    enableStyleSwitcher: true, // Let users switch themes
+    enableModeToggle: true, // Show light/dark toggle
+  },
+};
+```
 
 ## 🚀 Quick Start
 
@@ -30,9 +58,15 @@ make dev
 make test
 # or: yarn test
 
-# Build for production
+# Build for production (uses profile.config.ts)
 make build
 # or: yarn build
+
+# Build with specific theme
+make build-minimalista
+make build-modern-tech
+make build-profesional
+make build-vaporwave
 ```
 
 Visit `http://localhost:4321` to see your site.
@@ -44,6 +78,8 @@ Visit `http://localhost:4321` to see your site.
 ├── .github/
 │   └── workflows/
 │       └── ci-cd.yml          # GitHub Actions workflow
+├── docs/
+│   └── THEME-CONFIGURATION.md # Theme system documentation
 ├── public/                     # Static assets (images, favicons)
 ├── src/
 │   ├── components/

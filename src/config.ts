@@ -1,3 +1,5 @@
+import { profileConfig } from "./profile.config";
+
 // Site configuration - customize this file to rebrand the template
 export const siteConfig = {
   // Basic Info
@@ -34,14 +36,8 @@ export const siteConfig = {
     plausibleDomain: "fachada.dev",
   },
 
-  // Theme
-  theme: {
-    defaultMode: "light", // "light" | "dark" | "system"
-    colors: {
-      primary: "#3b82f6", // blue-500
-      secondary: "#8b5cf6", // violet-500
-    },
-  },
+  // Theme configuration from profile
+  theme: profileConfig.theme,
 } as const;
 
 export type SiteConfig = typeof siteConfig;

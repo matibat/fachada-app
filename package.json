@@ -11,11 +11,17 @@
   "scripts": {
     "dev": "astro dev",
     "build": "astro build",
+    "build:minimalista": "THEME_STYLE=minimalista astro build",
+    "build:modern-tech": "THEME_STYLE=modern-tech astro build",
+    "build:profesional": "THEME_STYLE=profesional astro build",
+    "build:vaporwave": "THEME_STYLE=vaporwave astro build",
     "preview": "astro preview",
     "astro": "astro",
     "test": "vitest run",
     "test:watch": "vitest",
     "test:ui": "vitest --ui",
+    "test:e2e": "playwright test",
+    "test:e2e:ui": "playwright test --ui",
     "firebase": "firebase"
   },
   "dependencies": {
@@ -26,10 +32,12 @@
     "astro": "^6.1.5",
     "framer-motion": "^12.38.0",
     "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react-dom": "^19.2.5",
+    "styled-components": "6"
   },
   "devDependencies": {
     "@astrojs/tailwind": "^6.0.2",
+    "@playwright/test": "^1.59.1",
     "@testing-library/dom": "^10.4.1",
     "@testing-library/react": "^16.3.2",
     "@vitest/coverage-v8": "^4.1.4",
@@ -39,6 +47,7 @@
     "happy-dom": "^20.8.9",
     "postcss": "^8.5.9",
     "tailwindcss": "3",
+    "typescript": "^6.0.2",
     "vite": "^7",
     "vitest": "^4.1.4"
   }

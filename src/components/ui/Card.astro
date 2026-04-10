@@ -6,6 +6,17 @@ export interface Props {
 const { class: className = '' } = Astro.props;
 ---
 
-<div class={`bg-white dark:bg-gray-800 rounded-lg border border-gray-200 dark:border-gray-700 p-6 ${className}`}>
+<div class={`theme-card p-6 ${className}`}>
   <slot />
 </div>
+
+<style>
+  .theme-card {
+    background-color: var(--bg-secondary);
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius);
+    color: var(--text-primary);
+    box-shadow: 0 6px 16px var(--shadow);
+    transition: var(--transition);
+  }
+</style>

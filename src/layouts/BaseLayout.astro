@@ -1,6 +1,8 @@
 ---
 import { siteConfig } from '../config';
-import ThemeToggle from '../components/islands/ThemeToggle';
+import { profileConfig } from '../profile.config';
+import LayoutWrapper from '../components/islands/LayoutWrapper';
+import { THEME_DEFINITIONS, CSS_VAR_MAP } from '../utils/theme.config';
 import '../styles/globals.css';
 
 export interface Props {
@@ -19,6 +21,8 @@ const {
 
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = new URL(ogImage, Astro.site);
+
+const { theme } = profileConfig;
 ---
 
 <!doctype html>
@@ -56,14 +60,66 @@ const ogImageURL = new URL(ogImage, Astro.site);
       <script defer data-domain={siteConfig.analytics.plausibleDomain} src="https://plausible.io/js/script.js"></script>
     )}
     
-    <!-- Prevent FOUC (Flash of Unstyled Content) for dark mode -->
-    <script is:inline>
-      const theme = localStorage.getItem('theme') || (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
-      document.documentElement.classList.toggle('dark', theme === 'dark');
+    <!--
+      FOUC prevention: read saved preferences from localStorage and apply the dark
+      class, data-theme attribute, and all CSS custom properties synchronously
+      before the first paint — before React hydrates.  CSS variables are now the
+      single source of truth for all styled element colours; styled-components
+      template strings reference var(--token) and therefore produce identical
+      class names on server and client, eliminating the hydration mismatch.
+    -->
+    <script is:inline define:vars={{ defaultStyle: theme.style, defaultMode: theme.defaultMode, themeDefinitions: THEME_DEFINITIONS, cssVarMap: CSS_VAR_MAP }}>
+      (function () {
+        function parseStored(raw, fallback) {
+          if (!raw) return fallback;
+          try { return JSON.parse(raw); } catch { return raw; }
+        }
+
+        var savedStyle = parseStored(localStorage.getItem('themeStyle'), defaultStyle);
+        var savedMode  = parseStored(localStorage.getItem('theme'), null);
+        var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+        var initialMode;
+        if (savedMode && savedMode !== 'auto') {
+          initialMode = savedMode;
+        } else if (savedMode === 'auto' || defaultMode === 'system') {
+          initialMode = prefersDark ? 'dark' : 'light';
+        } else {
+          initialMode = defaultMode;
+        }
+
+        // Normalise: only 'light' | 'dark' are valid token keys
+        if (initialMode !== 'dark') initialMode = 'light';
+
+        // Apply dark class (Tailwind darkMode: "class" + dark: utilities)
+        document.documentElement.classList.toggle('dark', initialMode === 'dark');
+
+        // Apply data-theme attribute (informational, for CSS attribute selectors)
+        document.documentElement.setAttribute('data-theme', savedStyle);
+
+        // Apply every CSS custom property so styled elements have the right
+        // colour on the very first paint, with no flash of wrong theme.
+        var styles = themeDefinitions[savedStyle];
+        if (!styles) styles = themeDefinitions[defaultStyle];
+        var tokens = styles && styles[initialMode];
+        if (tokens) {
+          var root = document.documentElement;
+          for (var key in cssVarMap) {
+            if (Object.prototype.hasOwnProperty.call(cssVarMap, key) && tokens[key] !== undefined) {
+              root.style.setProperty(cssVarMap[key], tokens[key]);
+            }
+          }
+        }
+      })();
     </script>
   </head>
-  <body class="min-h-screen bg-white dark:bg-gray-900 text-gray-900 dark:text-gray-100">
-    <slot />
-    <ThemeToggle client:load />
+  <body class="min-h-screen">
+    <LayoutWrapper
+      client:load
+      enableModeToggle={theme.enableModeToggle}
+      enableStyleSwitcher={theme.enableStyleSwitcher}
+    >
+      <slot />
+    </LayoutWrapper>
   </body>
 </html>
