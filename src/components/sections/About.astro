@@ -1,0 +1,26 @@
+---
+import { siteConfig } from '../../config';
+import Card from '../ui/Card.astro';
+---
+
+<section id="about" class="px-4 py-20">
+  <div class="max-w-4xl mx-auto">
+    <h2 class="text-4xl font-bold mb-8 text-center">About Me</h2>
+    <Card>
+      <div class="prose dark:prose-invert max-w-none">
+        <p class="text-lg text-gray-600 dark:text-gray-300 mb-4">
+          I'm a software engineer based in {siteConfig.location.city}, {siteConfig.location.country}, 
+          passionate about building elegant web experiences with modern technologies.
+        </p>
+        <p class="text-lg text-gray-600 dark:text-gray-300 mb-4">
+          I specialize in TypeScript, React, and modern web frameworks like Astro, creating 
+          performant, accessible, and user-friendly applications.
+        </p>
+        <p class="text-lg text-gray-600 dark:text-gray-300">
+          When I'm not coding, you can find me exploring new technologies, contributing to 
+          open source, or sharing knowledge with the developer community.
+        </p>
+      </div>
+    </Card>
+  </div>
+</section>
