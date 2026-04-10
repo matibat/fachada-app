@@ -1,27 +1,18 @@
-/** Profile configuration — controls which theme is active and which widgets are enabled. */
+/**
+ * Profile configuration — loaded from the active profile.
+ *
+ * The active profile is selected by the PROFILE environment variable at build time.
+ * Example: PROFILE=engineer-single-role yarn build
+ *
+ * To add a new profile, see src/profiles/index.ts.
+ */
 
-import type { ThemeStyle, ColorMode } from "./utils/theme.config";
+import { activeProfile } from "./profiles/index";
 
-export type { ThemeStyle, ColorMode };
+export const profileConfig = activeProfile.profileConfig;
 
-export interface ProfileConfig {
-  theme: {
-    /** Visual style — controls colors, spacing, and effects. */
-    style: ThemeStyle;
-    /** Default color mode on first visit. */
-    defaultMode: ColorMode | "system";
-    /** Show the theme style switcher widget. */
-    enableStyleSwitcher: boolean;
-    /** Show the dark/light mode toggle. */
-    enableModeToggle: boolean;
-  };
-}
-
-export const profileConfig: ProfileConfig = {
-  theme: {
-    style: "minimalist",
-    defaultMode: "system",
-    enableStyleSwitcher: true,
-    enableModeToggle: true,
-  },
-} as const;
+export type {
+  ProfileConfig,
+  ThemeStyle,
+  ColorMode,
+} from "./types/profile.types";

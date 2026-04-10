@@ -4,6 +4,7 @@ description: "Astro-based portfolio template with Tailwind CSS v4, designed to b
 stack: ["Astro", "TypeScript", "Tailwind CSS", "React"]
 date: 2026-04-01
 featured: true
+roles: ["engineer"]
 coverImage: "/images/project-portfolio.svg"
 ---
 

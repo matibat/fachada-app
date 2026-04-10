@@ -1,7 +1,12 @@
 ---
 import { siteConfig } from '../../config';
+import { profileConfig } from '../../profile.config';
 import Card from '../ui/Card.astro';
 import Button from '../ui/Button.astro';
+
+const contactMessage =
+  profileConfig.contactMessage ??
+  "I'm always interested in hearing about new projects and opportunities.";
 ---
 
 <section
@@ -15,7 +20,7 @@ import Button from '../ui/Button.astro';
     <Card>
       <div class="text-center space-y-6">
         <p class="text-lg" style="color: var(--text-secondary);">
-          I'm always interested in hearing about new projects and opportunities.
+          {contactMessage}
         </p>
         <div class="flex flex-col sm:flex-row gap-4 justify-center">
           <Button

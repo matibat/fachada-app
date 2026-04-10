@@ -1,6 +1,6 @@
 # Fachada Portfolio Template
 
-A modern, SEO-optimized portfolio template built with Astro 6, React, and Tailwind CSS. Features **4 visual themes**, dark mode, comprehensive testing, and automated deployment.
+A modern, SEO-optimized portfolio template built with Astro 6, React, and Tailwind CSS. Features **4 visual themes**, dark mode, comprehensive testing, and automated deployment. **Profile-extensible**: Create new portfolios for different people with configuration alone.
 
 ## ✨ Features
 
@@ -16,6 +16,7 @@ A modern, SEO-optimized portfolio template built with Astro 6, React, and Tailwi
 - 🔄 **CI/CD** - GitHub Actions for automated testing and Firebase deployment
 - ⚙️ **Configuration-Driven** - Rebrand from a single config file
 - 🏗️ **Makefile Automation** - Common tasks automated (dev, build, test, deploy)
+- 👥 **Multi-Profile Support** - Create entirely new SPAs for different people by extending profiles
 
 ## 🎨 Theme System
 
@@ -58,15 +59,13 @@ make dev
 make test
 # or: yarn test
 
-# Build for production (uses profile.config.ts)
+# Build for production (default profile)
 make build
 # or: yarn build
 
-# Build with specific theme
-make build-minimalista
-make build-modern-tech
-make build-profesional
-make build-vaporwave
+# Build with a specific profile
+PROFILE=engineer-single-role yarn build
+PROFILE=artist-engineer-multi yarn build
 ```
 
 Visit `http://localhost:4321` to see your site.
@@ -75,53 +74,56 @@ Visit `http://localhost:4321` to see your site.
 
 ```text
 /
-├── .github/
-│   └── workflows/
-│       └── ci-cd.yml          # GitHub Actions workflow
 ├── docs/
-│   └── THEME-CONFIGURATION.md # Theme system documentation
-├── public/                     # Static assets (images, favicons)
+│   ├── THEME-CONFIGURATION.md     # Theme system documentation
+│   └── PROFILE-EXTENSIBILITY.md  # Profile architecture guide
+├── public/                         # Static assets (images, favicons)
 ├── src/
 │   ├── components/
-│   │   ├── islands/
-│   │   │   └── ThemeToggle.tsx # React island for dark mode
-│   │   ├── sections/          # Homepage sections
+│   │   ├── islands/               # React interactive islands
+│   │   │   ├── ThemeToggle.tsx    # Light/dark mode toggle
+│   │   │   ├── ThemeSwitcher.tsx  # Visual style switcher
+│   │   │   └── LayoutWrapper.tsx  # Root provider (conditional widget rendering)
+│   │   ├── sections/              # Homepage sections
 │   │   │   ├── Hero.astro
 │   │   │   ├── About.astro
 │   │   │   ├── Skills.astro
 │   │   │   ├── Projects.astro
 │   │   │   └── Contact.astro
-│   │   └── ui/                # Reusable UI components
-│   │       ├── Button.astro
-│   │       ├── Badge.astro
-│   │       └── Card.astro
+│   │   └── ui/                    # Reusable UI components
 │   ├── content/
-│   │   ├── projects/          # Project case studies (.md)
-│   │   └── blog/              # Blog posts (.md)
+│   │   ├── projects/              # Project case studies (.md)
+│   │   └── blog/                  # Blog posts (.md)
+│   ├── profiles/                  # ← All profiles live here
+│   │   ├── index.ts               # Profile registry
+│   │   ├── default-fachada/       # Default portfolio
+│   │   ├── engineer-single-role/  # Example: single-role engineer
+│   │   └── artist-engineer-multi/ # Example: multi-role artist + engineer
+│   ├── types/
+│   │   └── profile.types.ts       # All profile TypeScript interfaces
 │   ├── layouts/
-│   │   └── BaseLayout.astro   # Root layout with SEO
+│   │   └── BaseLayout.astro       # Root layout with SEO
 │   ├── pages/
-│   │   ├── index.astro        # Homepage
-│   │   ├── projects/
-│   │   │   ├── index.astro    # Projects listing
-│   │   │   └── [slug].astro   # Dynamic project pages
-│   │   ├── blog/
-│   │   │   ├── index.astro    # Blog listing
-│   │   │   └── [slug].astro   # Dynamic blog posts
-│   │   ├── 404.astro          # Custom 404 page
-│   │   └── robots.txt.ts      # Dynamic robots.txt
+│   │   ├── index.astro            # Homepage (profile-driven section rendering)
+│   │   └── ...
 │   ├── utils/
-│   │   └── date.ts            # Date formatting utilities
-│   ├── config.ts              # **Site configuration**
-│   └── content.config.ts      # Content collections schema
-├── tests/                      # Vitest tests
-├── astro.config.mjs           # Astro configuration
-├── tailwind.config.mjs        # Tailwind CSS configuration
-├── vitest.config.ts           # Test configuration
-├── firebase.json              # Firebase Hosting config
-├── Makefile                   # Development automation
+│   │   └── theme.config.ts        # Theme token definitions
+│   ├── config.ts                  # Re-exports active profile's siteConfig
+│   └── profile.config.ts          # Re-exports active profile's profileConfig
+├── tests/
+│   ├── profiles.test.ts           # Profile loading and multi-role tests
+│   ├── config.test.ts             # Site config contract tests
+│   └── Theme*.test.tsx            # Theme system tests
+├── astro.config.mjs               # Astro configuration
 └── package.json
 ```
+
+├── vitest.config.ts # Test configuration
+├── firebase.json # Firebase Hosting config
+├── Makefile # Development automation
+└── package.json
+
+````
 
 ## ⚙️ Configuration
 
@@ -151,7 +153,148 @@ export const siteConfig = {
     plausibleDomain: "yoursite.com",
   },
 } as const;
+````
+
+## 📋 Creating New Profiles
+
+This template is designed to be **profile-extensible**. Changing the active profile at build time produces a completely different SPA — different name, bio, skills, theme settings, and visible sections.
+
+### Quick Profile Creation
+
+1. **Create a profile directory**:
+
+   ```bash
+   mkdir -p src/profiles/your-name
+   ```
+
+2. **Create `src/profiles/your-name/site.config.ts`**:
+
+   ```typescript
+   import type { SiteConfig } from "../../types/profile.types";
+
+   export const siteConfig: SiteConfig = {
+     name: "Your Name",
+     title: "Your Name — Your Role",
+     description: "Your professional description",
+     author: "Your Name",
+     url: "https://your-domain.dev",
+     ogImage: "/og-image.png",
+     social: {
+       github: "https://github.com/yourusername",
+       linkedin: "https://linkedin.com/in/yourusername",
+       twitter: "https://twitter.com/yourusername",
+       email: "your@email.dev",
+     },
+     location: { city: "Your City", country: "Your Country" },
+     roles: [
+       {
+         id: "engineer",
+         title: "Software Engineer",
+         specialties: ["TypeScript", "React"],
+         featured: true,
+       },
+     ],
+     primaryRole: "engineer",
+     analytics: { plausibleDomain: "your-domain.dev" },
+   };
+   ```
+
+3. **Create `src/profiles/your-name/profile.config.ts`**:
+
+   ```typescript
+   import type { ProfileConfig } from "../../types/profile.types";
+
+   export const profileConfig: ProfileConfig = {
+     theme: {
+       style: "minimalist", // minimalist | modern-tech | professional | vaporwave
+       defaultMode: "system", // light | dark | system
+       enableStyleSwitcher: true, // show/hide theme switcher widget
+       enableModeToggle: true, // show/hide light/dark toggle widget
+     },
+     about: {
+       paragraphs: [
+         "Your first bio paragraph.",
+         "Your second bio paragraph.",
+         "Your third bio paragraph.",
+       ],
+     },
+     skills: [
+       { name: "Category 1", skills: ["Tech A", "Tech B", "Tech C"] },
+       { name: "Category 2", skills: ["Tech D", "Tech E", "Tech F"] },
+     ],
+     sections: [
+       { id: "hero", enabled: true, order: 1 },
+       { id: "about", enabled: true, order: 2 },
+       { id: "skills", enabled: true, order: 3 },
+       { id: "projects", enabled: true, order: 4, requiresContent: "projects" },
+       { id: "contact", enabled: true, order: 5 },
+     ],
+     contactMessage: "Your contact section message.",
+   };
+   ```
+
+4. **Register the profile in `src/profiles/index.ts`**:
+
+   ```typescript
+   import { siteConfig as yourNameSite } from "./your-name/site.config";
+   import { profileConfig as yourNameProfile } from "./your-name/profile.config";
+
+   const PROFILES: Record<string, LoadedProfile> = {
+     // ... existing profiles ...
+     "your-name": {
+       siteConfig: yourNameSite,
+       profileConfig: yourNameProfile,
+     },
+   };
+   ```
+
+5. **Build or dev with your profile**:
+   ```bash
+   PROFILE=your-name yarn dev
+   PROFILE=your-name yarn build
+   ```
+
+### Included Example Profiles
+
+| Profile                 | Description                                    | Theme Widget | Mode Toggle |
+| ----------------------- | ---------------------------------------------- | ------------ | ----------- |
+| `default-fachada`       | Default single-role engineer portfolio         | ✅ Enabled   | ✅ Enabled  |
+| `engineer-single-role`  | Backend engineer — locked to modern-tech theme | ❌ Disabled  | ✅ Enabled  |
+| `artist-engineer-multi` | Multi-role: engineer + digital artist          | ✅ Enabled   | ✅ Enabled  |
+
+### Multi-Role Profiles (Artist + Engineer, etc.)
+
+To represent someone with multiple professional identities, add multiple entries to `roles`:
+
+```typescript
+roles: [
+  {
+    id: "engineer",
+    title: "Software Engineer",
+    specialties: ["TypeScript", "React", "WebGL"],
+    featured: true,
+  },
+  {
+    id: "artist",
+    title: "Digital Artist",
+    specialties: ["3D Modeling", "Animation", "Generative Art"],
+    featured: true,
+  },
+],
+primaryRole: "engineer",
 ```
+
+And enable the role switcher:
+
+```typescript
+// in profile.config.ts
+multiRoleDisplay: {
+  style: "tabs",
+  showRoleSwitcher: true,
+},
+```
+
+See [docs/PROFILE-EXTENSIBILITY.md](docs/PROFILE-EXTENSIBILITY.md) for the full architecture guide.
 
 ### Add Content
 

@@ -4,6 +4,7 @@ description: "WebSocket-based collaboration platform enabling teams to work toge
 stack: ["React", "Node.js", "WebSocket", "Redis", "MongoDB"]
 date: 2025-12-10
 featured: true
+roles: ["engineer"]
 githubUrl: "https://github.com/fachada/collab-tool"
 coverImage: "/images/project-collab.svg"
 ---

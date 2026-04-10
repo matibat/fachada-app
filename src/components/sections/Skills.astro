@@ -1,21 +1,8 @@
 ---
-import { siteConfig } from '../../config';
+import { profileConfig } from '../../profile.config';
 import Badge from '../ui/Badge.astro';
 
-const skillCategories = [
-  {
-    name: 'Languages',
-    skills: ['TypeScript', 'JavaScript', 'Python', 'HTML', 'CSS'],
-  },
-  {
-    name: 'Frameworks & Libraries',
-    skills: ['Astro', 'React', 'Next.js', 'Tailwind CSS', 'Node.js'],
-  },
-  {
-    name: 'Tools & Platforms',
-    skills: ['Git', 'Firebase', 'Vercel', 'Docker', 'GitHub Actions'],
-  },
-];
+const { skills: skillCategories } = profileConfig;
 ---
 
 <section

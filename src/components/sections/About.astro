@@ -1,6 +1,9 @@
 ---
 import { siteConfig } from '../../config';
+import { profileConfig } from '../../profile.config';
 import Card from '../ui/Card.astro';
+
+const { paragraphs } = profileConfig.about;
 ---
 
 <section id="about" class="px-4 py-20">
@@ -8,18 +11,11 @@ import Card from '../ui/Card.astro';
     <h2 class="text-4xl font-bold mb-8 text-center" data-index="01">About Me</h2>
     <Card>
       <div class="max-w-none">
-        <p class="text-lg mb-4" style="color: var(--text-secondary);">
-          I'm a software engineer based in {siteConfig.location.city}, {siteConfig.location.country}, 
-          passionate about building elegant web experiences with modern technologies.
-        </p>
-        <p class="text-lg mb-4" style="color: var(--text-secondary);">
-          I specialize in TypeScript, React, and modern web frameworks like Astro, creating 
-          performant, accessible, and user-friendly applications.
-        </p>
-        <p class="text-lg" style="color: var(--text-secondary);">
-          When I'm not coding, you can find me exploring new technologies, contributing to 
-          open source, or sharing knowledge with the developer community.
-        </p>
+        {paragraphs.map((paragraph) => (
+          <p class="text-lg mb-4 last:mb-0" style="color: var(--text-secondary);">
+            {paragraph}
+          </p>
+        ))}
       </div>
     </Card>
   </div>

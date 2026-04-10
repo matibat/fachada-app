@@ -28,9 +28,21 @@ describe("Site Configuration", () => {
     expect(siteConfig.location.country).toBeDefined();
   });
 
-  it("should have role and specialties", () => {
-    expect(siteConfig.role).toBeDefined();
-    expect(Array.isArray(siteConfig.specialties)).toBe(true);
-    expect(siteConfig.specialties.length).toBeGreaterThan(0);
+  it("should have roles with at least one entry and a valid primaryRole", () => {
+    expect(Array.isArray(siteConfig.roles)).toBe(true);
+    expect(siteConfig.roles.length).toBeGreaterThan(0);
+    expect(siteConfig.primaryRole).toBeDefined();
+    expect(siteConfig.roles.some((r) => r.id === siteConfig.primaryRole)).toBe(
+      true,
+    );
+  });
+
+  it("each role should have required fields", () => {
+    for (const role of siteConfig.roles) {
+      expect(role.id).toBeDefined();
+      expect(role.title).toBeDefined();
+      expect(Array.isArray(role.specialties)).toBe(true);
+      expect(typeof role.featured).toBe("boolean");
+    }
   });
 });

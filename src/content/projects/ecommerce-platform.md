@@ -4,6 +4,7 @@ description: "Modern e-commerce platform built with Next.js and Stripe integrati
 stack: ["Next.js", "TypeScript", "Tailwind CSS", "Stripe", "PostgreSQL"]
 date: 2025-03-15
 featured: true
+roles: ["engineer"]
 liveUrl: "https://example.com"
 githubUrl: "https://github.com/fachada/ecommerce-platform"
 coverImage: "/images/project-ecommerce.svg"

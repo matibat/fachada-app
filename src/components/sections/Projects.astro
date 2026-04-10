@@ -2,10 +2,25 @@
 import { getCollection } from 'astro:content';
 import ProjectCard from './ProjectCard.astro';
 
-const projects = (await getCollection('projects'))
-  .filter((project) => project.data.featured)
+export interface Props {
+  filterRoles?: string[];
+}
+
+const { filterRoles } = Astro.props;
+
+const allProjects = await getCollection('projects');
+
+const projects = allProjects
+  .filter((project) => {
+    if (!project.data.featured) return false;
+    if (!filterRoles || filterRoles.length === 0) return true;
+    const projectRoles = project.data.roles ?? [];
+    // Untagged projects are universal; tagged projects must match a filter role
+    if (projectRoles.length === 0) return true;
+    return projectRoles.some(r => filterRoles.includes(r));
+  })
   .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 3);
+  .slice(0, 6);
 ---
 
 <section id="projects" class="px-4 py-20">
@@ -25,8 +40,7 @@ const projects = (await getCollection('projects'))
             coverImage={project.data.coverImage}
             liveUrl={project.data.liveUrl}
             githubUrl={project.data.githubUrl}
-            slug={project.id}
-          />
+            slug={project.id}            roles={project.data.roles}          />
         ))}
       </div>
     )}
