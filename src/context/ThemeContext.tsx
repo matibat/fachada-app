@@ -16,7 +16,17 @@ import type {
     ThemeDependencies,
 } from '../utils/theme.types';
 import type { ThemeTokens } from '../utils/theme.config';
-import { getActiveTokens, CSS_VAR_MAP } from '../utils/theme.config';
+import { CSS_VAR_MAP } from '../utils/theme.config';
+import { resolveTheme } from '../core/theme/ThemeResolver';
+
+/** Internal helper — computes tokens via ThemeResolver with no variant overlay. */
+function computeTokens(style: ThemeStyle, effectiveMode: 'light' | 'dark'): ThemeTokens {
+    return resolveTheme(
+        { style, defaultMode: effectiveMode, enableStyleSwitcher: false, enableModeToggle: false },
+        {}
+    );
+}
+
 import {
     validateColorMode,
     validateThemeStyle,
@@ -49,6 +59,8 @@ export interface ThemeContextState {
 
     /** Active theme tokens derived from current style and color mode */
     activeTokens: ThemeTokens;
+    /** DDD v2 alias for activeTokens — prefer this in new code */
+    tokens: ThemeTokens;
 }
 
 /**
@@ -108,7 +120,8 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
         isInitialized: false,
         syncStatus: 'pending',
         lastError: null,
-        activeTokens: getActiveTokens(DEFAULT_STYLE_THEME, 'light'),
+        activeTokens: resolveTheme({ style: DEFAULT_STYLE_THEME, defaultMode: 'light', enableStyleSwitcher: false, enableModeToggle: false }, {}),
+        tokens: resolveTheme({ style: DEFAULT_STYLE_THEME, defaultMode: 'light', enableStyleSwitcher: false, enableModeToggle: false }, {}),
     });
 
     /**
@@ -178,7 +191,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
         }
 
         const effectiveColorMode = resolveEffectiveColorMode(colorMode);
-        const activeTokens = getActiveTokens(styleTheme, effectiveColorMode);
+        const activeTokens = computeTokens(styleTheme, effectiveColorMode);
 
         setState((prev) => ({
             ...prev,
@@ -189,6 +202,7 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
             syncStatus: 'synced',
             lastError: !colorModeResult.success ? colorModeResult.error || null : null,
             activeTokens,
+            tokens: activeTokens,
         }));
     }, [getDeps, resolveEffectiveColorMode]);
 
@@ -211,7 +225,8 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
                             ...prev,
                             colorMode: newColorMode,
                             effectiveColorMode,
-                            activeTokens: getActiveTokens(prev.styleTheme, effectiveColorMode),
+                            activeTokens: computeTokens(prev.styleTheme, effectiveColorMode),
+                            tokens: computeTokens(prev.styleTheme, effectiveColorMode),
                             syncStatus: 'synced',
                         }));
                     }
@@ -228,7 +243,8 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
                         setState((prev) => ({
                             ...prev,
                             styleTheme: newStyleTheme,
-                            activeTokens: getActiveTokens(newStyleTheme, prev.effectiveColorMode),
+                            activeTokens: computeTokens(newStyleTheme, prev.effectiveColorMode),
+                            tokens: computeTokens(newStyleTheme, prev.effectiveColorMode),
                             syncStatus: 'synced',
                         }));
                     }
@@ -294,7 +310,8 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
                 ...prev,
                 colorMode: mode,
                 effectiveColorMode,
-                activeTokens: getActiveTokens(prev.styleTheme, effectiveColorMode),
+                activeTokens: computeTokens(prev.styleTheme, effectiveColorMode),
+                tokens: computeTokens(prev.styleTheme, effectiveColorMode),
                 lastError: null,
                 syncStatus: 'synced',
             }));
@@ -332,7 +349,8 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
             setState((prev) => ({
                 ...prev,
                 styleTheme: style,
-                activeTokens: getActiveTokens(style, prev.effectiveColorMode),
+                activeTokens: computeTokens(style, prev.effectiveColorMode),
+                tokens: computeTokens(style, prev.effectiveColorMode),
                 lastError: null,
                 syncStatus: 'synced',
             }));
@@ -403,6 +421,7 @@ export function useTheme(): ThemeContextState {
         syncStatus: context.syncStatus,
         lastError: context.lastError,
         activeTokens: context.activeTokens,
+        tokens: context.tokens,
     };
 }
 

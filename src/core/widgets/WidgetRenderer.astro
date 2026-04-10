@@ -1,0 +1,56 @@
+---
+/**
+ * WidgetRenderer — application service.
+ *
+ * Drives page composition from a SectionConfig[] (subset of AppConfig.page.sections).
+ * Calls filterSections to determine which sections are enabled, then renders each
+ * section widget in order.
+ *
+ * An unknown section id renders nothing and emits a console.warn — no runtime crash.
+ * (DDD Phase 2 invariant: WidgetRegistry is the only place that names concrete widgets;
+ *  WidgetRenderer orchestrates them.)
+ */
+
+import type { PageSectionConfig } from '../../types/profile.types';
+import { filterSections } from './filterSections';
+import { siteConfig } from '../../config';
+
+// ── Widget imports (static — Astro build requirement) ──────────────────────────
+import Hero    from '../../widgets/Hero.astro';
+import About   from '../../widgets/About.astro';
+import Skills  from '../../widgets/Skills.astro';
+import Projects from '../../widgets/Projects.astro';
+import Contact from '../../widgets/Contact.astro';
+import RoleExplorer from '../../components/islands/RoleExplorer';
+
+export interface Props {
+  sections: PageSectionConfig[];
+  projectsCount: number;
+  blogCount: number;
+}
+
+const { sections, projectsCount, blogCount } = Astro.props;
+
+const enabledIds = filterSections(sections, {
+  projectsCount,
+  blogCount,
+  availableRoles: siteConfig.roles.map(r => r.id),
+});
+
+const filterRoles = siteConfig.roles.map(r => r.id);
+---
+
+{enabledIds.includes('hero') && <Hero />}
+{enabledIds.includes('about') && <About />}
+{enabledIds.includes('skills') && <Skills />}
+{enabledIds.includes('role-explorer') && (
+  <RoleExplorer
+    client:load
+    roles={siteConfig.roles}
+    primaryRole={siteConfig.primaryRole}
+  />
+)}
+{enabledIds.includes('projects') && (
+  <Projects filterRoles={filterRoles} />
+)}
+{enabledIds.includes('contact') && <Contact />}

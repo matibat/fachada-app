@@ -1,13 +1,8 @@
 ---
 import BaseLayout from '../layouts/BaseLayout.astro';
-import Hero from '../components/sections/Hero.astro';
-import About from '../components/sections/About.astro';
-import Skills from '../components/sections/Skills.astro';
-import Projects from '../components/sections/Projects.astro';
-import Contact from '../components/sections/Contact.astro';
+import WidgetRenderer from '../core/widgets/WidgetRenderer.astro';
 import Footer from '../components/Footer.astro';
 import StructuredData from '../components/StructuredData.astro';
-import RoleExplorer from '../components/islands/RoleExplorer';
 import { siteConfig } from '../config';
 import { profileConfig } from '../profile.config';
 import { getCollection } from 'astro:content';
@@ -23,44 +18,18 @@ const personSchema = {
   ].filter(Boolean),
 };
 
-// Resolve which sections are visible based on profile config
 const projects = await getCollection('projects');
 const blog = await getCollection('blog');
-
-const enabledSections = profileConfig.sections
-  .filter(section => {
-    if (!section.enabled) return false;
-    if (section.requiresContent === 'projects' && projects.length === 0) return false;
-    if (section.requiresContent === 'blog' && blog.length === 0) return false;
-    if (section.requiresRole) {
-      const hasMatchingRole = section.requiresRole.some(
-        roleId => siteConfig.roles.some(r => r.id === roleId)
-      );
-      if (!hasMatchingRole) return false;
-    }
-    return true;
-  })
-  .sort((a, b) => a.order - b.order)
-  .map(s => s.id);
 ---
 
 <BaseLayout>
   <StructuredData type="Person" data={personSchema} />
   <main>
-    {enabledSections.includes('hero') && <Hero />}
-    {enabledSections.includes('about') && <About />}
-    {enabledSections.includes('skills') && <Skills />}
-    {enabledSections.includes('role-explorer') && (
-      <RoleExplorer
-        client:load
-        roles={siteConfig.roles}
-        primaryRole={siteConfig.primaryRole}
-      />
-    )}
-    {enabledSections.includes('projects') && (
-      <Projects filterRoles={siteConfig.roles.map(r => r.id)} />
-    )}
-    {enabledSections.includes('contact') && <Contact />}
+    <WidgetRenderer
+      sections={profileConfig.sections}
+      projectsCount={projects.length}
+      blogCount={blog.length}
+    />
   </main>
   <Footer />
 </BaseLayout>
