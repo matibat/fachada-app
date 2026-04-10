@@ -21,7 +21,11 @@ const allEnabledSections: PageSectionConfig[] = [
   { id: "contact", enabled: true, order: 5 },
 ];
 
-const baseContext = { projectsCount: 3, blogCount: 0, availableRoles: ["engineer"] };
+const baseContext = {
+  projectsCount: 3,
+  blogCount: 0,
+  availableRoles: ["engineer"],
+};
 
 // ─── Scenario 1: only enabled sections are returned ──────────────────────────
 
@@ -37,7 +41,7 @@ describe("Scenario 1: filterSections excludes disabled sections", () => {
   });
 
   it("Given: all sections disabled, When: filtered, Then: result is empty", () => {
-    const sections: PageSectionConfig[] = allEnabledSections.map(s => ({
+    const sections: PageSectionConfig[] = allEnabledSections.map((s) => ({
       ...s,
       enabled: false,
     }));
@@ -86,17 +90,33 @@ describe("Scenario 2: filterSections excludes requiresContent sections when the 
 describe("Scenario 3: filterSections excludes requiresRole sections when no matching role is available", () => {
   it("Given: section requiresRole=['artist'], When: availableRoles=['engineer'], Then: section is excluded", () => {
     const sections: PageSectionConfig[] = [
-      { id: "role-explorer", enabled: true, order: 2, requiresRole: ["artist"] },
+      {
+        id: "role-explorer",
+        enabled: true,
+        order: 2,
+        requiresRole: ["artist"],
+      },
     ];
-    const result = filterSections(sections, { ...baseContext, availableRoles: ["engineer"] });
+    const result = filterSections(sections, {
+      ...baseContext,
+      availableRoles: ["engineer"],
+    });
     expect(result).not.toContain("role-explorer");
   });
 
   it("Given: section requiresRole=['engineer','artist'], When: availableRoles=['engineer'], Then: section is included", () => {
     const sections: PageSectionConfig[] = [
-      { id: "role-explorer", enabled: true, order: 2, requiresRole: ["engineer", "artist"] },
+      {
+        id: "role-explorer",
+        enabled: true,
+        order: 2,
+        requiresRole: ["engineer", "artist"],
+      },
     ];
-    const result = filterSections(sections, { ...baseContext, availableRoles: ["engineer"] });
+    const result = filterSections(sections, {
+      ...baseContext,
+      availableRoles: ["engineer"],
+    });
     expect(result).toContain("role-explorer");
   });
 
@@ -104,7 +124,10 @@ describe("Scenario 3: filterSections excludes requiresRole sections when no matc
     const sections: PageSectionConfig[] = [
       { id: "hero", enabled: true, order: 1 },
     ];
-    const result = filterSections(sections, { ...baseContext, availableRoles: [] });
+    const result = filterSections(sections, {
+      ...baseContext,
+      availableRoles: [],
+    });
     expect(result).toContain("hero");
   });
 });
@@ -118,7 +141,11 @@ describe("Scenario 4: filterSections returns section IDs sorted ascending by ord
       { id: "hero", enabled: true, order: 1 },
       { id: "about", enabled: true, order: 2 },
     ];
-    expect(filterSections(scrambled, baseContext)).toEqual(["hero", "about", "contact"]);
+    expect(filterSections(scrambled, baseContext)).toEqual([
+      "hero",
+      "about",
+      "contact",
+    ]);
   });
 
   it("Given: two sections at the same order, When: filtered, Then: both appear in result", () => {

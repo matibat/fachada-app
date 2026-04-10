@@ -1,7 +1,8 @@
 import { defineConfig } from "vitest/config";
+import { fachadaPlugin } from "./src/vite/fachada-plugin";
 
 export default defineConfig({
-  plugins: [],
+  plugins: [fachadaPlugin()],
   test: {
     environment: "happy-dom",
     exclude: ["node_modules", "dist", ".astro", "e2e"],

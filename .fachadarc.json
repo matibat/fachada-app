@@ -1,0 +1,7 @@
+{
+    "defaultApp": "default-fachada",
+    "apps": {
+        "default-fachada": "apps/default-fachada/app.config.ts",
+        "artist-engineer": "apps/artist-engineer/app.config.ts"
+    }
+}

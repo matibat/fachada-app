@@ -87,7 +87,11 @@ describe("Scenario 2: resolveTheme applies override tokens on top of base", () =
 
 describe("Scenario 3: resolveTheme falls back to base when activeVariant is not in variants", () => {
   it("Given: variants map without the requested key, When: activeVariant='nonexistent', Then: returns base tokens", () => {
-    const result = resolveTheme(baseConfig, { other: { tokens: { accent: "#ff0000" } } }, "nonexistent");
+    const result = resolveTheme(
+      baseConfig,
+      { other: { tokens: { accent: "#ff0000" } } },
+      "nonexistent",
+    );
 
     expect(result).toEqual(baseTokens);
   });
@@ -136,7 +140,12 @@ describe("Scenario 5: resolveTheme is a pure function", () => {
 // ─── Scenario 6: works with all four ThemeStyle values ───────────────────────
 
 describe("Scenario 6: resolveTheme works with every ThemeStyle", () => {
-  const styles = ["minimalist", "modern-tech", "professional", "vaporwave"] as const;
+  const styles = [
+    "minimalist",
+    "modern-tech",
+    "professional",
+    "vaporwave",
+  ] as const;
 
   for (const style of styles) {
     it(`Given: base style '${style}' in light mode, When: no variant, Then: returns that style's light tokens`, () => {

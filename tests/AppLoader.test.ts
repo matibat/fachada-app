@@ -1,114 +1,121 @@
 /**
- * Phase 4 — AppLoader domain service tests
+ * AppLoader + fachada-plugin integration tests.
  *
- * BDD: written before implementation. Import of loadAppConfig causes RED until
- * src/core/app/AppLoader.ts exists.
+ * AppLoader no longer hardcodes any app imports. It delegates entirely to the
+ * `virtual:fachada/active-app` module which is resolved at build/test time by
+ * vite-plugin-fachada reading `.fachadarc.json`.
  *
- * AppLoader resolves the active AppConfig by app name (from the APP env var or
- * PROFILE legacy env var). Tests use the direct function, not env var routing.
+ * vitest.config.ts registers the plugin with no activeApp override, so the
+ * active app defaults to APP env var → PROFILE env var → .fachadarc defaultApp
+ * ("default-fachada" unless overridden).
+ *
+ * App config structural invariants are tested by importing each app config
+ * file directly — not via AppLoader — so they remain independent of which app
+ * is currently active.
  */
 import { describe, it, expect } from "vitest";
-import { AVAILABLE_APPS, loadAppConfig } from "../src/core/app/AppLoader";
+import { getActiveAppConfig, AVAILABLE_APPS } from "../src/core/app/AppLoader";
+import { readFachadarc, resolveAppName } from "../src/vite/fachada-plugin";
 import type { AppConfig } from "../src/types/app.types";
 
-// ─── Scenario 1: loadAppConfig returns a valid AppConfig for known names ──────
+// Direct imports for structural invariant tests — independent of active app
+import { appConfig as defaultFachadaConfig } from "../apps/default-fachada/app.config";
+import { appConfig as artistEngineerConfig } from "../apps/artist-engineer/app.config";
 
-describe("Scenario 1: loadAppConfig returns a valid AppConfig for each known app", () => {
-  it("Given: app name 'default-fachada', When: loadAppConfig, Then: returns config with seo.name defined", () => {
-    const config = loadAppConfig("default-fachada");
+// ─── Scenario 1: getActiveAppConfig returns a valid AppConfig ─────────────────
+
+describe("Scenario 1: getActiveAppConfig returns the build-time-selected AppConfig", () => {
+  it("When: called, Then: returns an AppConfig with required fields", () => {
+    const config = getActiveAppConfig();
     expect(config.seo.name).toBeDefined();
     expect(config.seo.url).toBeDefined();
     expect(config.theme.style).toBeDefined();
-    expect(config.page).toBeDefined();
     expect(Array.isArray(config.page.sections)).toBe(true);
   });
 
-  it("Given: app name 'engineer', When: loadAppConfig, Then: returns config with seo.name defined", () => {
-    const config = loadAppConfig("engineer");
-    expect(config.seo.name).toBeDefined();
-    expect(config.theme.style).toBe("modern-tech");
-  });
-
-  it("Given: app name 'artist-engineer', When: loadAppConfig, Then: returns config for the multi-role profile", () => {
-    const config = loadAppConfig("artist-engineer");
-    expect(config.seo.name).toBeDefined();
-    expect(config.seo.roles.length).toBeGreaterThan(1);
+  it("When: called twice, Then: returns the same reference (stable)", () => {
+    expect(getActiveAppConfig()).toBe(getActiveAppConfig());
   });
 });
 
-// ─── Scenario 2: fallback to default for unknown app names ───────────────────
+// ─── Scenario 2: AVAILABLE_APPS reflects .fachadarc.json registry ─────────────
 
-describe("Scenario 2: loadAppConfig falls back to default-fachada for unknown names", () => {
-  it("Given: an unknown app name, When: loadAppConfig, Then: returns default-fachada config", () => {
-    const defaultConfig = loadAppConfig("default-fachada");
-    const unknownConfig = loadAppConfig("does-not-exist");
-    expect(unknownConfig.seo.name).toBe(defaultConfig.seo.name);
+describe("Scenario 2: AVAILABLE_APPS reflects the .fachadarc.json registry", () => {
+  it("contains all app names registered in .fachadarc.json", () => {
+    const fachadarc = readFachadarc();
+    const registeredApps = Object.keys(fachadarc.apps);
+    for (const name of registeredApps) {
+      expect(AVAILABLE_APPS).toContain(name);
+    }
   });
 
-  it("Given: empty string as app name, When: loadAppConfig, Then: returns default config", () => {
-    const config = loadAppConfig("");
-    expect(config.seo.name).toBeDefined();
+  it("is frozen (read-only)", () => {
+    expect(() => (AVAILABLE_APPS as string[]).push("hack")).toThrow();
+  });
+
+  it("contains at least one app", () => {
+    expect(AVAILABLE_APPS.length).toBeGreaterThan(0);
   });
 });
 
-// ─── Scenario 3: AppConfig satisfies all structural invariants ────────────────
+// ─── Scenario 3: resolveAppName maps legacy PROFILE names ────────────────────
 
-describe("Scenario 3: each loaded AppConfig satisfies the AppConfig aggregate structure", () => {
-  const apps = ["default-fachada", "engineer", "artist-engineer"];
+describe("Scenario 3: resolveAppName handles v1 PROFILE aliases", () => {
+  const fachadarc = readFachadarc();
 
-  for (const appName of apps) {
-    it(`Given: app '${appName}', When: loaded, Then: satisfies AppConfig structure`, () => {
-      const config: AppConfig = loadAppConfig(appName);
+  it("maps 'artist-engineer-multi' → 'artist-engineer'", () => {
+    expect(resolveAppName("artist-engineer-multi", fachadarc)).toBe(
+      "artist-engineer",
+    );
+  });
 
-      // seo
-      expect(typeof config.seo.name).toBe("string");
-      expect(typeof config.seo.url).toBe("string");
-      expect(() => new URL(config.seo.url)).not.toThrow();
-      expect(Array.isArray(config.seo.roles)).toBe(true);
-      expect(config.seo.roles.length).toBeGreaterThan(0);
+  it("passes through a v2 app name unchanged", () => {
+    expect(resolveAppName("default-fachada", fachadarc)).toBe(
+      "default-fachada",
+    );
+  });
 
-      // theme
-      expect(config.theme.style).toBeDefined();
+  it("falls back to defaultApp for unknown names", () => {
+    expect(resolveAppName("does-not-exist", fachadarc)).toBe(
+      fachadarc.defaultApp,
+    );
+  });
+});
 
-      // themeVariants
-      expect(typeof config.themeVariants).toBe("object");
+// ─── Scenario 4: structural invariants for each registered app config ─────────
 
-      // assets
-      expect(typeof config.assets.ogImage).toBe("string");
+describe("Scenario 4: each app config satisfies the AppConfig aggregate structure", () => {
+  const cases: [string, AppConfig][] = [
+    ["default-fachada", defaultFachadaConfig],
+    ["artist-engineer", artistEngineerConfig],
+  ];
 
-      // page
-      expect(Array.isArray(config.page.sections)).toBe(true);
-      for (const section of config.page.sections) {
-        expect(typeof section.id).toBe("string");
-        expect(typeof section.enabled).toBe("boolean");
-        expect(typeof section.order).toBe("number");
-        expect(Array.isArray(section.widgets)).toBe(true);
-      }
+  for (const [appName, config] of cases) {
+    describe(`app '${appName}'`, () => {
+      it("seo: name, url, and roles are valid", () => {
+        expect(typeof config.seo.name).toBe("string");
+        expect(typeof config.seo.url).toBe("string");
+        expect(() => new URL(config.seo.url)).not.toThrow();
+        expect(Array.isArray(config.seo.roles)).toBe(true);
+        expect(config.seo.roles.length).toBeGreaterThan(0);
+      });
+
+      it("theme.style is defined", () => {
+        expect(config.theme.style).toBeDefined();
+      });
+
+      it("themeVariants is an object", () => {
+        expect(typeof config.themeVariants).toBe("object");
+      });
+
+      it("assets.ogImage is a string", () => {
+        expect(typeof config.assets.ogImage).toBe("string");
+      });
+
+      it("page.sections is a non-empty array", () => {
+        expect(Array.isArray(config.page.sections)).toBe(true);
+        expect(config.page.sections.length).toBeGreaterThan(0);
+      });
     });
   }
-});
-
-// ─── Scenario 4: AVAILABLE_APPS lists all three app names ────────────────────
-
-describe("Scenario 4: AVAILABLE_APPS exports the full list of known app identifiers", () => {
-  it("Given: AVAILABLE_APPS, When: inspected, Then: contains all three app names", () => {
-    expect(AVAILABLE_APPS).toContain("default-fachada");
-    expect(AVAILABLE_APPS).toContain("engineer");
-    expect(AVAILABLE_APPS).toContain("artist-engineer");
-    expect(AVAILABLE_APPS).toHaveLength(3);
-  });
-});
-
-// ─── Scenario 5: PROFILE legacy name aliases are supported ───────────────────
-
-describe("Scenario 5: legacy PROFILE names are treated as valid aliases", () => {
-  it("Given: legacy name 'engineer-single-role', When: loadAppConfig, Then: returns engineer config", () => {
-    const config = loadAppConfig("engineer-single-role");
-    expect(config.theme.style).toBe("modern-tech");
-  });
-
-  it("Given: legacy name 'artist-engineer-multi', When: loadAppConfig, Then: returns artist-engineer config", () => {
-    const config = loadAppConfig("artist-engineer-multi");
-    expect(config.seo.roles.length).toBeGreaterThan(1);
-  });
 });

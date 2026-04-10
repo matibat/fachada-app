@@ -5,7 +5,14 @@
  * The value import of APP_CONFIG_VERSION ensures RED until app.types.ts exists.
  */
 import { describe, it, expect } from "vitest";
-import { APP_CONFIG_VERSION, type AppConfig, type PageConfig, type SectionConfig, type ThemeOverride, type AssetConfig } from "../src/types/app.types";
+import {
+  APP_CONFIG_VERSION,
+  type AppConfig,
+  type PageConfig,
+  type SectionConfig,
+  type ThemeOverride,
+  type AssetConfig,
+} from "../src/types/app.types";
 import { siteConfig } from "../src/profiles/default-fachada/site.config";
 import { profileConfig } from "../src/profiles/default-fachada/profile.config";
 import type { ThemeTokens } from "../src/utils/theme.config";
@@ -77,9 +84,7 @@ describe("Scenario 3: SectionConfig carries a widgets array", () => {
       id: "hero",
       enabled: true,
       order: 1,
-      widgets: [
-        { type: "HeroWidget", props: { headline: "Hello" } },
-      ],
+      widgets: [{ type: "HeroWidget", props: { headline: "Hello" } }],
     };
 
     expect(section.widgets).toHaveLength(1);
@@ -169,6 +174,8 @@ describe("Scenario 6: Existing profile data maps to AppConfig without data loss"
     expect(config.seo.social.github).toBeDefined();
     expect(config.seo.roles).toHaveLength(siteConfig.roles.length);
     expect(config.page.sections).toHaveLength(profileConfig.sections.length);
-    expect(config.page.sections.every((s) => Array.isArray(s.widgets))).toBe(true);
+    expect(config.page.sections.every((s) => Array.isArray(s.widgets))).toBe(
+      true,
+    );
   });
 });
