@@ -1,603 +1,646 @@
-# Especificación completa — 4 temas de portafolio SPA
+# Complete Spec — 4 Portfolio SPA Themes
 
-> Cada tema es un universo visual distinto. El objetivo es que al cambiar de tema, todo cambie: cómo se siente el espacio, cómo se lee el texto, cómo se mueve la página, qué tan cerca o lejos se siente el contenido. No solo los colores.
-
----
-
-## Elementos compartidos en todos los temas
-
-- Modo claro y oscuro, con toggle en navbar. Default según `prefers-color-scheme`.
-- Navegación sticky con smooth scroll entre secciones.
-- Totalmente responsive (mobile-first).
-- Animaciones sutiles al scroll (Intersection Observer) y hover.
-- Secciones: Hero → About → Skills → Projects → Experience → Contact → Footer
+> Each theme is a distinct world. The goal is that switching themes changes everything: how space feels, how text reads, how the page moves, how close or distant the content feels. Not just colors — the entire emotional register.
 
 ---
 
----
+## Shared across all themes
 
-# Tema 1 — Minimalista
-
-## Filosofía general
-
-El contenido es el diseño. Nada existe sin una razón. Si un elemento decorativo puede quitarse sin que el usuario pierda información, se quita. El espacio en blanco no es vacío: es respiración. La página debe sentirse como una galería de arte contemporáneo, no como un CV.
-
-**Sensación al entrar:** silencio, claridad, confianza.
-
----
-
-## Tipografía
-
-La tipografía ES el diseño en este tema. Todo el peso visual recae en ella.
-
-| Uso                                | Fuente                                  | Estilo                                            |
-| ---------------------------------- | --------------------------------------- | ------------------------------------------------- |
-| Títulos principales (H1, H2)       | `Playfair Display` o `DM Serif Display` | Regular (400), sin negrita artificial             |
-| Cuerpo, labels, nav                | `DM Sans` o `Sora`                      | Light (300) para cuerpo, Medium (500) para labels |
-| Monoespaciado (tech stack, fechas) | `JetBrains Mono`                        | Regular, tamaño pequeño                           |
-
-- **H1 hero:** 72–96px, peso 400, line-height 1.05, tracking -0.02em
-- **Body:** 16px, peso 300, line-height 1.8
-- **Labels / overlines:** 11px, uppercase, letter-spacing 0.12em, color muted
-- **Jerarquía:** se logra con tamaño y color, nunca con negrita agresiva
-
----
-
-## Paleta de colores
-
-### Modo claro
-
-| Token              | Valor     | Uso                                    |
-| ------------------ | --------- | -------------------------------------- |
-| `--bg`             | `#F9F8F5` | Fondo general (blanco cálido, no puro) |
-| `--bg-surface`     | `#FFFFFF` | Cards, navbar                          |
-| `--text-primary`   | `#141414` | Títulos                                |
-| `--text-secondary` | `#555550` | Cuerpo                                 |
-| `--text-muted`     | `#999990` | Labels, metadata                       |
-| `--border`         | `#E5E4DF` | Líneas divisoras                       |
-| `--accent`         | `#141414` | Links activos, CTAs (monocromático)    |
-
-### Modo oscuro
-
-| Token              | Valor     | Uso                           |
-| ------------------ | --------- | ----------------------------- |
-| `--bg`             | `#0E0E0C` | Fondo (negro cálido, no puro) |
-| `--bg-surface`     | `#161614` | Cards, navbar                 |
-| `--text-primary`   | `#F0EFE8` | Títulos                       |
-| `--text-secondary` | `#A8A89E` | Cuerpo                        |
-| `--text-muted`     | `#666660` | Labels, metadata              |
-| `--border`         | `#2A2A26` | Líneas divisoras              |
-| `--accent`         | `#F0EFE8` | Links activos, CTAs           |
-
-> **Principio:** este tema es casi monocromático. No hay acentos de color vivos. El contraste viene del blanco/negro y de la tipografía serif.
-
----
-
-## Layout y espaciado
-
-- **Contenedor máximo:** 720px centrado. No más. El ancho restringido es intencional — fuerza la lectura vertical y da sensación de publicación literaria.
-- **Padding horizontal:** 24px en mobile, 0 en desktop (el contenedor ya centra).
-- **Padding vertical entre secciones:** 120px. Generoso, casi incómodo.
-- **Grid de proyectos:** 1 columna en mobile, 2 columnas en desktop. Sin masonry ni layouts raros.
-- **Navbar:** Logo (nombre en serif, minúsculas) + links en uppercase pequeño + toggle. Sin fondo opaco — transparente con `backdrop-filter: blur(8px)` solo al hacer scroll.
-
----
-
-## Sección por sección
-
-### Hero
-
-- Sin imagen de fondo, sin ilustraciones, sin partículas.
-- Overline: `"Frontend Developer"` en 11px uppercase muted.
-- H1: nombre completo en serif, 80–96px, peso 400, 2–3 líneas si es necesario.
-- Bio: 2 frases máximo, 15–16px, light.
-- CTA: solo texto con `border-bottom: 1px solid currentColor`. Sin botones con fondo.
-- Scroll indicator: una línea vertical de 40px animada (no arrow).
-
-### About
-
-- Dos columnas en desktop: foto izquierda (cuadrada, sin border-radius), texto derecha.
-- Foto en escala de grises. Al hover, color — transición suave 0.6s.
-- Sin listas de habilidades aquí. Solo prosa.
-
-### Skills
-
-- Lista horizontal de tecnologías separadas por `/` o `·`.
-- Sin barras de progreso, sin porcentajes, sin badges de colores. Solo texto.
-- Ejemplo: `React · TypeScript · Node.js · PostgreSQL · Figma`
-
-### Projects
-
-- Grid 2 columnas. Cada card: imagen arriba + título + descripción 2 líneas + tech stack en mono pequeño.
-- Sin sombras, sin elevación. Hover: `opacity: 0.85` en la imagen.
-- Al hacer hover en la card: un `→` aparece junto al título.
-
-### Experience
-
-- Timeline con línea vertical de 1px `var(--border)`.
-- Cada item: fecha en mono muted + empresa en bold + cargo + descripción corta.
-- Sin iconos de empresa, sin logos.
-
-### Contact
-
-- Solo texto: "¿Trabajamos juntos?" en serif grande.
-- Email como link de texto grande.
-- Sin formulario. Simplicidad total.
-
----
-
-## Animaciones y micro-interacciones
-
-- **Entrada de secciones:** fade + translateY(20px) → translateY(0), duración 0.6s, ease-out, stagger entre elementos.
-- **Links de navegación:** underline que crece desde la izquierda (`scaleX` transform).
-- **Cursor:** default. Sin cursor custom.
-- **Transiciones de página:** ninguna. Cambio instantáneo de sección.
-
----
-
-## Patrones y texturas
-
-- Ninguno. Cero decoración.
-- El único "patrón" permitido es la línea del timeline.
-
----
-
-## Diferenciadores que lo hacen único
-
-1. La fuente serif en los títulos en un portafolio de dev es inesperada y elegante.
-2. El ancho máximo de 720px se siente como leer un libro, no una web.
-3. La foto en escala de grises → color al hover es el único "efecto" memorable.
-4. Los CTAs sin botón dan una sobriedad que pocos portfolios tienen.
+- Light and dark mode, toggled from the navbar. Default follows `prefers-color-scheme`.
+- Sticky navigation with smooth scroll between sections.
+- Fully responsive (mobile-first).
+- Subtle scroll-triggered animations (Intersection Observer) and hover feedback.
+- Sections: Hero → About → Skills → Projects → Experience → Contact → Footer
 
 ---
 
 ---
 
-# Tema 2 — Modern Tech
+# Theme 1 — Minimal
 
-## Filosofía general
+## General philosophy
 
-Esto es una declaración de habilidades técnicas. La interfaz misma debe demostrar que el desarrollador domina efectos, animaciones y composición visual compleja. Es oscuro por defecto porque la tecnología avanzada vive de noche. Cada elemento tiene energía. La pantalla debe sentirse como un dashboard de misión crítica que también es hermoso.
+The content is the design. Nothing exists without a reason. If a decorative element can be removed without the visitor losing information, it goes. White space isn't emptiness — it's breathing room. The page should feel like a contemporary art gallery, not a résumé.
 
-**Sensación al entrar:** poder, velocidad, precisión, futuro.
+But minimalism done purely as style is cold and forgettable. This theme earns its restraint by being _warm_. The paper-toned background, the serif type, the photo that warms to color on hover — these are human touches that tell visitors they're reading about a real person, not scanning a spec sheet.
 
----
+**Emotional arc:** The visitor lands in silence and clarity → trusts the author's taste → reads carefully, unhurried → reaches the contact section feeling like they already know the person.
 
-## Tipografía
-
-| Uso                 | Fuente                                  | Estilo                        |
-| ------------------- | --------------------------------------- | ----------------------------- |
-| Títulos (H1, H2)    | `Space Grotesk` o `Bricolage Grotesque` | Bold (700), tracking negativo |
-| Cuerpo              | `Inter` o `IBM Plex Sans`               | Regular (400)                 |
-| Código / tech stack | `JetBrains Mono` o `Fira Code`          | Con ligaduras                 |
-| Labels / badges     | `Space Mono`                            | Uppercase, pequeño            |
-
-- **H1 hero:** 80–112px, peso 700–800, tracking -0.03em, en ocasiones partiendo en dos líneas de distinto tamaño.
-- **Body:** 15px, peso 400, line-height 1.65.
-- **Efecto especial:** el H1 puede tener palabras clave en color neón (solo 1–2 palabras, no todo el texto).
+**Entry feeling:** quiet confidence. Like opening a well-designed book.
 
 ---
 
-## Paleta de colores
+## Typography
 
-### Modo oscuro (default y predominante)
+Typography _is_ the design in this theme. All visual weight falls on it.
 
-| Token              | Valor       | Uso                                        |
-| ------------------ | ----------- | ------------------------------------------ |
-| `--bg`             | `#080C10`   | Fondo profundo (azul-negro, no negro puro) |
-| `--bg-surface`     | `#0F1620`   | Cards, navbar                              |
-| `--bg-elevated`    | `#1A2535`   | Cards al hover, inputs                     |
-| `--text-primary`   | `#E8EFF5`   | Títulos                                    |
-| `--text-secondary` | `#8A9BB0`   | Cuerpo                                     |
-| `--text-muted`     | `#4A5A70`   | Metadata                                   |
-| `--border`         | `#1E2D40`   | Bordes normales                            |
-| `--border-glow`    | `#00D4FF40` | Bordes con glow (cyan con opacidad)        |
-| `--accent-cyan`    | `#00D4FF`   | Acento principal                           |
-| `--accent-violet`  | `#8B5CF6`   | Acento secundario                          |
-| `--accent-green`   | `#00FF88`   | Acento terciario (éxito, online)           |
+| Use                           | Font                                     | Style                                         |
+| ----------------------------- | ---------------------------------------- | --------------------------------------------- |
+| Primary headings (H1, H2)     | `Playfair Display` or `DM Serif Display` | Regular (400), no artificial bold             |
+| Body, labels, nav             | `DM Sans` or `Sora`                      | Light (300) for body, Medium (500) for labels |
+| Monospace (tech stack, dates) | `JetBrains Mono`                         | Regular, small size                           |
 
-### Modo claro
-
-| Token             | Valor     | Uso                              |
-| ----------------- | --------- | -------------------------------- |
-| `--bg`            | `#F0F4F8` | Fondo                            |
-| `--bg-surface`    | `#FFFFFF` | Cards                            |
-| `--accent-cyan`   | `#0095C8` | Cyan oscurecido para legibilidad |
-| `--accent-violet` | `#6D3FD9` | Violeta oscurecido               |
+- **H1 hero:** 72–96px, weight 400, line-height 1.05, tracking -0.02em
+- **Body:** 16px, weight 300, line-height 1.8 — generous leading makes prose feel like an invitation to read
+- **Labels / overlines:** 11px, uppercase, letter-spacing 0.12em, muted color
+- **Hierarchy:** achieved through size and color, never aggressive bold
 
 ---
 
-## Layout y espaciado
+## Color palette
 
-- **Contenedor máximo:** 1100px. Respira más que el minimalista.
-- **Grid de proyectos:** layout tipo Bento. Algunas cards 2x1, otras 1x1. Asimetría controlada.
-- **Padding vertical entre secciones:** 80–100px.
+### Light mode
+
+| Token              | Value     | Use                                      |
+| ------------------ | --------- | ---------------------------------------- |
+| `--bg`             | `#F9F8F5` | Main background (warm white, never pure) |
+| `--bg-surface`     | `#FFFFFF` | Cards, navbar                            |
+| `--text-primary`   | `#141414` | Headings                                 |
+| `--text-secondary` | `#555550` | Body                                     |
+| `--text-muted`     | `#999990` | Labels, metadata                         |
+| `--border`         | `#E5E4DF` | Dividers                                 |
+| `--accent`         | `#141414` | Active links, CTAs (monochromatic)       |
+
+### Dark mode
+
+| Token              | Value     | Use                               |
+| ------------------ | --------- | --------------------------------- |
+| `--bg`             | `#0E0E0C` | Background (warm black, not pure) |
+| `--bg-surface`     | `#161614` | Cards, navbar                     |
+| `--text-primary`   | `#F0EFE8` | Headings                          |
+| `--text-secondary` | `#A8A89E` | Body                              |
+| `--text-muted`     | `#666660` | Labels, metadata                  |
+| `--border`         | `#2A2A26` | Dividers                          |
+| `--accent`         | `#F0EFE8` | Active links, CTAs                |
+
+> **Principle:** nearly monochromatic. No vivid accent colors. Contrast comes from the warm black/white and the unexpected serif type. The warmth in the tone values (`#F9F8F5`, `#0E0E0C`) is what saves it from feeling sterile.
+
+---
+
+## Layout and spacing
+
+- **Max container:** 720px centered. No more. The narrow width is intentional — it forces vertical reading and feels like a literary publication.
+- **Horizontal padding:** 24px on mobile, 0 on desktop (the container already centers).
+- **Vertical padding between sections:** 120px. Generous, almost uncomfortable — that pause _is_ the design.
+- **Projects grid:** 1 column mobile, 2 columns desktop. No masonry, no asymmetry.
+- **Navbar:** name in serif lowercase + links in small uppercase + toggle. No opaque background — transparent with `backdrop-filter: blur(8px)` only on scroll.
+
+---
+
+## Section by section
+
+### Hero — "First impression as an introduction, not a broadcast"
+
+- No background image, no illustrations, no particles.
+- Overline: the person's role (e.g. `"Product Engineer"`) in 11px uppercase muted. One line. Sets context fast.
+- H1: full name in serif, 80–96px, weight 400, 2–3 lines if needed. The name earns the space.
+- Bio: 2 sentences maximum — written in first person, warm and direct. Not "I am a developer." Something like: _"I build interfaces people actually enjoy using. Lately obsessed with performance and the craft of type."_
+- CTA: text only with `border-bottom: 1px solid currentColor`. No filled buttons.
+- Scroll indicator: a 40px vertical line that fades in and out gently (no arrow).
+
+### About — "The human behind the work"
+
+- Two columns on desktop: photo left (square, no border-radius), text right.
+- Photo in grayscale. On hover: color — smooth 0.6s transition. This is the single most memorable interaction on the page. It says: _there's a real person here._
+- Text is prose, not bullets. It can include opinions, context, why this work matters. Not a skills list — that's for the Skills section.
+- Optional: one short quote that sounds like the person, not a productivity slogan.
+
+### Skills — "Craft, stated plainly"
+
+- A horizontal run of technologies separated by `·`.
+- No progress bars, no percentages, no colored badges. Just text.
+- Example: `React · TypeScript · Node.js · PostgreSQL · Figma`
+- The restraint here is intentional — it communicates confidence without needing to rank oneself.
+
+### Projects — "Show, then tell"
+
+- 2-column grid. Each card: image top + title + 2-line description + tech stack in small mono.
+- No shadows, no elevation. Hover: `opacity: 0.85` on the image.
+- On card hover: a `→` appears next to the title.
+- Description copy matters: each project description should say _what problem it solved_, not just what it is.
+
+### Experience — "A story, not a list"
+
+- Vertical timeline with a 1px `var(--border)` line.
+- Each item: date in muted mono + company in medium weight + role + short description.
+- The description should be 1–2 sentences that convey _impact_, not just duties. Example: _"Rebuilt the checkout flow — reduced drop-off by 18%."_
+- No company logos, no icons.
+
+### Contact — "An invitation"
+
+- Large serif heading: _"Let's work together"_ or a variant that sounds genuine, not corporate.
+- Email as a large text link — the link itself is the CTA.
+- Optional: 1-line note about what kind of work the person is open to. Makes it easier for the visitor to self-qualify. Example: _"Currently open to senior roles and interesting side projects."_
+- No form. Total simplicity.
+
+---
+
+## Animations and micro-interactions
+
+- **Section entry:** fade + translateY(20px) → translateY(0), duration 0.6s, ease-out, stagger between elements.
+- **Navigation links:** underline grows from the left (`scaleX` transform).
+- **Cursor:** default. No custom cursor.
+- **Page transitions:** none. Instant section switch.
+
+---
+
+## Patterns and textures
+
+- None. Zero decoration.
+- The only "pattern" allowed is the timeline's vertical line.
+
+---
+
+## What makes it distinctive
+
+1. Serif type in a developer portfolio is unexpected — it signals design literacy.
+2. The 720px max-width feels like reading a book, not scanning a webpage.
+3. The grayscale → color photo hover is the single "effect" people remember and mention.
+4. Plain-text CTAs without button backgrounds project a quiet confidence most portfolios lack.
+5. The warmth in the tone values (`#F9F8F5`, not `#FFFFFF`) prevents the cold, clinical feeling that kills otherwise clean designs.
+
+---
+
+---
+
+# Theme 2 — Modern Tech
+
+## General philosophy
+
+This is a declaration of technical ability. The interface itself must prove that the developer commands complex animations, effects, and visual composition. Dark by default because advanced technology lives at night. Every element has energy.
+
+But "tech aesthetic" portfolios often collapse into pure performance: impressive to look at for 10 seconds, forgettable after. This theme avoids that trap by building in _narrative_. The animations aren't decoration — they sequence the story. The typewriter text in the hero isn't a trick — it's an invitation. The visitor should feel like they're being _shown something_ at every scroll position, not just impressed by a demo reel.
+
+**Emotional arc:** Visitor lands in awe at the craft → gets pulled in by the motion → begins to trust the technical depth → by Projects they're reading seriously → Contact feels like an access request granted.
+
+**Entry feeling:** power, velocity, precision. Like watching a live deployment go green.
+
+---
+
+## Typography
+
+| Use               | Font                                     | Style                         |
+| ----------------- | ---------------------------------------- | ----------------------------- |
+| Headings (H1, H2) | `Space Grotesk` or `Bricolage Grotesque` | Bold (700), negative tracking |
+| Body              | `Inter` or `IBM Plex Sans`               | Regular (400)                 |
+| Code / tech stack | `JetBrains Mono` or `Fira Code`          | With ligatures                |
+| Labels / badges   | `Space Mono`                             | Uppercase, small              |
+
+- **H1 hero:** 80–112px, weight 700–800, tracking -0.03em. Occasionally split across two lines with different sizes.
+- **Body:** 15px, weight 400, line-height 1.65.
+- **Special effect:** 1–2 key words in the H1 can use a neon accent color. Not the whole title — just the word that matters most.
+
+---
+
+## Color palette
+
+### Dark mode (default and dominant)
+
+| Token              | Value       | Use                                          |
+| ------------------ | ----------- | -------------------------------------------- |
+| `--bg`             | `#080C10`   | Deep background (blue-black, not pure black) |
+| `--bg-surface`     | `#0F1620`   | Cards, navbar                                |
+| `--bg-elevated`    | `#1A2535`   | Cards on hover, inputs                       |
+| `--text-primary`   | `#E8EFF5`   | Headings                                     |
+| `--text-secondary` | `#8A9BB0`   | Body                                         |
+| `--text-muted`     | `#4A5A70`   | Metadata                                     |
+| `--border`         | `#1E2D40`   | Normal borders                               |
+| `--border-glow`    | `#00D4FF40` | Glowing borders (cyan with opacity)          |
+| `--accent-cyan`    | `#00D4FF`   | Primary accent                               |
+| `--accent-violet`  | `#8B5CF6`   | Secondary accent                             |
+| `--accent-green`   | `#00FF88`   | Tertiary accent (success, online status)     |
+
+### Light mode
+
+| Token             | Value     | Use                          |
+| ----------------- | --------- | ---------------------------- |
+| `--bg`            | `#F0F4F8` | Background                   |
+| `--bg-surface`    | `#FFFFFF` | Cards                        |
+| `--accent-cyan`   | `#0095C8` | Darkened cyan for legibility |
+| `--accent-violet` | `#6D3FD9` | Darkened violet              |
+
+---
+
+## Layout and spacing
+
+- **Max container:** 1100px. Breathes more than Minimal.
+- **Projects grid:** Bento layout. Some cards 2×1, some 1×1. Controlled asymmetry.
+- **Vertical padding between sections:** 80–100px.
 - **Navbar:** glassmorphism — `background: rgba(8,12,16,0.7)`, `backdrop-filter: blur(20px)`, `border-bottom: 1px solid var(--border-glow)`.
-- **Separadores de sección:** líneas horizontales de 1px con gradiente que se desvanece en los extremos.
+- **Section separators:** 1px horizontal lines with a gradient that fades at both ends.
 
 ---
 
-## Sección por sección
+## Section by section
 
-### Hero
+### Hero — "Boot sequence"
 
-- Fondo: un canvas con partículas conectadas (tsParticles o canvas puro, muy sutil, opacidad 0.2).
-- Overline: texto monoespaciado con efecto typewriter: `> Inicializando portafolio...`
-- H1: nombre grande, y debajo una línea con texto rotativo: "Frontend Dev / UI Engineer / Creative Coder" que cambia con crossfade.
-- Botones: outlined con borde `var(--accent-cyan)`, hover con glow `box-shadow: 0 0 20px var(--accent-cyan)40`.
-- Decoración lateral: una columna de números binarios o coordenadas cayendo lentamente (muy opaco, decorativo).
+- Background: subtle particle canvas (tsParticles or pure canvas), opacity 0.2. The particles shouldn't dominate — they should feel like a living atmosphere.
+- Overline: monospace typewriter effect: `> Initializing portfolio...` — one line, then the name appears. Sequence matters: the visitor reads the setup before the reveal.
+- H1: large name, then a rotating line below: _"Frontend Engineer / UI Architect / Creative Coder"_ cycling with a crossfade every 3s.
+- Buttons: outlined, `var(--accent-cyan)` border, hover with glow `box-shadow: 0 0 20px var(--accent-cyan)40`.
+- Decorational side column: slowly drifting binary numbers or coordinates, very low opacity. Atmosphere, not content.
+- The bio is 2–3 lines of actual voice: _"I care about the milliseconds. And about the interfaces people don't notice because they just work."_
 
-### About
+### About — "The operator behind the system"
 
-- Foto con `clip-path` hexagonal o con borde animado (gradiente que rota alrededor de la foto).
-- Métricas destacadas en grid 2x2: años de experiencia, proyectos, etc. Con contador animado al scroll.
-- Skills como badges con distintos colores de acento.
+- Photo with `clip-path` hexagonal or an animated border (rotating gradient around the photo).
+- 2×2 stats grid: years of experience, shipped projects, etc. Counter animates on scroll. Keep the numbers real — if in doubt, use modest numbers. Inflated counters read as insecure.
+- Skills as badges with accent colors — grouped, not strewn randomly.
+- 2–3 sentences of personal voice. Not a mission statement. Something that could only be written by this person.
 
-### Skills
+### Skills — "The arsenal"
 
-- Barras de progreso animadas al scroll — pero con estética de terminal: `████████░░ 80%`.
-- Agrupadas por categoría: Frontend / Backend / Tools. Cada categoría con su acento de color.
-- Al hover en una skill: aparece tooltip con 1 línea de contexto.
+- Scroll-animated progress bars, but with terminal aesthetics: `████████░░ 80%`.
+- Grouped by category: Frontend / Backend / Tools. Each category has its accent color.
+- On hover: tooltip with a single line of context — what this person has _done_ with this skill, not a definition.
 
-### Projects
+### Projects — "Proof of work"
 
-- Grid Bento: 3 columnas, cards de distinto tamaño.
-- Cada card: fondo oscuro + imagen con overlay de gradiente + tags flotantes + título grande.
-- Al hover: `transform: translateY(-6px)`, sombra con glow del color de acento de ese proyecto.
-- Badge de estado: `// live` en verde o `// in progress` en amber.
-- Filtros por categoría (tabs de texto, sin estilo agresivo).
+- Bento grid: 3 columns, varying card sizes.
+- Each card: dark background + image with gradient overlay + floating tags + large title.
+- Hover: `transform: translateY(-6px)`, glow shadow from that project's accent color.
+- Status badge: `// live` in green or `// in progress` in amber.
+- Filter tabs by category (text tabs, no aggressive styling).
+- **Project descriptions are the most human part of this section.** Each should open with the problem: _"A client's booking system was losing 30% of users on mobile."_ One sentence on what was built. One sentence on the result.
 
-### Experience
+### Experience — "The mission log"
 
-- Timeline horizontal en desktop (scroll lateral o línea visual), vertical en mobile.
-- Nodos de la timeline: círculos con borde neón.
-- Al hacer click o hover en un nodo: expand con animación.
+- Horizontal timeline desktop (visual line), vertical on mobile.
+- Timeline nodes: circles with neon border.
+- Click or hover to expand: smooth animation.
+- Each expanded entry has a "what changed because of this work" sentence — not just job duties. That's what separates senior from junior reading.
 
-### Contact
+### Contact — "Access terminal"
 
-- Terminal simulada: input que parece una consola.
-- Al escribir y enviar: respuesta animada "Mensaje recibido. Procesando..." con efecto de código.
-- Alternativamente: formulario con inputs de estilo glassmorphism.
-
----
-
-## Animaciones y micro-interacciones
-
-- **Entrada de secciones:** fade + pequeño blur(4px) → blur(0), duración 0.5s.
-- **Hover en cards:** elevación + glow en borde.
-- **Cursor custom:** punto pequeño + anillo que sigue con delay (CSS o JS). Solo en desktop.
-- **Scroll progress bar:** línea de 2px en la parte superior del viewport que avanza con el scroll, en color cyan.
-- **Navbar links:** al hover, underline con color neón y pequeño flash.
+- Simulated terminal: an input that looks like a console.
+- On send: animated response _"Message received. Processing..."_ with code-style feedback.
+- Alternative: glassmorphism-style form inputs.
+- Below the terminal: plain-text links — email (primary), GitHub, LinkedIn. Some people won't want to use the fancy input.
 
 ---
 
-## Patrones y texturas
+## Animations and micro-interactions
 
-- **Grid pattern en hero:** CSS `background-image: linear-gradient(var(--border) 1px, transparent 1px)` — cuadrícula muy sutil.
-- **Gradiente radial en hero:** desde el centro, del color del acento a transparente, muy difuso.
-- **Noise texture sutil:** `opacity: 0.025` sobre las cards para quitar la sensación de "plástico".
-
----
-
-## Diferenciadores que lo hacen único
-
-1. El layout Bento de proyectos demuestra criterio de diseño, no solo dev.
-2. La navbar glassmorphism en oscuro se ve premium sin esfuerzo.
-3. El cursor custom es el detalle que la gente menciona.
-4. El efecto typewriter en el hero ya es esperado — lo que lo diferencia es el texto rotativo debajo del nombre.
+- **Section entry:** fade + slight `blur(4px)` → `blur(0)`, duration 0.5s.
+- **Card hover:** elevation + border glow.
+- **Custom cursor:** small dot + trailing ring with delay (CSS or JS). Desktop only.
+- **Scroll progress bar:** 2px line at the top of the viewport advancing with scroll, in cyan.
+- **Navbar links:** on hover, neon underline + small flash.
 
 ---
 
----
+## Patterns and textures
 
-# Tema 3 — Profesional
-
-## Filosofía general
-
-Aquí el usuario está buscando trabajo serio, comunicando seniority, o apuntando a clientes corporativos. La interfaz transmite: "Sé lo que hago, lo he hecho bien, y puedo repetirlo." No hay trucos visuales ni efectos llamativos. La estructura es el mensaje. Debe verse como un producto de software bien pensado, no como un experimento creativo.
-
-**Sensación al entrar:** estructura, confianza, claridad ejecutiva.
+- **Subtle grid in hero:** CSS `background-image: linear-gradient(var(--border) 1px, transparent 1px)` — barely visible grid.
+- **Radial gradient in hero:** center-out, accent color to transparent, very diffuse.
+- **Noise texture:** `opacity: 0.025` over cards to remove the flat "plastic" feeling.
 
 ---
 
-## Tipografía
+## What makes it distinctive
 
-| Uso                  | Fuente                                                     | Estilo         |
-| -------------------- | ---------------------------------------------------------- | -------------- |
-| Títulos (H1, H2)     | `Plus Jakarta Sans` o `Neue Haas Grotesk`                  | SemiBold (600) |
-| Cuerpo               | `Plus Jakarta Sans` (misma fuente, peso normal)            | Regular (400)  |
-| Datos, fechas, stats | `Tabular Numbers` con `font-variant-numeric: tabular-nums` | Medium (500)   |
-
-- Usar una sola familia de fuente con muchos pesos es una señal de madurez de diseño.
-- **H1 hero:** 56–72px, peso 600, tracking -0.01em. Más contenido que el minimalista.
-- **Body:** 15px, peso 400, line-height 1.65.
-- **Jerarquía de labels:** 12px, peso 500, uppercase, letter-spacing 0.08em.
+1. The Bento project layout demonstrates design judgment — not just engineering.
+2. The glassmorphic navbar in dark mode reads as premium with minimal effort.
+3. The custom cursor is the detail people mention when they share the portfolio.
+4. The typewriter effect is expected — what's different is the _rotating role line_ under the name.
+5. The narrative project descriptions turn a visual demo into a case study.
 
 ---
 
-## Paleta de colores
+---
 
-### Modo claro
+# Theme 3 — Professional
 
-| Token              | Valor     | Uso                                                         |
+## General philosophy
+
+This is a portfolio for someone aiming at serious roles, communicating seniority, or reaching corporate clients. The interface says: _"I know what I'm doing, I've done it well, and I can do it again."_ No visual tricks, no experimental effects. Structure is the message. It should look like a well-considered software product.
+
+But "professional" can easily become "lifeless." Most portfolios in this category look like LinkedIn printed to HTML — technically correct, humanly inert. This theme avoids that by treating every section as a _decision made by a person with taste_, not a template filled in. The typography is tight and purposeful. The layout is confident. And beneath the structure, there's a clear voice: a senior engineer who knows their worth and communicates it plainly.
+
+**Emotional arc:** Visitor arrives with a question (_"Is this person legit?"_) → Hero answers with evidence, not hype → About and Skills build context → Projects prove the claims → Experience closes the case → Contact is a natural next step, not a leap of faith.
+
+**Entry feeling:** structure, trust, executive clarity. Like reading a pitch deck that you actually want to finish.
+
+---
+
+## Typography
+
+| Use                | Font                                                     | Style          |
+| ------------------ | -------------------------------------------------------- | -------------- |
+| Headings (H1, H2)  | `Plus Jakarta Sans` or `Neue Haas Grotesk`               | SemiBold (600) |
+| Body               | `Plus Jakarta Sans` (same family, lighter weight)        | Regular (400)  |
+| Data, dates, stats | Tabular numbers via `font-variant-numeric: tabular-nums` | Medium (500)   |
+
+- Using a single font family across all weights is a mark of design maturity. No "body font" vs "heading font" split.
+- **H1 hero:** 56–72px, weight 600, tracking -0.01em. More composed than Minimal.
+- **Body:** 15px, weight 400, line-height 1.65.
+- **Label hierarchy:** 12px, weight 500, uppercase, letter-spacing 0.08em.
+
+---
+
+## Color palette
+
+### Light mode
+
+| Token              | Value     | Use                                                         |
 | ------------------ | --------- | ----------------------------------------------------------- |
-| `--bg`             | `#FFFFFF` | Fondo                                                       |
-| `--bg-surface`     | `#F7F7F8` | Secciones alternas, cards                                   |
-| `--bg-dark`        | `#0F1929` | Sección hero (oscuro sobre claro crea contraste de sección) |
-| `--text-primary`   | `#0D1117` | Títulos                                                     |
-| `--text-secondary` | `#4A5568` | Cuerpo                                                      |
+| `--bg`             | `#FFFFFF` | Background                                                  |
+| `--bg-surface`     | `#F7F7F8` | Alternating sections, cards                                 |
+| `--bg-dark`        | `#0F1929` | Hero section (dark-on-light creates section-level contrast) |
+| `--text-primary`   | `#0D1117` | Headings                                                    |
+| `--text-secondary` | `#4A5568` | Body                                                        |
 | `--text-muted`     | `#A0AEC0` | Metadata                                                    |
-| `--border`         | `#E2E8F0` | Bordes                                                      |
-| `--accent`         | `#2563EB` | Azul profesional                                            |
-| `--accent-light`   | `#EFF6FF` | Fondo de badges, highlights                                 |
+| `--border`         | `#E2E8F0` | Borders                                                     |
+| `--accent`         | `#2563EB` | Professional blue                                           |
+| `--accent-light`   | `#EFF6FF` | Badge backgrounds, highlights                               |
 
-### Modo oscuro
+### Dark mode
 
-| Token              | Valor     | Uso                        |
-| ------------------ | --------- | -------------------------- |
-| `--bg`             | `#0D1117` | Fondo (estilo GitHub dark) |
-| `--bg-surface`     | `#161B22` | Cards, superficies         |
-| `--bg-elevated`    | `#21262D` | Cards elevadas             |
-| `--text-primary`   | `#F0F6FC` | Títulos                    |
-| `--text-secondary` | `#8B949E` | Cuerpo                     |
-| `--border`         | `#30363D` | Bordes                     |
-| `--accent`         | `#58A6FF` | Azul en dark mode          |
-
----
-
-## Layout y espaciado
-
-- **Estructura con sidebar en desktop:** Navbar lateral izquierda de 240px fija + contenido principal. En mobile: top navbar normal.
-- **Contenedor máximo:** 960px (sidebar + contenido).
-- **Grid de proyectos:** 2–3 columnas con cards uniformes. Sin asimetría.
-- **Padding vertical entre secciones:** 80px.
-- **Secciones alternas:** una sección sobre fondo `--bg`, la siguiente sobre `--bg-surface`. Da ritmo sin usar colores.
+| Token              | Value     | Use                           |
+| ------------------ | --------- | ----------------------------- |
+| `--bg`             | `#0D1117` | Background (GitHub dark feel) |
+| `--bg-surface`     | `#161B22` | Cards, surfaces               |
+| `--bg-elevated`    | `#21262D` | Elevated cards                |
+| `--text-primary`   | `#F0F6FC` | Headings                      |
+| `--text-secondary` | `#8B949E` | Body                          |
+| `--border`         | `#30363D` | Borders                       |
+| `--accent`         | `#58A6FF` | Blue in dark mode             |
 
 ---
 
-## Sección por sección
+## Layout and spacing
 
-### Hero
-
-- **Oscuro siempre**, independiente del modo (el hero tiene su propio fondo `--bg-dark`).
-- Foto profesional circular con anillo de gradiente sutil.
-- Nombre + cargo + empresa actual o "disponible para proyectos".
-- 3–4 métricas en una fila: `5 años de exp.` / `23 proyectos` / `8 clientes` / `Available for hire ●` (punto verde animado).
-- Botones: "Ver proyectos" (filled, azul) + "Descargar CV" (outlined).
-
-### About
-
-- Dos columnas: texto izquierda + cards de datos derecha.
-- Cards de datos: valores grandes (número) + label debajo. Ej: `5+` / `años de experiencia`.
-- Texto en prosa, no lista. 3–4 párrafos.
-
-### Skills
-
-- Agrupadas en tabs: `Frontend` / `Backend` / `DevOps` / `Soft Skills`.
-- Cada skill: icono + nombre + nivel en texto (`Avanzado`, `Intermedio`). Sin barras de progreso numéricas.
-- Grid 3–4 columnas por tab.
-
-### Projects
-
-- Tabs o filtros: `Todos` / `Frontend` / `Full-stack` / `Open Source`.
-- Cada card: imagen + badge de categoría + título + descripción corta + links (GitHub, Live).
-- Card al hover: elevación sutil (`box-shadow`), sin glow.
-- Sin efectos dramáticos.
-
-### Experience
-
-- **Doble timeline:** izquierda Experiencia, derecha Educación. En columnas en desktop.
-- Cada item: logo de empresa (si está disponible) + cargo + empresa + fechas + 2–3 bullets.
-- Bullets con `•` o `—`, no emojis ni iconos fancy.
-
-### Contact
-
-- Formulario completo: nombre + email + asunto + mensaje.
-- Labels encima de cada campo (no placeholder-only).
-- Botón submit con estado loading.
-- Sidebar de contacto alternativo: email directo + LinkedIn + GitHub como links con iconos.
+- **Desktop sidebar structure:** fixed 240px left sidebar + main content. Mobile: normal top navbar.
+- **Max container:** 960px (sidebar + content).
+- **Projects grid:** 2–3 uniform-column grid. No asymmetry.
+- **Vertical padding between sections:** 80px.
+- **Alternating sections:** one section on `--bg`, the next on `--bg-surface`. Creates rhythm without relying on color.
 
 ---
 
-## Animaciones y micro-interacciones
+## Section by section
 
-- **Entrada de secciones:** fade simple, duración 0.4s. Nada dramático.
-- **Hover en cards:** `translateY(-3px)` + sombra más pronunciada.
-- **Active state en sidebar:** el link de la sección activa tiene `border-left: 3px solid var(--accent)` + fondo `--accent-light`.
-- **Punto verde en "Available":** pulso lento con `@keyframes pulse`, como un semáforo.
-- **Sin cursor custom, sin partículas, sin efectos de texto.**
+### Hero — "First impression as a brief"
+
+- **Always dark**, regardless of color mode. The hero has its own `--bg-dark` background. The darkness makes the name land hard — a section break disguised as design.
+- Professional circular photo with a subtle gradient ring. Real, current, good lighting.
+- Name + current role + status line: _"Open to senior roles"_ or _"Currently at [Company]"_ — one fact, stated simply.
+- 3–4 stat chips in a horizontal row: `5 yrs exp` / `23 shipped products` / `8 clients` / `Available ●` (pulsing green dot for availability). Keep numbers honest — conservative metrics read as senior; inflated numbers read as junior.
+- Buttons: "View projects" (filled, blue) + "Download CV" (outlined).
+- The hero should answer: _who are you, what do you do, are you available?_ — in under 5 seconds.
+
+### About — "Context and credibility"
+
+- Two columns: prose left, data cards right.
+- Data cards: large number + label. E.g.: `5+` / `years of experience`, `23` / `products shipped`. Let the numbers do work, not the superlatives.
+- Prose: 3–4 paragraphs in active voice. Not a list of adjectives. Write _about the work_ — what kinds of problems this person solves, what they care about, where they want to go. One short sentence in each paragraph should be unexpectedly direct.
+
+### Skills — "Capability, organized"
+
+- Tabbed view: `Frontend` / `Backend` / `DevOps` / `Soft Skills`.
+- Each skill: icon + name + text level (`Senior`, `Intermediate`). No numeric progress bars.
+- 3–4 column grid per tab.
+- No skill should appear more than once (no "JavaScript" and "ES6" as separate entries).
+
+### Projects — "The case studies"
+
+- Filter tabs: `All` / `Frontend` / `Full-stack` / `Open Source`.
+- Each card: image + category badge + title + short description + links (GitHub, Live).
+- Card hover: subtle elevation (`box-shadow`), no glow.
+- **Description structure:** 1 line on the problem, 1 line on the approach, 1 line on the outcome. Repeat across every project — consistency reads as discipline.
+- Even for side projects: _why_ does it exist? One sentence.
+
+### Experience — "The evidence"
+
+- **Double column timeline:** Experience left, Education right. Side by side on desktop.
+- Each item: company logo if available + role + company + dates + 2–3 bullets.
+- Bullets use `—`, not emojis or complex icons. Bullet copy = outcome-first: _"Reduced API response time by 40% through query optimization and caching."_ Never _"Responsible for API optimization."_
+- Gap awareness: if there's a gap in the timeline, it can be visible and that's fine. Real people have gaps.
+
+### Contact — "The next step"
+
+- Complete form: name + email + subject + message.
+- Labels above each field (not placeholder-only — placeholders disappear when typing and confuse users).
+- Submit button with loading state.
+- Contact sidebar: email + LinkedIn + GitHub as links with icons — for people who prefer direct outreach.
+- Optional: a one-liner above the form saying what kind of inquiries are welcome. Sets expectations and reduces noise.
 
 ---
 
-## Patrones y texturas
+## Animations and micro-interactions
 
-- Ninguna textura visible.
-- El patrón es estructural: la división sidebar/contenido ya es el "patrón".
-- Separadores: solo `border-top: 1px solid var(--border)`.
-
----
-
-## Diferenciadores que lo hacen único
-
-1. La navbar lateral en desktop es inusual en portafolios y comunica estructura de producto.
-2. El hero siempre oscuro rompe con el ritmo del resto y hace la primera impresión fuerte.
-3. La doble timeline (experiencia + educación) en paralelo es más informativa que la lista simple.
-4. El verde de "disponible" es el único color llamativo — y tiene significado concreto.
+- **Section entry:** simple fade, duration 0.4s. Nothing dramatic.
+- **Card hover:** `translateY(-3px)` + more pronounced shadow.
+- **Active state in sidebar:** current section link gets `border-left: 3px solid var(--accent)` + `--accent-light` background.
+- **Available dot:** slow `@keyframes pulse`, like a traffic light.
+- **No custom cursor, no particles, no text effects.**
 
 ---
 
----
+## Patterns and textures
 
-# Tema 4 — Vaporwave
-
-## Filosofía general
-
-Este portafolio es una obra de arte interactiva. No sigue reglas de diseño corporativo porque las reglas fueron creadas antes del internet, antes de los monitores, antes de los sueños digitales. Cada sección es un "escenario": el usuario viaja a través de ambientes distintos mientras scrollea. Es irresistible, memorable, y completamente auténtico. Ideal para quien entiende que la personalidad es una ventaja competitiva, no un riesgo.
-
-**Sensación al entrar:** nostalgia de un futuro que nunca existió. Maravilla. Curiosidad. "¿Quién hizo esto?"
+- No visible textures.
+- The pattern is structural: the sidebar/content division _is_ the pattern.
+- Separators: `border-top: 1px solid var(--border)` only.
 
 ---
 
-## Tipografía
+## What makes it distinctive
 
-La tipografía mezcla épocas deliberadamente — serif de los 80s + sans moderna + display retro.
+1. The side navbar on desktop is rare in portfolios — it signals "product thinking," not "template filling."
+2. The hero always dark regardless of mode creates a strong first impression and a memorable section transition.
+3. The double-column timeline (experience + education) side by side is more informative and visually more mature than a simple list.
+4. The "available" green dot is the only vivid color element — and it carries concrete meaning, not decoration.
+5. Outcome-first bullet copy in Experience is the single change that most separates this from generic portfolios.
 
-| Uso                           | Fuente                              | Estilo                      |
-| ----------------------------- | ----------------------------------- | --------------------------- |
-| H1 hero / títulos principales | `Bebas Neue` o `Anton`              | Regular, todo caps, enorme  |
-| H2 secciones                  | `Viga` o `Righteous`                | Regular, con carácter retro |
-| Cuerpo                        | `Space Grotesk`                     | Regular 400                 |
-| Labels, metadata              | `Space Mono`                        | Con carácter de terminal    |
-| Acento / citas                | `Dancing Script` o cursiva italiana | Para contraste inesperado   |
+---
 
-- **H1 hero:** 100–140px, todo caps, tracking 0. La escala lo es todo.
+---
+
+# Theme 4 — Vaporwave
+
+## General philosophy
+
+This portfolio is an interactive artwork. It doesn't follow corporate design rules — because those rules were written before the internet, before monitors, before digital dreams. Each section is a _scene_: the visitor travels through distinct environments while scrolling. It's irresistible, memorable, and entirely authentic.
+
+But aesthetic-first portfolios often fail as portfolios — all vibe, no substance. The trap is putting so much energy into the atmosphere that the actual work gets buried. This theme earns its extravagance by making the content _the star_ of each scene. The skills section looks like a game inventory because that framing is more memorable — but every skill is real. The project cards look like VHS cassettes because it's surprising — but every description still answers: _what was the problem, what did I build, what changed?_ Personality is a competitive advantage. But only when the work can back it up.
+
+**Emotional arc:** Visitor is stopped in their tracks by the hero → curious, they scroll expecting style with no substance → project section surprises them with actual depth → experience ties the aesthetic to real credentials → contact is the "this is too good not to reach out" moment.
+
+**Entry feeling:** nostalgia for a future that never existed. Wonder. _"Who made this?"_
+
+---
+
+## Typography
+
+Typography mixes eras deliberately — 80s display serif + modern sans + retro display, in deliberate contrast.
+
+| Use                     | Font                               | Style                       |
+| ----------------------- | ---------------------------------- | --------------------------- |
+| H1 hero / main headings | `Bebas Neue` or `Anton`            | Regular, all-caps, enormous |
+| H2 section headings     | `Viga` or `Righteous`              | Regular, retro character    |
+| Body                    | `Space Grotesk`                    | Regular 400                 |
+| Labels, metadata        | `Space Mono`                       | Terminal character          |
+| Accent / quotes         | `Dancing Script` or italic cursive | Unexpected contrast         |
+
+- **H1 hero:** 100–140px, all-caps, tracking 0. Scale is the statement.
 - **Body:** 15px, weight 400, line-height 1.7.
-- **Técnica especial:** algunas palabras del H1 pueden tener `color: transparent; -webkit-text-stroke: 2px var(--accent)` — texto outline, estilo retro.
+- **Technique:** some H1 words can use `color: transparent; -webkit-text-stroke: 2px var(--accent)` — outlined text, retro-poster style.
 
 ---
 
-## Paleta de colores
+## Color palette
 
-### Modo oscuro (default y predominante)
+### Dark mode (default and dominant)
 
-| Token               | Valor                                   | Uso                          |
-| ------------------- | --------------------------------------- | ---------------------------- |
-| `--bg`              | `#1A0533`                               | Púrpura profundo             |
-| `--bg-surface`      | `#2D0D5C`                               | Superficies, cards           |
-| `--text-primary`    | `#F5E6FF`                               | Texto sobre fondo oscuro     |
-| `--text-secondary`  | `#C4A0E8`                               | Texto secundario             |
-| `--pink`            | `#FF2DAF`                               | Rosa neón principal          |
-| `--cyan`            | `#00FFFF`                               | Cyan brillante               |
-| `--yellow`          | `#FFE600`                               | Amarillo neón                |
-| `--lavender`        | `#C77DFF`                               | Lavanda                      |
-| `--gradient-sunset` | `#FF6B6B → #FF2DAF → #C77DFF → #4EA8DE` | Gradiente de sección hero    |
-| `--grid-color`      | `rgba(0, 255, 255, 0.15)`               | Color de la cuadrícula retro |
+| Token               | Value                                   | Use                   |
+| ------------------- | --------------------------------------- | --------------------- |
+| `--bg`              | `#1A0533`                               | Deep purple           |
+| `--bg-surface`      | `#2D0D5C`                               | Surfaces, cards       |
+| `--text-primary`    | `#F5E6FF`                               | Text on dark          |
+| `--text-secondary`  | `#C4A0E8`                               | Secondary text        |
+| `--pink`            | `#FF2DAF`                               | Primary neon pink     |
+| `--cyan`            | `#00FFFF`                               | Bright cyan           |
+| `--yellow`          | `#FFE600`                               | Neon yellow           |
+| `--lavender`        | `#C77DFF`                               | Lavender              |
+| `--gradient-sunset` | `#FF6B6B → #FF2DAF → #C77DFF → #4EA8DE` | Hero section gradient |
+| `--grid-color`      | `rgba(0, 255, 255, 0.15)`               | Retro grid line color |
 
-### Modo claro
+### Light mode
 
-| Token            | Valor     | Uso                              |
-| ---------------- | --------- | -------------------------------- |
-| `--bg`           | `#FDF0FF` | Lavanda muy pálido               |
-| `--bg-surface`   | `#FFFFFF` | Cards                            |
-| `--text-primary` | `#2D0D5C` | Texto oscuro                     |
-| `--pink`         | `#D1007A` | Rosa oscurecido para legibilidad |
-| `--cyan`         | `#0096A0` | Cyan oscurecido                  |
-
----
-
-## Layout y espaciado
-
-- **Sin contenedor fijo:** cada sección usa su propio layout, que puede ser full-width o restringido.
-- **Secciones como "escenas":** cada una tiene fondo, decoración y composición distintos.
-- **Grid de proyectos:** cards con aspecto de VHS, cassettes, o cartuchos de videojuego.
-- **Padding vertical:** variable — algunas secciones muy juntas para crear tensión, otras con mucho aire.
-- **Elementos que rompen el layout:** imágenes o texto que sobresalen del contenedor, elementos que se superponen entre secciones.
+| Token            | Value     | Use                          |
+| ---------------- | --------- | ---------------------------- |
+| `--bg`           | `#FDF0FF` | Very pale lavender           |
+| `--bg-surface`   | `#FFFFFF` | Cards                        |
+| `--text-primary` | `#2D0D5C` | Dark text                    |
+| `--pink`         | `#D1007A` | Darkened pink for legibility |
+| `--cyan`         | `#0096A0` | Darkened cyan                |
 
 ---
 
-## Sección por sección
+## Layout and spacing
 
-### Hero
-
-- **Fondo:** cuadrícula perspectiva (efecto "retrowave floor") animada con CSS — líneas que convergen al horizonte y se mueven lentamente.
-- **Cielo:** gradiente sunset de abajo a arriba: `#0A0015 → #4A0080 → #FF2DAF → #FF8C42`.
-- **Sol retro:** semicírculo con líneas horizontales superpuestas (el símbolo vaporwave por excelencia), en amarillo/naranja.
-- **H1:** nombre en Bebas Neue, enorme, con sombra de color neón: `text-shadow: 0 0 30px var(--pink)`.
-- **Subtítulo:** en Space Mono, pequeño, con efecto de cursor parpadeante.
-- **Elemento flotante:** una palmera o estatua griega en silhouette (SVG) decorativa.
-- **CTA:** botón con borde degradado animado (rainbow border).
-
-### About
-
-- **Fondo:** checker pattern (tablero de ajedrez) en tonos púrpura muy sutil.
-- Foto con glitch effect al hover — duplicación de imagen con offset de color (CSS `filter: hue-rotate` + posición).
-- Texto sobre una card que parece una ventana de Windows 95 — barra de título con botones de minimizar/cerrar decorativos.
-- Cita personal en cursiva grande.
-
-### Skills
-
-- **Presentadas como "achievements" de videojuego:** cada skill tiene un icono de píxel art (o se pueden cargar desde devicons) + nombre + XP bar estilo RPG.
-- La barra de XP tiene colores neón y animación al scroll.
-- Layout tipo inventario de juego: grid de iconos cuadrados con tooltip al hover.
-
-### Projects
-
-- **Cards estilo VHS / cassette:**
-  - Fondo de la card: textura oscura con pequeñas líneas de scanlines (CSS `repeating-linear-gradient`).
-  - "Etiqueta" del cassette con el nombre del proyecto escrito a mano (fuente cursiva).
-  - Esquinas redondeadas, aspecto plástico.
-  - Al hover: efecto de "track" — pequeño glitch de imagen que se acomoda, como insertar el cassette.
-  - Badge: `▶ PLAY` en verde para el link live, `</>` para GitHub.
-- Fondo de sección: gradiente de neón suave.
-
-### Experience
-
-- Timeline presentada como una "línea de tiempo de internet" — estética de foro viejo o GeoCities.
-- Cada trabajo en una "post card" con borde de píxeles (CSS `border-image` con patrón de píxeles).
-- Fechas en Space Mono, grandes.
-- Separadores con GIF decorativo pequeño (o pseudo-GIF con CSS animation) — estrella parpadeante, separador de `-·-·-`.
-
-### Contact
-
-- **Sección con estética de chat de IRC / AOL Instant Messenger.**
-- Ventana de chat con título "you've got mail" o "new message from: [tu nombre]".
-- Input estilizado como un campo de chat retro.
-- Easter egg: si el usuario escribe algo y envía, respuesta automática con un mensaje gracioso.
+- **No fixed container:** each section uses its own layout — full-width or restricted, depending on the scene.
+- **Sections as scenes:** each has its own background, decoration, and composition.
+- **Projects grid:** VHS cassette or game cartridge cards.
+- **Vertical padding:** variable — some sections deliberately close to create tension, others open for air.
+- **Layout-breaking elements:** images or text that overflow the container, elements that overlap between sections. These are intentional — they make the page feel alive.
 
 ---
 
-## Animaciones y micro-interacciones
+## Section by section
 
-- **Cuadrícula del hero:** se mueve hacia el espectador en loop infinito (CSS `perspective` + `translateZ` en keyframes).
-- **Entrada de secciones:** las cards de proyectos entran con efecto de "drop" — caen desde arriba con un ligero rebote (`cubic-bezier` con overshoot).
-- **Glitch effect en títulos de sección:** al hacer hover, el texto se desplaza en rojo/cyan por 0.3s — efecto chromatic aberration.
-- **Cursor custom:** cursor estilo "crosshair" retro, o un pixel cursor de 16x16.
-- **Parallax sutil:** el sol del hero se mueve a velocidad diferente al resto al hacer scroll.
-- **Stars background en footer:** pequeñas partículas blancas estáticas que parpadean lentamente.
+### Hero — "The opening scene"
+
+- **Background:** perspective grid animation (retrowave floor) via CSS — converging lines that slowly move toward the viewer, looping infinitely.
+- **Sky:** sunset gradient bottom-to-top: `#0A0015 → #4A0080 → #FF2DAF → #FF8C42`.
+- **Retro sun:** semicircle with horizontal stripes overlay (the vaporwave icon), yellow/orange.
+- **H1:** name in Bebas Neue, enormous, with neon shadow: `text-shadow: 0 0 30px var(--pink)`. The name _glows_.
+- **Subtitle:** Space Mono, small, blinking cursor effect. One line: role or short tagline. Actually _written_ — not placeholder text.
+- **Decorative SVG:** palm tree or Greek statue silhouette.
+- **CTA:** button with an animated rainbow border gradient. Hover: the rainbow spins faster.
+
+### About — "The operator's desk"
+
+- **Background:** very subtle checker pattern in purple tones (`repeating-conic-gradient`).
+- Photo with glitch effect on hover — image duplication with color channel offset (CSS `filter: hue-rotate` + position shift). 0.3s, then snaps back. Feels like a video signal quirk.
+- Text sits on a card styled as a Windows 95 window — decorative title bar with minimize/close buttons. The person's name is the window title. Content inside is real prose: a short paragraph in first person that sounds like talking, not writing-about-yourself.
+- Personal quote in large italic below — one sentence that captures the person's actual voice.
+
+### Skills — "The inventory"
+
+- Presented as game achievement unlocks: each skill has a pixel-art icon (devicons work fine) + name + XP bar styled for RPG.
+- XP bar: neon colors, fills on scroll with spring animation.
+- Layout: game inventory grid of square icon cells with tooltips on hover.
+- Tooltip content: _what_ this person has done with this skill, in plain language. Not a definition. Example: _"Built a real-time collaborative editor used by 8,000 daily active users."_
+
+### Projects — "The VHS shelf"
+
+Cards styled as VHS cassettes:
+
+- Card background: dark texture with subtle CSS scanlines (`repeating-linear-gradient`).
+- Cassette "label" with the project name in a cursive font (handwritten look).
+- Rounded corners, plastic aesthetic.
+- Hover: "track" effect — brief image glitch that settles, like inserting the cassette.
+- Badge: `▶ PLAY` in green for live link, `</>` for GitHub.
+- Section background: soft neon gradient.
+- **Each cassette description:** one sentence on the problem, one on the tech, one on the moment it shipped and why it mattered. The tone should match the aesthetic — brief, direct, personal.
+
+### Experience — "The geocities era chronicle"
+
+- Timeline styled as an old internet timeline — forum-era or GeoCities aesthetic.
+- Each job in a "postcard" with a pixel border (`border-image` with pixel SVG pattern).
+- Dates large, in Space Mono.
+- Separators: CSS `animation`-based blinking star or `-·-·-` divider — decorative, not content.
+- Each postcard has a "postmark" stamp: the company name or city + year. Purely decorative but deeply nostalgic.
+- Copy inside each postcard follows the same discipline as other themes: outcome-first bullets.
+
+### Contact — "The chatroom"
+
+- **IRC / AOL Instant Messenger aesthetic.** Window with title bar: _"new message from: [name]"_ or _"you've got mail."_
+- Input styled as a retro chat field. Border glow in pink or cyan.
+- On send: animated bot response — a few lines of pre-written reply that's warm and funny, not robotic. Example: _"Message received. I'll be in touch. (Please don't go anywhere, this is very exciting.)"_
+- Easter egg: specific phrases trigger special responses. Small delight for curious visitors.
+- Always include a plain-text escape hatch: _"Prefer email? [email]"_ below the chat window.
 
 ---
 
-## Patrones y texturas
+## Animations and micro-interactions
 
-Estos patrones se usan en secciones específicas, no en todas al mismo tiempo:
-
-| Patrón                 | CSS / Técnica                                                                                       | Sección             |
-| ---------------------- | --------------------------------------------------------------------------------------------------- | ------------------- |
-| Cuadrícula perspectiva | `perspective` + líneas CSS animadas                                                                 | Hero                |
-| Checker pattern        | `repeating-conic-gradient`                                                                          | About               |
-| Scanlines              | `repeating-linear-gradient(transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)` | Cards de proyectos  |
-| Starfield              | `box-shadow` con cientos de puntos (CSS trick) o canvas                                             | Footer / Contact    |
-| Noise grain            | Pseudo-elemento con `opacity: 0.04`, patrón SVG                                                     | About, Experience   |
-| Pixel border           | `border-image` con SVG de 3x3 píxeles                                                               | Cards de Experience |
+- **Hero grid:** moves toward the viewer in an infinite loop (`perspective` + `translateZ` in keyframes).
+- **Section entry for project cards:** drops in from above with bounce (`cubic-bezier` with overshoot). Feels like the cassette being placed on the shelf.
+- **Glitch on section headings:** hover triggers a 0.3s chromatic aberration — text shifts red + cyan. Not on idle — only on hover, so it stays surprising.
+- **Custom cursor:** retro crosshair or 16×16 pixel cursor.
+- **Parallax:** the hero sun moves at a different scroll speed than the grid.
+- **Footer stars:** small static particles that blink slowly.
 
 ---
 
-## Diferenciadores que lo hacen único
+## Patterns and textures
 
-1. La cuadrícula perspectiva animada en el hero es la imagen más reconocible del tema — nadie la olvida.
-2. Las cards de proyectos como cassettes VHS son únicas en el mundo de los portafolios de dev.
-3. El contraste entre una fuente de 140px y metadata en 11px Space Mono crea tensión visual perfecta.
-4. La sección de contact como ventana de AIM/IRC es el "momento" que hace que la gente comparta el portafolio.
-5. El glitch effect solo en hover es suficiente — no todo el tiempo, o se vuelve ruido.
+Used in specific sections, never all at once — layering everything creates noise, not richness:
+
+| Pattern          | CSS / Technique                                                                                     | Section           |
+| ---------------- | --------------------------------------------------------------------------------------------------- | ----------------- |
+| Perspective grid | `perspective` + animated CSS lines                                                                  | Hero              |
+| Checker pattern  | `repeating-conic-gradient`                                                                          | About             |
+| Scanlines        | `repeating-linear-gradient(transparent, transparent 2px, rgba(0,0,0,0.1) 2px, rgba(0,0,0,0.1) 4px)` | Project cards     |
+| Starfield        | `box-shadow` with many points (CSS trick) or canvas                                                 | Footer / Contact  |
+| Noise grain      | Pseudo-element at `opacity: 0.04`, SVG pattern                                                      | About, Experience |
+| Pixel border     | `border-image` with 3×3 pixel SVG                                                                   | Experience cards  |
+
+---
+
+## What makes it distinctive
+
+1. The perspective grid animation in the hero is the most recognizable image of the theme — nobody forgets it.
+2. VHS cassette project cards are unique in the dev portfolio space — and the descriptions inside are still substantive.
+3. The contrast between 140px type and 11px Space Mono metadata creates perfect visual tension.
+4. The AIM/IRC contact section is the _moment_ that makes people share the portfolio.
+5. The glitch effect only on hover is enough — not ambient, never noise. That restraint is what makes it land.
+6. The About "Windows 95 window" grounds the nostalgia in something personal rather than just decorative.
 
 ---
 
 ---
 
-# Tabla resumen de diferencias reales entre temas
+# Summary — Real Differences Between Themes
 
-|                         | Minimalista                   | Modern Tech                  | Profesional                   | Vaporwave                           |
-| ----------------------- | ----------------------------- | ---------------------------- | ----------------------------- | ----------------------------------- |
-| **Ancho de contenedor** | 720px                         | 1100px                       | 960px + sidebar               | Full-width por sección              |
-| **Fuente de títulos**   | Serif (Playfair)              | Grotesk bold (Space Grotesk) | Sans moderna (Plus Jakarta)   | Display retro (Bebas Neue)          |
-| **Fondo hero**          | Blanco vacío                  | Partículas + grid oscuro     | Oscuro sólido                 | Cuadrícula perspectiva animada      |
-| **Grid de proyectos**   | 2 columnas limpias            | Bento asimétrico             | Grid uniforme con filtros     | Cards tipo VHS                      |
-| **Skills**              | Lista de texto plano          | Barras estilo terminal       | Tabs + iconos + nivel         | RPG inventory + XP bars             |
-| **Timeline**            | Línea vertical delgada        | Horizontal, nodos neón       | Doble columna (exp + edu)     | Postcards estilo GeoCities          |
-| **Contact**             | Email como texto grande       | Terminal simulada            | Formulario completo + sidebar | Ventana de chat retro (AIM)         |
-| **Cursor**              | Default                       | Custom (punto + anillo)      | Default                       | Pixel cursor retro                  |
-| **Animaciones**         | Fade + translateY suave       | Glow, blur, typewriter       | Fade mínimo                   | Glitch, drop con rebote, parallax   |
-| **Decoración**          | Ninguna                       | Grid pattern + noise         | Ninguna                       | Checkers, scanlines, starfield, sol |
-| **Cantidad de colores** | 1 (monocromático)             | 3 acentos neón               | 1 acento (azul)               | 4–5 neones                          |
-| **Modo predominante**   | Claro                         | Oscuro                       | Claro (hero oscuro)           | Oscuro                              |
-| **Vibe**                | Galería de arte contemporáneo | Dashboard de misión crítica  | Producto de software maduro   | Instalación artística interactiva   |
+|                         | Minimal                       | Modern Tech                        | Professional                        | Vaporwave                           |
+| ----------------------- | ----------------------------- | ---------------------------------- | ----------------------------------- | ----------------------------------- |
+| **Emotional target**    | Trust through restraint       | Awe, then depth                    | Confidence, then credibility        | Wonder, then substance              |
+| **Container width**     | 720px                         | 1100px                             | 960px + sidebar                     | Full-width per scene                |
+| **Heading font**        | Serif (Playfair)              | Bold grotesque (Space Grotesk)     | Modern sans (Plus Jakarta)          | Retro display (Bebas Neue)          |
+| **Hero background**     | Empty warm white              | Particles + dark grid              | Always-dark solid                   | Animated perspective grid           |
+| **Projects grid**       | 2 clean columns               | Asymmetric Bento                   | Uniform grid with filters           | VHS cassette cards                  |
+| **Skills**              | Plain text list               | Terminal-style progress bars       | Tabs + icons + text levels          | RPG inventory + XP bars             |
+| **Timeline**            | Thin vertical line            | Horizontal, neon nodes             | Double-column (exp + edu)           | GeoCities-era postcards             |
+| **Contact**             | Large email link              | Simulated terminal                 | Full form + direct contacts sidebar | Retro AIM/IRC chat window           |
+| **Cursor**              | Default                       | Custom (dot + trailing ring)       | Default                             | Retro pixel cursor                  |
+| **Animations**          | Fade + gentle translateY      | Glow, blur, typewriter             | Minimal fade                        | Glitch, bounce drop, parallax       |
+| **Decoration**          | None                          | Grid pattern + noise               | None                                | Checkers, scanlines, starfield, sun |
+| **Human signal**        | Grayscale → color photo hover | Real narrative in project captions | Outcome-first bullet copy           | Real voice in Windows 95 About card |
+| **Cantidad de colores** | 1 (monocromático)             | 3 acentos neón                     | 1 acento (azul)                     | 4–5 neones                          |
+| **Modo predominante**   | Claro                         | Oscuro                             | Claro (hero oscuro)                 | Oscuro                              |
+| **Vibe**                | Galería de arte contemporáneo | Dashboard de misión crítica        | Producto de software maduro         | Instalación artística interactiva   |

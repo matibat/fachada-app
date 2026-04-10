@@ -10,7 +10,7 @@ const projects = (await getCollection('projects'))
 
 <section id="projects" class="px-4 py-20">
   <div class="max-w-6xl mx-auto">
-    <h2 class="text-4xl font-bold mb-12 text-center">Featured Projects</h2>
+    <h2 class="text-4xl font-bold mb-12 text-center" data-index="03">Featured Projects</h2>
     {projects.length === 0 ? (
       <p class="text-center" style="color: var(--text-secondary);">
         No projects yet. Check back soon!

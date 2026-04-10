@@ -206,9 +206,9 @@ describe('ThemeContext', () => {
                 expect(screen.getByTestId('is-initialized').textContent).toBe('true');
             });
 
-            // dark modern-tech accent is #00f5ff, bgPrimary is #0f0f0f
-            expect(screen.getByTestId('active-accent').textContent).toBe('#00f5ff');
-            expect(screen.getByTestId('active-bg-primary').textContent).toBe('#0f0f0f');
+            // dark modern-tech accent is #00D4FF, bgPrimary is #080C10
+            expect(screen.getByTestId('active-accent').textContent).toBe('#00D4FF');
+            expect(screen.getByTestId('active-bg-primary').textContent).toBe('#080C10');
         });
     });
 
@@ -301,8 +301,8 @@ describe('ThemeContext', () => {
             fireEvent.click(screen.getByTestId('set-style-btn')); // sets to modern-tech
 
             await waitFor(() => {
-                // light mode modern-tech accent is #3b82f6
-                expect(screen.getByTestId('active-accent').textContent).toBe('#3b82f6');
+                // light mode modern-tech accent is #0095C8
+                expect(screen.getByTestId('active-accent').textContent).toBe('#0095C8');
             });
         });
     });
@@ -316,8 +316,8 @@ describe('ThemeContext', () => {
                 expect(screen.getByTestId('effective-color-mode').textContent).toBe('dark');
             });
 
-            // minimalist dark accent is #9ca3af
-            expect(screen.getByTestId('active-accent').textContent).toBe('#9ca3af');
+            // minimalist dark accent is #F0EFE8
+            expect(screen.getByTestId('active-accent').textContent).toBe('#F0EFE8');
         });
 
         it('should switch to light activeTokens when color mode changes to light', async () => {
@@ -343,8 +343,8 @@ describe('ThemeContext', () => {
 
             await waitFor(() => {
                 expect(screen.getByTestId('effective-color-mode').textContent).toBe('light');
-                // minimalist light accent is #6b7280
-                expect(screen.getByTestId('active-accent').textContent).toBe('#6b7280');
+                // minimalist light accent is #141414
+                expect(screen.getByTestId('active-accent').textContent).toBe('#141414');
             });
         });
 
@@ -356,8 +356,8 @@ describe('ThemeContext', () => {
                 expect(screen.getByTestId('is-initialized').textContent).toBe('true');
             });
 
-            // professional light accent is #0055ff
-            expect(screen.getByTestId('active-accent').textContent).toBe('#0055ff');
+            // professional light accent is #0055FF
+            expect(screen.getByTestId('active-accent').textContent).toBe('#0055FF');
         });
     });
 
@@ -395,15 +395,15 @@ describe('ThemeContext', () => {
             );
 
             await waitFor(() => {
-                // Initially minimalist light: #6b7280
-                expect(screen.getByTestId('sc-accent').textContent).toBe('#6b7280');
+                // Initially minimalist light: #141414
+                expect(screen.getByTestId('sc-accent').textContent).toBe('#141414');
             });
 
             fireEvent.click(screen.getByTestId('set-style-btn')); // sets modern-tech
 
             await waitFor(() => {
-                // modern-tech light: #3b82f6
-                expect(screen.getByTestId('sc-accent').textContent).toBe('#3b82f6');
+                // modern-tech light: #0095C8
+                expect(screen.getByTestId('sc-accent').textContent).toBe('#0095C8');
             });
         });
     });

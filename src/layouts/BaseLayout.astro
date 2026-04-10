@@ -55,6 +55,14 @@ const { theme } = profileConfig;
     <meta property="twitter:description" content={description} />
     <meta property="twitter:image" content={ogImageURL} />
     
+    <!-- Google Fonts — all four theme typefaces loaded upfront to avoid FOUC on switch -->
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@300;400;500&family=Playfair+Display:wght@400;700&family=Inter:wght@300;400;500;600;700&family=Space+Grotesk:wght@400;500;700&family=Space+Mono:wght@400;700&family=Exo+2:wght@400;700;800&family=JetBrains+Mono:wght@400;500&display=swap"
+      rel="stylesheet"
+    />
+
     <!-- Plausible Analytics -->
     {siteConfig.analytics.plausibleDomain && (
       <script defer data-domain={siteConfig.analytics.plausibleDomain} src="https://plausible.io/js/script.js"></script>
