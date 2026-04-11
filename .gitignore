@@ -29,3 +29,7 @@ playwright-report/
 
 # jetbrains setting folder
 .idea/
+
+
+# custom ai agents
+.agent-workspace/
