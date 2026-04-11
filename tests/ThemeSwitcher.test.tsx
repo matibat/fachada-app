@@ -1,21 +1,31 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import ThemeSwitcher from '../src/components/islands/ThemeSwitcher';
-import { ThemeProvider, useTheme } from '../src/context/ThemeContext';
+import { useTheme } from '../src/context/ThemeContext';
 import { THEME_DEFINITIONS } from '../src/utils/theme.config';
+import { useThemeStore, getThemeStore } from '../src/stores/themeStore';
+
+const mockAppThemes = { default: 'minimalist', globals: Object.keys(THEME_DEFINITIONS) };
 
 function ThemeSwitcherWithProvider() {
-    return (
-        <ThemeProvider>
-            <ThemeSwitcher />
-        </ThemeProvider>
-    );
+    return <ThemeSwitcher />;
 }
 
 describe('ThemeSwitcher Component', () => {
     beforeEach(() => {
         localStorage.clear();
         document.documentElement.removeAttribute('data-theme');
+        document.documentElement.classList.remove('dark');
+        document.documentElement.style.cssText = '';
+        // Reset Zustand store to prevent test pollution
+        useThemeStore.setState({
+            tokens: THEME_DEFINITIONS.minimalist.light,
+            styleTheme: 'minimalist',
+            colorMode: 'auto',
+            effectiveColorMode: 'light',
+            availableThemes: [],
+            customThemePool: {},
+        });
         Object.defineProperty(window, 'matchMedia', {
             writable: true,
             value: vi.fn().mockImplementation(() => ({
@@ -28,6 +38,7 @@ describe('ThemeSwitcher Component', () => {
                 removeEventListener: vi.fn(),
             })),
         });
+        getThemeStore().initFromEnvironment(mockAppThemes);
     });
 
     it('should render theme switcher button', () => {
@@ -89,6 +100,7 @@ describe('ThemeSwitcher Component', () => {
 
     it('should show active state for theme restored from localStorage', async () => {
         localStorage.setItem('themeStyle', JSON.stringify('vaporwave'));
+        getThemeStore().initFromEnvironment(mockAppThemes);
         render(<ThemeSwitcherWithProvider />);
         fireEvent.click(screen.getByRole('button', { name: /change theme style/i }));
 
@@ -165,10 +177,10 @@ describe('ThemeSwitcher Component', () => {
 
         function ThemeSwitcherWithConsumer() {
             return (
-                <ThemeProvider>
+                <>
                     <ThemeSwitcher />
                     <TokenDisplay />
-                </ThemeProvider>
+                </>
             );
         }
 
@@ -281,6 +293,56 @@ describe('ThemeSwitcher Component', () => {
 
             expect(document.documentElement.style.getPropertyValue('--bg-primary'))
                 .toBe(THEME_DEFINITIONS.minimalist.light.bgPrimary);
+        });
+    });
+
+    // ────────────────────────────────────────────────────────────────────────
+    // availableThemes filtering
+    // ────────────────────────────────────────────────────────────────────────
+    describe('availableThemes filtering', () => {
+        it('shows only custom themes when availableThemes has no global keys', async () => {
+            // Given: store seeded with custom-only themes (no global theme keys)
+            const customPool = {
+                minimal: {
+                    name: 'Minimal',
+                    description: 'A minimal custom theme',
+                    light: THEME_DEFINITIONS.minimalist.light,
+                    dark: THEME_DEFINITIONS.minimalist.dark,
+                },
+                warm: {
+                    name: 'Warm',
+                    description: 'A warm custom theme',
+                    light: THEME_DEFINITIONS.minimalist.light,
+                    dark: THEME_DEFINITIONS.minimalist.dark,
+                },
+                bold: {
+                    name: 'Bold',
+                    description: 'A bold custom theme',
+                    light: THEME_DEFINITIONS.minimalist.light,
+                    dark: THEME_DEFINITIONS.minimalist.dark,
+                },
+            };
+            useThemeStore.setState({
+                availableThemes: ['minimal', 'warm', 'bold'],
+                customThemePool: customPool,
+            } as any);
+
+            render(<ThemeSwitcherWithProvider />);
+            fireEvent.click(screen.getByRole('button', { name: /change theme style/i }));
+
+            await waitFor(() => {
+                // Exactly 3 theme option buttons rendered
+                const optionButtons = screen
+                    .getAllByRole('button')
+                    .filter(b => b.hasAttribute('aria-pressed'));
+                expect(optionButtons).toHaveLength(3);
+
+                // None of the global theme display names appear in the output
+                expect(screen.queryByText('Minimalist')).toBeNull();
+                expect(screen.queryByText('Modern Tech')).toBeNull();
+                expect(screen.queryByText('Professional')).toBeNull();
+                expect(screen.queryByText('Vaporwave')).toBeNull();
+            });
         });
     });
 });

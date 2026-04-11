@@ -3,6 +3,8 @@ import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { useTheme as useSCTheme } from 'styled-components';
 import type { ThemeTokens } from '../src/utils/theme.config';
+import { THEME_DEFINITIONS } from '../src/utils/theme.config';
+import { useThemeStore, getThemeStore } from '../src/stores/themeStore';
 import {
     ThemeProvider,
     useTheme,
@@ -14,17 +16,14 @@ import {
  * Test component that uses useTheme hook
  */
 function ThemeStateComponent() {
-    const { colorMode, effectiveColorMode, styleTheme, activeTokens, isInitialized, syncStatus, lastError } = useTheme();
+    const { colorMode, effectiveColorMode, styleTheme, tokens } = useTheme();
     return (
         <div>
             <div data-testid="color-mode">{colorMode}</div>
             <div data-testid="effective-color-mode">{effectiveColorMode}</div>
             <div data-testid="style-theme">{styleTheme}</div>
-            <div data-testid="active-accent">{activeTokens.accent}</div>
-            <div data-testid="active-bg-primary">{activeTokens.bgPrimary}</div>
-            <div data-testid="is-initialized">{isInitialized ? 'true' : 'false'}</div>
-            <div data-testid="sync-status">{syncStatus}</div>
-            <div data-testid="last-error">{lastError?.code || 'none'}</div>
+            <div data-testid="tokens-accent">{tokens.accent}</div>
+            <div data-testid="tokens-bg-primary">{tokens.bgPrimary}</div>
         </div>
     );
 }
@@ -33,7 +32,7 @@ function ThemeStateComponent() {
  * Test component that uses useThemeActions hook
  */
 function ThemeActionsComponent() {
-    const { setColorMode, setStyleTheme, applyTheme, resetError } = useThemeActions();
+    const { setColorMode, setStyleTheme } = useThemeActions();
     return (
         <div>
             <button
@@ -59,18 +58,6 @@ function ThemeActionsComponent() {
                 onClick={() => setStyleTheme('modern-tech')}
             >
                 Set Style
-            </button>
-            <button
-                data-testid="apply-theme-btn"
-                onClick={() => applyTheme()}
-            >
-                Apply Theme
-            </button>
-            <button
-                data-testid="reset-error-btn"
-                onClick={() => resetError()}
-            >
-                Reset Error
             </button>
         </div>
     );
@@ -139,6 +126,8 @@ describe('ThemeContext', () => {
         // Clear any existing classes/attributes on document element
         document.documentElement.classList.remove('dark');
         document.documentElement.removeAttribute('data-theme');
+        // Initialize Zustand store from current localStorage mock
+        getThemeStore().initFromEnvironment({ default: 'minimalist', globals: Object.keys(THEME_DEFINITIONS) });
     });
 
     afterEach(() => {
@@ -146,37 +135,31 @@ describe('ThemeContext', () => {
         localStorageMock = {};
     });
 
-    describe('Behavior 1: Initialize theme on mount', () => {
-        it('should initialize with default values when localStorage is empty', async () => {
+    describe('Behavior 1: Initialize theme state from environment', () => {
+        it('should initialize with default values when localStorage is empty', () => {
             render(<ThemeStateComponent />, { wrapper: TestWrapper });
-
-            await waitFor(() => {
-                expect(screen.getByTestId('is-initialized').textContent).toBe('true');
-            });
 
             expect(screen.getByTestId('color-mode').textContent).toBe('auto');
             expect(screen.getByTestId('style-theme').textContent).toBe('minimalist');
         });
 
-        it('should load color mode from localStorage', async () => {
+        it('should load color mode from localStorage', () => {
             localStorageMock['theme'] = '"dark"';
+            getThemeStore().initFromEnvironment({ default: 'minimalist', globals: Object.keys(THEME_DEFINITIONS) });
             render(<ThemeStateComponent />, { wrapper: TestWrapper });
 
-            await waitFor(() => {
-                expect(screen.getByTestId('color-mode').textContent).toBe('dark');
-            });
+            expect(screen.getByTestId('color-mode').textContent).toBe('dark');
         });
 
-        it('should load style theme from localStorage', async () => {
+        it('should load style theme from localStorage', () => {
             localStorageMock['themeStyle'] = '"modern-tech"';
+            getThemeStore().initFromEnvironment({ default: 'minimalist', globals: Object.keys(THEME_DEFINITIONS) });
             render(<ThemeStateComponent />, { wrapper: TestWrapper });
 
-            await waitFor(() => {
-                expect(screen.getByTestId('style-theme').textContent).toBe('modern-tech');
-            });
+            expect(screen.getByTestId('style-theme').textContent).toBe('modern-tech');
         });
 
-        it('should resolve auto mode to system preference on init', async () => {
+        it('should resolve auto mode to system preference on init', () => {
             vi.mocked(window.matchMedia).mockReturnValue({
                 matches: true,
                 media: '(prefers-color-scheme: dark)',
@@ -189,26 +172,22 @@ describe('ThemeContext', () => {
             });
 
             localStorageMock['theme'] = '"auto"';
+            getThemeStore().initFromEnvironment({ default: 'minimalist', globals: Object.keys(THEME_DEFINITIONS) });
             render(<ThemeStateComponent />, { wrapper: TestWrapper });
 
-            await waitFor(() => {
-                expect(screen.getByTestId('effective-color-mode').textContent).toBe('dark');
-            });
+            expect(screen.getByTestId('effective-color-mode').textContent).toBe('dark');
         });
 
-        it('should set activeTokens matching the stored colorMode and styleTheme on initialization', async () => {
+        it('should set tokens matching the stored colorMode and styleTheme on initialization', () => {
             localStorageMock['theme'] = '"dark"';
             localStorageMock['themeStyle'] = '"modern-tech"';
+            getThemeStore().initFromEnvironment({ default: 'minimalist', globals: Object.keys(THEME_DEFINITIONS) });
 
             render(<ThemeStateComponent />, { wrapper: TestWrapper });
 
-            await waitFor(() => {
-                expect(screen.getByTestId('is-initialized').textContent).toBe('true');
-            });
-
             // dark modern-tech accent is #00D4FF, bgPrimary is #080C10
-            expect(screen.getByTestId('active-accent').textContent).toBe('#00D4FF');
-            expect(screen.getByTestId('active-bg-primary').textContent).toBe('#080C10');
+            expect(screen.getByTestId('tokens-accent').textContent).toBe('#00D4FF');
+            expect(screen.getByTestId('tokens-bg-primary').textContent).toBe('#080C10');
         });
     });
 
@@ -242,7 +221,7 @@ describe('ThemeContext', () => {
             });
         });
 
-        it('should update effective color mode when auto is selected', async () => {
+        it('should update effective color mode when auto is selected with dark preference', async () => {
             vi.mocked(window.matchMedia).mockReturnValue({
                 matches: true,
                 media: '(prefers-color-scheme: dark)',
@@ -254,7 +233,7 @@ describe('ThemeContext', () => {
                 dispatchEvent: vi.fn(),
             });
 
-            const { rerender } = render(
+            render(
                 <div>
                     <ThemeActionsComponent />
                     <ThemeStateComponent />
@@ -265,12 +244,7 @@ describe('ThemeContext', () => {
             fireEvent.click(screen.getByTestId('set-auto-btn'));
 
             await waitFor(() => {
-                rerender(
-                    <div>
-                        <ThemeActionsComponent />
-                        <ThemeStateComponent />
-                    </div>
-                );
+                expect(screen.getByTestId('effective-color-mode').textContent).toBe('dark');
             });
         });
     });
@@ -285,7 +259,7 @@ describe('ThemeContext', () => {
             });
         });
 
-        it('should update activeTokens to reflect the new style theme', async () => {
+        it('should update tokens to reflect the new style theme', async () => {
             render(
                 <div>
                     <ThemeActionsComponent />
@@ -293,34 +267,28 @@ describe('ThemeContext', () => {
                 </div>,
                 { wrapper: TestWrapper }
             );
-
-            await waitFor(() => {
-                expect(screen.getByTestId('is-initialized').textContent).toBe('true');
-            });
 
             fireEvent.click(screen.getByTestId('set-style-btn')); // sets to modern-tech
 
             await waitFor(() => {
                 // light mode modern-tech accent is #0095C8
-                expect(screen.getByTestId('active-accent').textContent).toBe('#0095C8');
+                expect(screen.getByTestId('tokens-accent').textContent).toBe('#0095C8');
             });
         });
     });
 
-    describe('Behavior 4: activeTokens reflect colorMode and styleTheme changes', () => {
-        it('should produce dark activeTokens when color mode is dark', async () => {
+    describe('Behavior 4: tokens reflect colorMode and styleTheme changes', () => {
+        it('should produce dark tokens when color mode is dark', () => {
             localStorageMock['theme'] = '"dark"';
+            getThemeStore().initFromEnvironment({ default: 'minimalist', globals: Object.keys(THEME_DEFINITIONS) });
             render(<ThemeStateComponent />, { wrapper: TestWrapper });
 
-            await waitFor(() => {
-                expect(screen.getByTestId('effective-color-mode').textContent).toBe('dark');
-            });
-
+            expect(screen.getByTestId('effective-color-mode').textContent).toBe('dark');
             // minimalist dark accent is #F0EFE8
-            expect(screen.getByTestId('active-accent').textContent).toBe('#F0EFE8');
+            expect(screen.getByTestId('tokens-accent').textContent).toBe('#F0EFE8');
         });
 
-        it('should switch to light activeTokens when color mode changes to light', async () => {
+        it('should switch to light tokens when color mode changes to light', async () => {
             render(
                 <div>
                     <ThemeActionsComponent />
@@ -328,10 +296,6 @@ describe('ThemeContext', () => {
                 </div>,
                 { wrapper: TestWrapper }
             );
-
-            await waitFor(() => {
-                expect(screen.getByTestId('is-initialized').textContent).toBe('true');
-            });
 
             fireEvent.click(screen.getByTestId('set-dark-btn'));
 
@@ -344,26 +308,44 @@ describe('ThemeContext', () => {
             await waitFor(() => {
                 expect(screen.getByTestId('effective-color-mode').textContent).toBe('light');
                 // minimalist light accent is #141414
-                expect(screen.getByTestId('active-accent').textContent).toBe('#141414');
+                expect(screen.getByTestId('tokens-accent').textContent).toBe('#141414');
             });
         });
 
-        it('should set activeTokens matching the loaded style theme', async () => {
+        it('should set tokens matching the loaded style theme', () => {
             localStorageMock['themeStyle'] = '"professional"';
+            getThemeStore().initFromEnvironment({ default: 'minimalist', globals: Object.keys(THEME_DEFINITIONS) });
             render(<ThemeStateComponent />, { wrapper: TestWrapper });
 
-            await waitFor(() => {
-                expect(screen.getByTestId('is-initialized').textContent).toBe('true');
-            });
-
             // professional light accent is #0055FF
-            expect(screen.getByTestId('active-accent').textContent).toBe('#0055FF');
+            expect(screen.getByTestId('tokens-accent').textContent).toBe('#0055FF');
         });
     });
 
-    describe('Behavior 8: SCThemeProvider propagates activeTokens as theme', () => {
-        it('should provide activeTokens as the styled-components theme', async () => {
+    describe('Behavior 5: Error handling for invalid values', () => {
+        it('should handle invalid color mode gracefully', () => {
+            localStorageMock['theme'] = '"invalid"';
+            getThemeStore().initFromEnvironment({ default: 'minimalist', globals: Object.keys(THEME_DEFINITIONS) });
+            render(<ThemeStateComponent />, { wrapper: TestWrapper });
+
+            // Should fall back to default
+            expect(screen.getByTestId('color-mode').textContent).toBe('auto');
+        });
+
+        it('should handle invalid style theme gracefully', () => {
+            localStorageMock['themeStyle'] = '"invalid"';
+            getThemeStore().initFromEnvironment({ default: 'minimalist', globals: Object.keys(THEME_DEFINITIONS) });
+            render(<ThemeStateComponent />, { wrapper: TestWrapper });
+
+            // Should fall back to default
+            expect(screen.getByTestId('style-theme').textContent).toBe('minimalist');
+        });
+    });
+
+    describe('Behavior 6: SCThemeProvider propagates tokens as SC theme', () => {
+        it('should provide tokens as the styled-components theme', () => {
             localStorageMock['themeStyle'] = '"modern-tech"';
+            getThemeStore().initFromEnvironment({ default: 'minimalist', globals: Object.keys(THEME_DEFINITIONS) });
 
             render(
                 <div>
@@ -373,16 +355,10 @@ describe('ThemeContext', () => {
                 { wrapper: TestWrapper }
             );
 
-            await waitFor(() => {
-                expect(screen.getByTestId('is-initialized').textContent).toBe('true');
-            });
-
-            // SC theme accent must match context activeTokens accent
-            await waitFor(() => {
-                expect(screen.getByTestId('sc-accent').textContent).toBe(
-                    screen.getByTestId('active-accent').textContent
-                );
-            });
+            // SC theme accent must match context tokens accent
+            expect(screen.getByTestId('sc-accent').textContent).toBe(
+                screen.getByTestId('tokens-accent').textContent
+            );
         });
 
         it('should update styled-components theme when style changes', async () => {
@@ -394,10 +370,8 @@ describe('ThemeContext', () => {
                 { wrapper: TestWrapper }
             );
 
-            await waitFor(() => {
-                // Initially minimalist light: #141414
-                expect(screen.getByTestId('sc-accent').textContent).toBe('#141414');
-            });
+            // Initially minimalist light: #141414
+            expect(screen.getByTestId('sc-accent').textContent).toBe('#141414');
 
             fireEvent.click(screen.getByTestId('set-style-btn')); // sets modern-tech
 
@@ -407,79 +381,189 @@ describe('ThemeContext', () => {
             });
         });
     });
+});
 
-    describe('Behavior 5: Error handling for invalid values', () => {
-        it('should handle invalid color mode gracefully', async () => {
-            localStorageMock['theme'] = '"invalid"';
-            render(<ThemeStateComponent />, { wrapper: TestWrapper });
+// BDD: Validated Zustand migration behaviors
+describe('BDD: Zustand migration behaviors', () => {
+    let localStorageMock: { [key: string]: string };
 
-            await waitFor(() => {
-                // Should fall back to default
-                expect(screen.getByTestId('color-mode').textContent).toBe('auto');
-            });
+    beforeEach(() => {
+        localStorageMock = {};
+        const api = {
+            getItem: (key: string) => localStorageMock[key] || null,
+            setItem: (key: string, value: string) => { localStorageMock[key] = value.toString(); },
+            removeItem: (key: string) => { delete localStorageMock[key]; },
+            clear: () => { localStorageMock = {}; },
+            length: 0,
+            key: (index: number) => Object.keys(localStorageMock)[index] || null,
+        };
+        Object.defineProperty(window, 'localStorage', { value: api, writable: true });
+        Object.defineProperty(window, 'matchMedia', {
+            writable: true,
+            value: vi.fn().mockImplementation((query: string) => ({
+                matches: false,
+                media: query,
+                onchange: null,
+                addListener: vi.fn(),
+                removeListener: vi.fn(),
+                addEventListener: vi.fn(),
+                removeEventListener: vi.fn(),
+                dispatchEvent: vi.fn(),
+            })),
         });
-
-        it('should handle invalid style theme gracefully', async () => {
-            localStorageMock['themeStyle'] = '"invalid"';
-            render(<ThemeStateComponent />, { wrapper: TestWrapper });
-
-            await waitFor(() => {
-                // Should fall back to default
-                expect(screen.getByTestId('style-theme').textContent).toBe('minimalist');
-            });
-        });
+        getThemeStore().initFromEnvironment({ default: 'minimalist', globals: Object.keys(THEME_DEFINITIONS) });
     });
 
-    describe('Behavior 6: Hook usage validation', () => {
-        it('useTheme should throw error when used outside provider', () => {
-            function BadComponent() {
-                useTheme();
-                return null;
-            }
-
-            expect(() => {
-                render(<BadComponent />);
-            }).toThrow('useTheme must be used within ThemeProvider');
-        });
-
-        it('useThemeActions should throw error when used outside provider', () => {
-            function BadComponent() {
-                useThemeActions();
-                return null;
-            }
-
-            expect(() => {
-                render(<BadComponent />);
-            }).toThrow('useThemeActions must be used within ThemeProvider');
-        });
-
-        it('useThemeContext should throw error when used outside provider', () => {
-            function BadComponent() {
-                useThemeContext();
-                return null;
-            }
-
-            expect(() => {
-                render(<BadComponent />);
-            }).toThrow('useThemeContext must be used within ThemeProvider');
-        });
+    afterEach(() => {
+        vi.clearAllMocks();
     });
 
-    describe('Behavior 7: Sync status tracking', () => {
-        it('should start with synced sync status', async () => {
-            render(<ThemeStateComponent />, { wrapper: TestWrapper });
+    it('[B1] Given: Zustand store has modern-tech dark tokens, When: useTheme() called, Then: tokens come from Zustand', () => {
+        useThemeStore.setState({
+            tokens: THEME_DEFINITIONS['modern-tech'].dark,
+            styleTheme: 'modern-tech',
+            colorMode: 'dark',
+            effectiveColorMode: 'dark',
+        });
+        function Probe() {
+            const { tokens } = useTheme();
+            return <span data-testid="b1-tokens-accent">{tokens?.accent ?? 'none'}</span>;
+        }
+        render(<Probe />, { wrapper: TestWrapper });
+        expect(screen.getByTestId('b1-tokens-accent').textContent).toBe(THEME_DEFINITIONS['modern-tech'].dark.accent);
+    });
 
-            await waitFor(() => {
-                expect(screen.getByTestId('sync-status').textContent).toBe('synced');
-            });
+    it('[B2] When useThemeActions().setStyleTheme() is called, Zustand store state is updated', () => {
+        function Actions() {
+            const { setStyleTheme } = useThemeActions();
+            return <button onClick={() => setStyleTheme('modern-tech')}>Change</button>;
+        }
+        render(<Actions />, { wrapper: TestWrapper });
+        expect(getThemeStore().styleTheme).toBe('minimalist');
+        fireEvent.click(screen.getByText('Change'));
+        expect(getThemeStore().styleTheme).toBe('modern-tech');
+    });
+
+    it('[B3] ThemeProvider wraps children in SCThemeProvider with active tokens', () => {
+        localStorageMock['themeStyle'] = '"professional"';
+        getThemeStore().initFromEnvironment({ default: 'minimalist', globals: Object.keys(THEME_DEFINITIONS) });
+        function Consumer() {
+            const scTheme = useSCTheme() as ThemeTokens;
+            return <span data-testid="b3-sc-accent">{scTheme.accent}</span>;
+        }
+        render(<Consumer />, { wrapper: TestWrapper });
+        expect(screen.getByTestId('b3-sc-accent').textContent).toBe('#0055FF');
+    });
+});
+
+// ─── B5: ThemeProvider no-op guard on second mount ────────────────────────────
+
+describe('B5: ThemeProvider no-op guard on second mount', () => {
+    let localStorageMock: { [key: string]: string };
+
+    beforeEach(() => {
+        localStorageMock = {};
+        const api = {
+            getItem: (key: string) => localStorageMock[key] || null,
+            setItem: (key: string, value: string) => { localStorageMock[key] = value.toString(); },
+            removeItem: (key: string) => { delete localStorageMock[key]; },
+            clear: () => { localStorageMock = {}; },
+            length: 0,
+            key: (index: number) => Object.keys(localStorageMock)[index] || null,
+        };
+        Object.defineProperty(window, 'localStorage', { value: api, writable: true });
+        Object.defineProperty(window, 'matchMedia', {
+            writable: true,
+            value: vi.fn().mockImplementation((query: string) => ({
+                matches: false,
+                media: query,
+                onchange: null,
+                addListener: vi.fn(),
+                removeListener: vi.fn(),
+                addEventListener: vi.fn(),
+                removeEventListener: vi.fn(),
+                dispatchEvent: vi.fn(),
+            })),
+        });
+        // Start with empty availableThemes so the first ThemeProvider mount triggers init
+        useThemeStore.setState({ availableThemes: [] } as any);
+    });
+
+    afterEach(() => {
+        vi.clearAllMocks();
+    });
+
+    it('ThemeProvider does not re-initialize when store is already populated', async () => {
+        // Given: store has empty availableThemes; capture real init and wrap with a spy
+        const realInit = useThemeStore.getState().initFromEnvironment;
+        const initSpy = vi.fn((...args: Parameters<typeof realInit>) => (realInit as Function)(...args));
+        useThemeStore.setState({ initFromEnvironment: initSpy } as any);
+
+        // When: ThemeProvider is mounted for the first time
+        const { unmount } = render(<ThemeProvider><div /></ThemeProvider>);
+
+        // Then: initFromEnvironment is called exactly once (availableThemes was empty)
+        await waitFor(() => {
+            expect(initSpy).toHaveBeenCalledTimes(1);
         });
 
-        it('should be initialized after mount', async () => {
-            render(<ThemeStateComponent />, { wrapper: TestWrapper });
+        // When: unmounted and remounted (simulating a re-render / island remount)
+        unmount();
+        render(<ThemeProvider><div /></ThemeProvider>);
 
-            await waitFor(() => {
-                expect(screen.getByTestId('is-initialized').textContent).toBe('true');
-            });
+        // Allow any pending effects to flush
+        await waitFor(() => {
+            // No additional call expected; waiting ensures effects have had a chance to fire
+            expect(initSpy).toHaveBeenCalledTimes(1);
         });
+
+        // Then: initFromEnvironment was called exactly ONCE across both mounts
+        expect(initSpy).toHaveBeenCalledTimes(1);
+    });
+});
+
+// ─── B6: useTheme returns backward-compat fields ──────────────────────────────
+
+describe('B6: useTheme returns backward-compat fields', () => {
+    beforeEach(() => {
+        Object.defineProperty(window, 'matchMedia', {
+            writable: true,
+            value: vi.fn().mockImplementation((query: string) => ({
+                matches: false,
+                media: query,
+                onchange: null,
+                addListener: vi.fn(),
+                removeListener: vi.fn(),
+                addEventListener: vi.fn(),
+                removeEventListener: vi.fn(),
+                dispatchEvent: vi.fn(),
+            })),
+        });
+        getThemeStore().initFromEnvironment({ default: 'minimalist', globals: Object.keys(THEME_DEFINITIONS) });
+    });
+
+    afterEach(() => {
+        vi.clearAllMocks();
+    });
+
+    it('useTheme returns backward-compat fields', () => {
+        let capturedResult: ReturnType<typeof useTheme> | null = null;
+
+        function CompatConsumer() {
+            capturedResult = useTheme();
+            return null;
+        }
+
+        render(<CompatConsumer />, { wrapper: TestWrapper });
+
+        expect(capturedResult).not.toBeNull();
+        // activeTokens is an alias for tokens (backward compat)
+        expect(capturedResult!.activeTokens).toEqual(capturedResult!.tokens);
+        // isInitialized is always true — Zustand store is a module-level singleton
+        expect(capturedResult!.isInitialized).toBe(true);
+        // syncStatus is always 'synced' (deprecated compat field)
+        expect(capturedResult!.syncStatus).toBe('synced');
+        // lastError is always null (deprecated compat field)
+        expect(capturedResult!.lastError).toBeNull();
     });
 });

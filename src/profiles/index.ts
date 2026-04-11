@@ -10,11 +10,14 @@
 
 import type { ProfileConfig, SiteConfig } from "../types/profile.types";
 
-import { siteConfig as fachadaSite } from "./default-fachada/site.config";
-import { profileConfig as fachadaProfile } from "./default-fachada/profile.config";
+import { siteConfig as fachadaSite } from "../../apps/default-fachada/site.config";
+import { profileConfig as fachadaProfile } from "../../apps/default-fachada/profile.config";
 
-import { siteConfig as artistEngineerSite } from "./artist-engineer-multi/site.config";
-import { profileConfig as artistEngineerProfile } from "./artist-engineer-multi/profile.config";
+import { siteConfig as artistEngineerSite } from "../../apps/artist-engineer/site.config";
+import { profileConfig as artistEngineerProfile } from "../../apps/artist-engineer/profile.config";
+
+import { siteConfig as engineerSingleRoleSite } from "../../apps/engineer-single-role/site.config";
+import { profileConfig as engineerSingleRoleProfile } from "../../apps/engineer-single-role/profile.config";
 
 export interface LoadedProfile {
   siteConfig: SiteConfig;
@@ -29,6 +32,10 @@ const PROFILES: Record<string, LoadedProfile> = {
   "artist-engineer": {
     siteConfig: artistEngineerSite,
     profileConfig: artistEngineerProfile,
+  },
+  "engineer-single-role": {
+    siteConfig: engineerSingleRoleSite,
+    profileConfig: engineerSingleRoleProfile,
   },
 };
 

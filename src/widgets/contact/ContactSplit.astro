@@ -1,0 +1,115 @@
+---
+import { siteConfig } from '../../config';
+import { profileConfig } from '../../profile.config';
+import Card from '../../components/ui/Card.astro';
+import Button from '../../components/ui/Button.astro';
+
+const contactMessage =
+  profileConfig.contactMessage ??
+  "I'm always interested in hearing about new projects and opportunities.";
+---
+
+<section
+  id="contact"
+  class="px-4 py-20"
+  data-testid="contact-section"
+  style="background-color: var(--bg-secondary);"
+>
+  <div class="max-w-5xl mx-auto">
+    <div class="contact-split-grid">
+      <!-- Left: heading + message + social links -->
+      <div class="contact-split-info">
+        <h2 class="text-4xl font-bold mb-6" data-index="04">Get in Touch</h2>
+        <p class="text-lg mb-8" style="color: var(--text-secondary);">
+          {contactMessage}
+        </p>
+        <div class="contact-split-socials">
+          {siteConfig.social.github && (
+            <a
+              href={siteConfig.social.github}
+              class="contact-social-link"
+              aria-label="GitHub"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              GitHub
+            </a>
+          )}
+          {siteConfig.social.linkedin && (
+            <a
+              href={siteConfig.social.linkedin}
+              class="contact-social-link"
+              aria-label="LinkedIn"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              LinkedIn
+            </a>
+          )}
+          {siteConfig.social.twitter && (
+            <a
+              href={siteConfig.social.twitter}
+              class="contact-social-link"
+              aria-label="Twitter"
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Twitter
+            </a>
+          )}
+        </div>
+      </div>
+
+      <!-- Right: CTA card -->
+      <div class="contact-split-cta">
+        <Card>
+          <div class="flex flex-col gap-4 items-start">
+            <p class="text-sm uppercase tracking-widest" style="color: var(--text-secondary); font-family: var(--font-mono);">
+              Ready to connect?
+            </p>
+            <Button
+              href={`mailto:${siteConfig.social.email}`}
+              variant="primary"
+              size="lg"
+              class="contact-email-button w-full justify-center"
+            >
+              Send Email
+            </Button>
+          </div>
+        </Card>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style>
+  .contact-split-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 3rem;
+  }
+
+  @media (min-width: 768px) {
+    .contact-split-grid {
+      grid-template-columns: 1fr 1fr;
+      gap: 4rem;
+      align-items: center;
+    }
+  }
+
+  .contact-split-socials {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+  }
+
+  .contact-social-link {
+    color: var(--text-secondary);
+    transition: color var(--transition);
+    text-decoration: none;
+  }
+
+  .contact-social-link:hover {
+    color: var(--accent);
+  }
+</style>

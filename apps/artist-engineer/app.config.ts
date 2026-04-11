@@ -11,12 +11,13 @@
  * - Complete light/dark token sets (not partial overlays)
  */
 
-import { siteConfig } from "../../src/profiles/artist-engineer-multi/site.config";
-import { profileConfig } from "../../src/profiles/artist-engineer-multi/profile.config";
+import { siteConfig } from "./site.config";
+import { profileConfig } from "./profile.config";
 import type {
   AppConfig,
   CustomThemeDefinition,
 } from "../../src/types/app.types";
+import type { WidgetLayoutConfig } from "../../src/types/layout.types";
 
 export const appConfig: AppConfig = {
   seo: siteConfig,
@@ -211,6 +212,23 @@ export const appConfig: AppConfig = {
       } as CustomThemeDefinition,
     },
     default: "minimal",
+  },
+  themeLayouts: {
+    minimal: {
+      hero: "split",
+      skills: "grid-3",
+      projects: "grid-2",
+    } satisfies WidgetLayoutConfig,
+    warm: {
+      hero: "centered",
+      skills: "list",
+      projects: "list",
+    } satisfies WidgetLayoutConfig,
+    bold: {
+      hero: "split",
+      skills: "grid-2",
+      projects: "grid-3",
+    } satisfies WidgetLayoutConfig,
   },
   themeVariants: {},
   assets: {

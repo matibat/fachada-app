@@ -4,7 +4,7 @@
  * code as infrastructure and code as medium.
  */
 
-import type { SiteConfig } from "../../types/profile.types";
+import type { SiteConfig } from "../../src/types/profile.types";
 
 export const siteConfig: SiteConfig = {
   name: "Matías Batista",

@@ -1,55 +1,17 @@
 ---
-import { siteConfig } from '../config';
-import { getCollection } from 'astro:content';
-import ProjectCard from '../components/sections/ProjectCard.astro';
+import type { ProjectsLayout } from '../types/layout.types';
+import ProjectsGrid3 from './projects/ProjectsGrid3.astro';
+import ProjectsGrid2 from './projects/ProjectsGrid2.astro';
+import ProjectsList from './projects/ProjectsList.astro';
 
 export interface Props {
+  layout?: ProjectsLayout;
   filterRoles?: string[];
 }
 
-const { filterRoles } = Astro.props;
-
-const allProjects = await getCollection('projects');
-
-const projects = allProjects
-  .filter((project) => {
-    if (!project.data.featured) return false;
-    if (!filterRoles || filterRoles.length === 0) return true;
-    const projectRoles = project.data.roles ?? [];
-    // Untagged projects are universal; tagged projects must match a filter role
-    if (projectRoles.length === 0) return true;
-    return projectRoles.some(r => filterRoles.includes(r));
-  })
-  .sort((a, b) => b.data.date.getTime() - a.data.date.getTime())
-  .slice(0, 6);
-
-// Context-aware heading: framework → "Featured Work", person → "Featured Projects"
-const isFramework = siteConfig.roles.some(r => r.id === 'framework');
-const heading = isFramework ? 'Featured Work' : 'Featured Projects';
+const { layout = 'grid-3', filterRoles } = Astro.props;
 ---
 
-<section id="projects" class="px-4 py-20">
-  <div class="max-w-6xl mx-auto">
-    <h2 class="text-4xl font-bold mb-12 text-center" data-index="03">{heading}</h2>
-    {projects.length === 0 ? (
-      <p class="text-center" style="color: var(--text-secondary);">
-        No projects yet. Check back soon!
-      </p>
-    ) : (
-      <div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {projects.map((project) => (
-          <ProjectCard
-            title={project.data.title}
-            description={project.data.description}
-            stack={project.data.stack}
-            coverImage={project.data.coverImage}
-            liveUrl={project.data.liveUrl}
-            githubUrl={project.data.githubUrl}
-            slug={project.id}
-            roles={project.data.roles}
-          />
-        ))}
-      </div>
-    )}
-  </div>
-</section>
+{layout === 'grid-3' && <ProjectsGrid3 filterRoles={filterRoles} />}
+{layout === 'grid-2' && <ProjectsGrid2 filterRoles={filterRoles} />}
+{layout === 'list' && <ProjectsList filterRoles={filterRoles} />}

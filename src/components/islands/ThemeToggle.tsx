@@ -1,4 +1,4 @@
-import { useTheme, useThemeActions } from '../../context/ThemeContext';
+import { useThemeStore } from '../../stores/themeStore';
 import type { ColorMode } from '../../utils/theme.types';
 import { StyledButton } from './ThemeToggle.styles';
 
@@ -15,8 +15,9 @@ const SunIcon = () => (
 );
 
 export default function ThemeToggle() {
-    const { colorMode, effectiveColorMode } = useTheme();
-    const { setColorMode } = useThemeActions();
+    const colorMode = useThemeStore(s => s.colorMode);
+    const effectiveColorMode = useThemeStore(s => s.effectiveColorMode);
+    const setColorMode = useThemeStore(s => s.setColorMode);
 
     // Determine what mode to display visually
     const displayMode = colorMode === 'auto' ? effectiveColorMode : colorMode;

@@ -31,7 +31,7 @@ Each theme supports both light and dark modes. See [docs/THEME-CONFIGURATION.md]
 
 ### Quick Theme Setup
 
-Edit `src/profile.config.ts`:
+Edit your app's `profile.config.ts` (located in `apps/your-app/`):
 
 ```typescript
 export const profileConfig = {
@@ -94,10 +94,8 @@ Visit `http://localhost:4321` to see your site.
 │   ├── content/
 │   │   ├── projects/              # Project case studies (.md)
 │   │   └── blog/                  # Blog posts (.md)
-│   ├── profiles/                  # ← All app profiles live here
-│   │   ├── index.ts               # App registry (maps APP env var to profiles)
-│   │   ├── default-fachada/       # Default developer portfolio
-│   │   └── artist-engineer-multi/ # Artist-engineer portfolio with 3 custom themes
+│   ├── profiles/
+│   │   └── index.ts               # backward-compatibility shim
 │   ├── types/
 │   │   └── profile.types.ts       # All profile TypeScript interfaces
 │   ├── layouts/
@@ -109,6 +107,10 @@ Visit `http://localhost:4321` to see your site.
 │   │   └── theme.config.ts        # Theme token definitions
 │   ├── config.ts                  # Re-exports active profile's siteConfig
 │   └── profile.config.ts          # Re-exports active profile's profileConfig
+├── apps/
+│   ├── default-fachada/           # Default developer portfolio
+│   ├── artist-engineer/           # Multi-role: engineer + digital artist
+│   └── engineer-single-role/      # Backend engineer locked to modern-tech theme
 ├── tests/
 │   ├── profiles.test.ts           # Profile loading and multi-role tests
 │   ├── config.test.ts             # Site config contract tests
@@ -154,11 +156,13 @@ export const siteConfig = {
 } as const;
 ````
 
-## 📋 Creating New Profiles
+## 📋 Creating New Apps
 
-This template is designed to be **profile-extensible**. Changing the active profile at build time produces a completely different SPA — different name, bio, skills, theme settings, and visible sections.
+> **Note:** The `src/profiles/` directory is deprecated. New apps should be created under `apps/`.
 
-### Quick Profile Creation
+This template is designed to be **app-extensible**. Changing the active app at build time produces a completely different SPA — different name, bio, skills, theme settings, and visible sections.
+
+### Quick App Creation (Legacy Profile Setup)
 
 1. **Create a profile directory**:
 
@@ -232,7 +236,7 @@ This template is designed to be **profile-extensible**. Changing the active prof
    };
    ```
 
-4. **Register the profile in `src/profiles/index.ts`**:
+4. **Register the app in `src/profiles/index.ts`** (legacy shim):
 
    ```typescript
    import { siteConfig as yourNameSite } from "./your-name/site.config";

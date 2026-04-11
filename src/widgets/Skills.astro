@@ -1,33 +1,16 @@
 ---
-import { siteConfig } from '../config';
-import { profileConfig } from '../profile.config';
-import Badge from '../components/ui/Badge.astro';
+import type { SkillsLayout } from '../types/layout.types';
+import SkillsGrid3 from './skills/SkillsGrid3.astro';
+import SkillsGrid2 from './skills/SkillsGrid2.astro';
+import SkillsList from './skills/SkillsList.astro';
 
-const { skills: skillCategories } = profileConfig;
-// Derive heading from context: framework → "Features & Architecture", person → "Skills & Technologies"
-const isFramework = siteConfig.roles.some(r => r.id === 'framework');
-const heading = isFramework ? 'Features & Architecture' : 'Skills & Technologies';
+export interface Props {
+  layout?: SkillsLayout;
+}
+
+const { layout = 'grid-3' } = Astro.props;
 ---
 
-<section
-  id="skills"
-  class="px-4 py-20"
-  data-testid="skills-section"
-  style="background-color: var(--bg-secondary);"
->
-  <div class="max-w-4xl mx-auto">
-    <h2 class="text-4xl font-bold mb-12 text-center" data-index="02">{heading}</h2>
-    <div class="grid md:grid-cols-3 gap-8">
-      {skillCategories.map((category) => (
-        <div>
-          <h3 class="text-xl font-semibold mb-4">{category.name}</h3>
-          <div class="flex flex-wrap gap-2">
-            {category.skills.map((skill) => (
-              <Badge>{skill}</Badge>
-            ))}
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-</section>
+{layout === 'grid-3' && <SkillsGrid3 />}
+{layout === 'grid-2' && <SkillsGrid2 />}
+{layout === 'list' && <SkillsList />}

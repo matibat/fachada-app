@@ -1,506 +1,144 @@
 'use client';
 
-import React, {
-    createContext,
-    useContext,
-    useState,
-    useEffect,
-    useCallback,
-} from 'react';
+import React, { useEffect } from 'react';
 import type { ReactNode } from 'react';
 import { ThemeProvider as SCThemeProvider } from 'styled-components';
-import type {
-    ColorMode,
-    ThemeStyle,
-    ThemeError,
-    ThemeDependencies,
-} from '../utils/theme.types';
-import type { ThemeTokens, ThemeDefinition } from '../utils/theme.config';
-import { CSS_VAR_MAP, THEME_DEFINITIONS } from '../utils/theme.config';
-import { resolveTheme } from '../core/theme/ThemeResolver';
+import { useThemeStore, getThemeStore } from '../stores/themeStore';
+import type { ThemePool } from '../stores/themeStore';
+import { CSS_VAR_MAP, THEME_DEFINITIONS, type ThemeTokens } from '../utils/theme.config';
+import type { ColorMode } from '../utils/theme.types';
 
-import {
-    validateColorMode,
-    validateThemeStyle,
-    getSystemPreference,
-    readFromStorage,
-    writeToStorage,
-} from '../utils/theme.utils';
+// ─── Types ─────────────────────────────────────────────────────────────────────
 
-/**
- * Theme context state interface
- */
-export interface ThemeContextState {
-    /** Current color mode (light/dark/auto) */
-    colorMode: ColorMode;
-
-    /** Resolved effective theme (considering auto preference) */
-    effectiveColorMode: 'light' | 'dark';
-
-    /** Current style theme — now accepts dynamic string keys for custom themes */
-    styleTheme: string;
-
-    /** Whether client-side initialization has completed */
-    isInitialized: boolean;
-
-    /** Sync status with storage */
-    syncStatus: 'synced' | 'pending' | 'error';
-
-    /** Last error that occurred during theme operations */
-    lastError: ThemeError | null;
-
-    /** Active theme tokens derived from current style and color mode */
-    activeTokens: ThemeTokens;
-    /** DDD v2 alias for activeTokens — prefer this in new code */
+export interface ThemeState {
     tokens: ThemeTokens;
+    /** @deprecated Use `tokens`. Kept for backward compatibility. */
+    activeTokens: ThemeTokens;
+    styleTheme: string;
+    colorMode: ColorMode;
+    effectiveColorMode: 'light' | 'dark';
+    availableThemes: string[];
+    customThemePool: ThemePool;
+    /** Always true — Zustand store is a module-level singleton. Kept for backward compatibility. */
+    isInitialized: boolean;
+    /** @deprecated Kept for backward compatibility. */
+    syncStatus: 'synced' | 'pending' | 'error';
+    /** @deprecated Kept for backward compatibility. */
+    lastError: null;
 }
 
-/**
- * Actions available through useThemeActions hook
- */
 export interface ThemeActions {
-    /** Update color mode and persist to storage */
-    setColorMode(mode: ColorMode): Promise<void>;
-
-    /** Update style theme and persist to storage — now accepts any string (custom themes) */
-    setStyleTheme(style: string): Promise<void>;
-
-    /** Manually apply current theme to DOM */
+    setStyleTheme(theme: string): void;
+    setColorMode(mode: ColorMode): void;
+    /** @deprecated No-op. Kept for backward compatibility. */
     applyTheme(): Promise<void>;
-
-    /** Clear the last error */
+    /** @deprecated No-op. Kept for backward compatibility. */
     resetError(): void;
 }
 
-/**
- * Theme context type
- */
-export interface ThemeContextType extends ThemeContextState, ThemeActions { }
-
-/**
- * Theme context - use with useTheme() or useThemeActions()
- */
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
-
-interface ThemeProviderProps {
+export interface ThemeProviderProps {
     children: ReactNode;
+    /** Kept for call-site compatibility. Initialization via initFromEnvironment (P-04). */
     defaultTheme?: string;
 }
 
-/**
- * Storage keys
- */
-const STORAGE_KEYS = {
-    COLOR_MODE: 'theme',
-    STYLE_THEME: 'themeStyle',
-} as const;
+// ─── Provider ──────────────────────────────────────────────────────────────────
 
 /**
- * Default values
+ * ThemeProvider — styled-components SC bridge + CSS custom property applicator.
+ * Reads active tokens from the Zustand store; wraps children in SCThemeProvider.
+ * All theme state lives in useThemeStore; no internal React state.
  */
-const DEFAULT_COLOR_MODE: ColorMode = 'auto';
-const DEFAULT_STYLE_THEME = 'minimalist';
+export function ThemeProvider({ children, defaultTheme = 'minimalist' }: ThemeProviderProps) {
+    const tokens = useThemeStore(s => s.tokens);
+    const styleTheme = useThemeStore(s => s.styleTheme);
+    const effectiveColorMode = useThemeStore(s => s.effectiveColorMode);
 
-/**
- * ThemeProvider component
- * Initializes theme from localStorage, handles storage events, and provides context.
- * 
- * Available themes are accessed from window.__FACHADA_THEME_POOL__ which is set by
- * BaseLayout.astro before React hydrates. This allows custom themes to be available
- * on the client side without requiring complex serialization of large objects.
- */
-export function ThemeProvider({ children, defaultTheme = DEFAULT_STYLE_THEME }: ThemeProviderProps) {
-    // Get available themes from window (set by BaseLayout.astro before hydration).
-    // Falls back to THEME_DEFINITIONS when window global is absent (SSR / test environments).
-    const getAvailableThemes = (): Record<string, ThemeDefinition> => {
-        if (typeof window !== 'undefined' && (window as any).__FACHADA_THEME_POOL__) {
-            const pool = (window as any).__FACHADA_THEME_POOL__;
-            if (Object.keys(pool).length > 0) return pool;
+    // Auto-initialize from environment on mount if the store hasn't been
+    // explicitly initialized yet (availableThemes is empty). This preserves
+    // backward-compatible behavior: tests/components that render ThemeProvider
+    // without calling initFromEnvironment still read localStorage correctly.
+    // When initFromEnvironment was already called (e.g. in test beforeEach),
+    // availableThemes will be non-empty and this effect is a no-op.
+    useEffect(() => {
+        if (getThemeStore().availableThemes.length === 0) {
+            getThemeStore().initFromEnvironment({
+                default: defaultTheme,
+                globals: Object.keys(THEME_DEFINITIONS),
+            });
         }
-        return THEME_DEFINITIONS;
-    };
-
-    /** Helper — computes tokens via ThemeResolver, with access to available themes */
-    const computeTokens = (style: string, effectiveMode: 'light' | 'dark'): ThemeTokens => {
-        const availableThemes = getAvailableThemes();
-        return resolveTheme(
-            { style: style as any, defaultMode: effectiveMode, enableStyleSwitcher: false, enableModeToggle: false },
-            {},
-            undefined,
-            availableThemes
-        );
-    };
-
-    const [state, setState] = useState<ThemeContextState>({
-        colorMode: DEFAULT_COLOR_MODE,
-        effectiveColorMode: 'light',
-        styleTheme: defaultTheme,
-        isInitialized: false,
-        syncStatus: 'pending',
-        lastError: null,
-        activeTokens: computeTokens(defaultTheme, 'light'),
-        tokens: computeTokens(defaultTheme, 'light'),
-    });
-
-    /**
-     * Get theme dependencies from browser APIs
-     */
-    const getDeps = useCallback((): ThemeDependencies => {
-        return {
-            storage: typeof window !== 'undefined' ? window.localStorage : undefined,
-            window: typeof window !== 'undefined' ? window : undefined,
-        };
+    // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
-    /**
-     * Resolve effective color mode (handle auto preference)
-     */
-    const resolveEffectiveColorMode = useCallback(
-        (colorMode: ColorMode): 'light' | 'dark' => {
-            if (colorMode === 'auto') {
-                const deps = getDeps();
-                const result = getSystemPreference(deps);
-                if (result.success && result.value) {
-                    return result.value;
-                }
-                return 'light'; // Default fallback
-            }
-            return colorMode as 'light' | 'dark';
-        },
-        [getDeps]
-    );
-
-    /**
-     * Initialize theme on client mount
-     * Reads from localStorage and computes activeTokens — no DOM mutations.
-     */
-    useEffect(() => {
-        // Check if we're in a browser environment
-        if (typeof window === 'undefined') {
-            return;
-        }
-
-        const deps = getDeps();
-
-        // Read theme from storage
-        const colorModeResult = readFromStorage<ColorMode>(
-            deps,
-            STORAGE_KEYS.COLOR_MODE,
-            DEFAULT_COLOR_MODE
-        );
-        const styleThemeResult = readFromStorage<ThemeStyle>(
-            deps,
-            STORAGE_KEYS.STYLE_THEME,
-            DEFAULT_STYLE_THEME
-        );
-
-        let colorMode = colorModeResult.value || DEFAULT_COLOR_MODE;
-        let styleTheme = styleThemeResult.value || DEFAULT_STYLE_THEME;
-
-        // Validate loaded values
-        const colorModeValidation = validateColorMode(colorMode);
-        if (!colorModeValidation.success) {
-            colorMode = DEFAULT_COLOR_MODE;
-        }
-
-        const styleValidation = validateThemeStyle(styleTheme);
-        if (!styleValidation.success) {
-            styleTheme = DEFAULT_STYLE_THEME;
-        }
-
-        const effectiveColorMode = resolveEffectiveColorMode(colorMode);
-        const activeTokens = computeTokens(styleTheme, effectiveColorMode);
-
-        setState((prev) => ({
-            ...prev,
-            colorMode,
-            styleTheme,
-            effectiveColorMode,
-            isInitialized: true,
-            syncStatus: 'synced',
-            lastError: !colorModeResult.success ? colorModeResult.error || null : null,
-            activeTokens,
-            tokens: activeTokens,
-        }));
-    }, [getDeps, resolveEffectiveColorMode]);
-
-    /**
-     * Listen for storage events from other tabs/windows
-     */
-    useEffect(() => {
-        if (typeof window === 'undefined') {
-            return;
-        }
-
-        const handleStorageChange = (event: StorageEvent) => {
-            if (event.key === STORAGE_KEYS.COLOR_MODE) {
-                try {
-                    const newColorMode = JSON.parse(event.newValue || DEFAULT_COLOR_MODE);
-                    const validation = validateColorMode(newColorMode);
-                    if (validation.success) {
-                        const effectiveColorMode = resolveEffectiveColorMode(newColorMode);
-                        setState((prev) => ({
-                            ...prev,
-                            colorMode: newColorMode,
-                            effectiveColorMode,
-                            activeTokens: computeTokens(prev.styleTheme, effectiveColorMode),
-                            tokens: computeTokens(prev.styleTheme, effectiveColorMode),
-                            syncStatus: 'synced',
-                        }));
-                    }
-                } catch (_error) {
-                    // Ignore parse errors
-                }
-            }
-
-            if (event.key === STORAGE_KEYS.STYLE_THEME) {
-                try {
-                    const newStyleTheme = JSON.parse(event.newValue || DEFAULT_STYLE_THEME);
-                    const pool = getAvailableThemes();
-                    const isValid = newStyleTheme in pool || validateThemeStyle(newStyleTheme).success;
-                    if (isValid) {
-                        setState((prev) => ({
-                            ...prev,
-                            styleTheme: newStyleTheme,
-                            activeTokens: computeTokens(newStyleTheme, prev.effectiveColorMode),
-                            tokens: computeTokens(newStyleTheme, prev.effectiveColorMode),
-                            syncStatus: 'synced',
-                        }));
-                    }
-                } catch (_error) {
-                    // Ignore parse errors
-                }
-            }
-        };
-
-        window.addEventListener('storage', handleStorageChange);
-        return () => window.removeEventListener('storage', handleStorageChange);
-    }, [resolveEffectiveColorMode]);
-
-    /**
-     * Mirror theme state to the root element so both token-based styling and
-     * any legacy selectors stay in sync with context updates.
-     */
+    // Apply CSS custom properties to document root so non-SC components
+    // and tests that inspect document.documentElement remain consistent.
     useEffect(() => {
         if (typeof document === 'undefined') return;
-
         const root = document.documentElement;
-        root.setAttribute('data-theme', state.styleTheme);
-        root.classList.toggle('dark', state.effectiveColorMode === 'dark');
-        root.style.colorScheme = state.effectiveColorMode;
-
+        root.setAttribute('data-theme', styleTheme);
+        root.classList.toggle('dark', effectiveColorMode === 'dark');
+        root.style.colorScheme = effectiveColorMode;
         (Object.keys(CSS_VAR_MAP) as (keyof ThemeTokens)[]).forEach((key) => {
-            const value = state.activeTokens[key];
+            const value = tokens[key];
             if (value !== undefined) {
                 root.style.setProperty(CSS_VAR_MAP[key], value);
             }
         });
-    }, [state.activeTokens, state.styleTheme, state.effectiveColorMode]);
-
-    /**
-     * Set color mode action
-     */
-    const setColorMode = useCallback(
-        async (mode: ColorMode): Promise<void> => {
-            const validation = validateColorMode(mode);
-            if (!validation.success) {
-                setState((prev) => ({
-                    ...prev,
-                    lastError: validation.error || null,
-                    syncStatus: 'error',
-                }));
-                return;
-            }
-
-            const deps = getDeps();
-            const storageResult = writeToStorage(deps, STORAGE_KEYS.COLOR_MODE, mode);
-
-            if (!storageResult.success) {
-                setState((prev) => ({
-                    ...prev,
-                    lastError: storageResult.error || null,
-                    syncStatus: 'error',
-                }));
-                return;
-            }
-
-            const effectiveColorMode = resolveEffectiveColorMode(mode);
-            setState((prev) => ({
-                ...prev,
-                colorMode: mode,
-                effectiveColorMode,
-                activeTokens: computeTokens(prev.styleTheme, effectiveColorMode),
-                tokens: computeTokens(prev.styleTheme, effectiveColorMode),
-                lastError: null,
-                syncStatus: 'synced',
-            }));
-        },
-        [getDeps, resolveEffectiveColorMode]
-    );
-
-    /**
-     * Set style theme action
-     */
-    const setStyleTheme = useCallback(
-        async (style: string): Promise<void> => {
-            const pool = getAvailableThemes();
-            const isInPool = style in pool;
-            if (!isInPool) {
-                const validation = validateThemeStyle(style);
-                if (!validation.success) {
-                    setState((prev) => ({
-                        ...prev,
-                        lastError: validation.error || null,
-                        syncStatus: 'error',
-                    }));
-                    return;
-                }
-            }
-
-            const deps = getDeps();
-            const storageResult = writeToStorage(deps, STORAGE_KEYS.STYLE_THEME, style);
-
-            if (!storageResult.success) {
-                setState((prev) => ({
-                    ...prev,
-                    lastError: storageResult.error || null,
-                    syncStatus: 'error',
-                }));
-                return;
-            }
-
-            setState((prev) => ({
-                ...prev,
-                styleTheme: style,
-                activeTokens: computeTokens(style, prev.effectiveColorMode),
-                tokens: computeTokens(style, prev.effectiveColorMode),
-                lastError: null,
-                syncStatus: 'synced',
-            }));
-        },
-        [getDeps]
-    );
-
-    /**
-     * No-op kept for API compatibility.
-     * Theme is now propagated exclusively through SCThemeProvider; no DOM mutations.
-     */
-    const applyTheme = useCallback(async (): Promise<void> => {
-        setState((prev) => ({ ...prev, syncStatus: 'synced' }));
-    }, []);
-
-    /**
-     * Reset error state
-     */
-    const resetError = useCallback((): void => {
-        setState((prev) => ({
-            ...prev,
-            lastError: null,
-        }));
-    }, []);
-
-    // Build context value
-    const value: ThemeContextType = {
-        ...state,
-        setColorMode,
-        setStyleTheme,
-        applyTheme,
-        resetError,
-    };
+    }, [tokens, styleTheme, effectiveColorMode]);
 
     return (
-        <ThemeContext.Provider value={value}>
-            <SCThemeProvider theme={state.activeTokens}>
-                {children}
-            </SCThemeProvider>
-        </ThemeContext.Provider>
+        <SCThemeProvider theme={tokens}>
+            {children}
+        </SCThemeProvider>
     );
 }
 
-/**
- * Hook to access theme state
- * Returns current theme state (colorMode, styleTheme, isInitialized, etc.)
- *
- * @returns Current theme state
- * @throws Error if used outside ThemeProvider
- *
- * @example
- * function MyComponent() {
- *   const { colorMode, styleTheme, isInitialized } = useTheme();
- *   return <div>Color mode: {colorMode}</div>;
- * }
- */
-export function useTheme(): ThemeContextState {
-    const context = useContext(ThemeContext);
-    if (!context) {
-        throw new Error('useTheme must be used within ThemeProvider');
-    }
+// ─── Hooks ─────────────────────────────────────────────────────────────────────
 
+/**
+ * useTheme — returns current theme state from the Zustand store.
+ */
+export function useTheme(): ThemeState {
+    const tokens = useThemeStore(s => s.tokens);
+    const styleTheme = useThemeStore(s => s.styleTheme);
+    const colorMode = useThemeStore(s => s.colorMode);
+    const effectiveColorMode = useThemeStore(s => s.effectiveColorMode);
+    const availableThemes = useThemeStore(s => s.availableThemes);
+    const customThemePool = useThemeStore(s => s.customThemePool);
     return {
-        colorMode: context.colorMode,
-        effectiveColorMode: context.effectiveColorMode,
-        styleTheme: context.styleTheme,
-        isInitialized: context.isInitialized,
-        syncStatus: context.syncStatus,
-        lastError: context.lastError,
-        activeTokens: context.activeTokens,
-        tokens: context.tokens,
+        tokens,
+        activeTokens: tokens,
+        styleTheme,
+        colorMode,
+        effectiveColorMode,
+        availableThemes,
+        customThemePool,
+        isInitialized: true,
+        syncStatus: 'synced',
+        lastError: null,
     };
 }
 
 /**
- * Hook to access theme actions
- * Returns functions to update theme state
- *
- * @returns Theme action functions
- * @throws Error if used outside ThemeProvider
- *
- * @example
- * function MyComponent() {
- *   const { setColorMode } = useThemeActions();
- *   return (
- *     <button onClick={() => setColorMode('dark')}>
- *       Switch to dark mode
- *     </button>
- *   );
- * }
+ * useThemeActions — returns theme mutation actions from the Zustand store.
  */
 export function useThemeActions(): ThemeActions {
-    const context = useContext(ThemeContext);
-    if (!context) {
-        throw new Error('useThemeActions must be used within ThemeProvider');
-    }
-
+    const setStyleTheme = useThemeStore(s => s.setStyleTheme);
+    const setColorMode = useThemeStore(s => s.setColorMode);
     return {
-        setColorMode: context.setColorMode,
-        setStyleTheme: context.setStyleTheme,
-        applyTheme: context.applyTheme,
-        resetError: context.resetError,
+        setStyleTheme,
+        setColorMode,
+        applyTheme: async () => {},
+        resetError: () => {},
     };
 }
 
 /**
- * Combined hook for both state and actions
- * Convenience hook when you need both state and actions
- *
- * @returns Theme context value (state + actions)
- * @throws Error if used outside ThemeProvider
- *
- * @example
- * function MyComponent() {
- *   const { colorMode, setColorMode } = useThemeContext();
- *   return (
- *     <div>
- *       Current: {colorMode}
- *       <button onClick={() => setColorMode('dark')}>Change</button>
- *     </div>
- *   );
- * }
+ * useThemeContext — combined hook for theme state and actions.
  */
-export function useThemeContext(): ThemeContextType {
-    const context = useContext(ThemeContext);
-    if (!context) {
-        throw new Error('useThemeContext must be used within ThemeProvider');
-    }
-    return context;
+export function useThemeContext(): ThemeState & ThemeActions {
+    const state = useTheme();
+    const actions = useThemeActions();
+    return { ...state, ...actions };
 }
+

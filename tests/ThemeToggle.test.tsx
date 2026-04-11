@@ -1,16 +1,16 @@
 import { describe, it, expect, beforeEach, vi, afterEach } from 'vitest';
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import ThemeToggle from '../src/components/islands/ThemeToggle';
-import { ThemeProvider, useTheme, useThemeActions } from '../src/context/ThemeContext';
+import { useTheme, useThemeActions } from '../src/context/ThemeContext';
 import { THEME_DEFINITIONS } from '../src/utils/theme.config';
+import { useThemeStore, getThemeStore } from '../src/stores/themeStore';
 
-// Helper component to wrap ThemeToggle with ThemeProvider
+const mockAppThemes = { default: 'minimalist', globals: Object.keys(THEME_DEFINITIONS) };
+
+// Helper renders ThemeToggle without a ThemeProvider wrapper;
+// state is managed via Zustand store initialized in beforeEach.
 function ThemeToggleWithProvider() {
-    return (
-        <ThemeProvider>
-            <ThemeToggle />
-        </ThemeProvider>
-    );
+    return <ThemeToggle />;
 }
 
 describe('ThemeToggle Component', () => {
@@ -19,7 +19,16 @@ describe('ThemeToggle Component', () => {
         localStorage.clear();
         document.documentElement.classList.remove('dark');
         document.documentElement.removeAttribute('data-theme');
-
+        document.documentElement.style.cssText = '';
+        // Reset Zustand store to prevent test pollution
+        useThemeStore.setState({
+            tokens: THEME_DEFINITIONS.minimalist.light,
+            styleTheme: 'minimalist',
+            colorMode: 'auto',
+            effectiveColorMode: 'light',
+            availableThemes: [],
+            customThemePool: {},
+        });
         // Mock matchMedia for system preference detection
         Object.defineProperty(window, 'matchMedia', {
             writable: true,
@@ -34,6 +43,7 @@ describe('ThemeToggle Component', () => {
                 dispatchEvent: vi.fn(),
             })),
         });
+        getThemeStore().initFromEnvironment(mockAppThemes);
     });
 
     afterEach(() => {
@@ -141,6 +151,7 @@ describe('ThemeToggle Component', () => {
     describe('Behavior: clicking toggle applies color mode to the page', () => {
         it('Given: mode is light, When: toggle clicked (→ dark), Then: color mode becomes dark', async () => {
             localStorage.setItem('theme', JSON.stringify('light'));
+            getThemeStore().initFromEnvironment(mockAppThemes);
             render(<ThemeToggleWithProvider />);
 
             const button = screen.getByRole('button');
@@ -158,6 +169,7 @@ describe('ThemeToggle Component', () => {
 
         it('Given: mode is dark, When: toggle clicked (→ light), Then: color mode becomes light', async () => {
             localStorage.setItem('theme', JSON.stringify('dark'));
+            getThemeStore().initFromEnvironment(mockAppThemes);
             render(<ThemeToggleWithProvider />);
 
             const button = screen.getByRole('button');
@@ -203,11 +215,11 @@ describe('ThemeToggle Component', () => {
 
         function ToggleWithConsumer() {
             return (
-                <ThemeProvider>
+                <>
                     <ThemeToggle />
                     <ThemeConsumer />
                     <ThemeActionButtons />
-                </ThemeProvider>
+                </>
             );
         }
 
@@ -278,6 +290,7 @@ describe('ThemeToggle Component', () => {
 
         it('Given: dark mode stored in localStorage, When: ThemeToggle mounts, Then: --bg-secondary CSS var is minimalist dark bgSecondary', async () => {
             localStorage.setItem('theme', JSON.stringify('dark'));
+            getThemeStore().initFromEnvironment(mockAppThemes);
             render(<ThemeToggleWithProvider />);
 
             await waitFor(() =>
@@ -290,6 +303,7 @@ describe('ThemeToggle Component', () => {
 
         it('Given: ThemeToggle in dark mode, When: switch to light, Then: --text-primary CSS var reverts to light theme value', async () => {
             localStorage.setItem('theme', JSON.stringify('dark'));
+            getThemeStore().initFromEnvironment(mockAppThemes);
             render(<ThemeToggleWithProvider />);
             const button = screen.getByRole('button');
 

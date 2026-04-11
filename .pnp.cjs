@@ -51,7 +51,8 @@ const RAW_RUNTIME_STATE =
           ["tailwindcss", "npm:3.4.19"],\
           ["typescript", "patch:typescript@npm%3A6.0.2#optional!builtin<compat/typescript>::version=6.0.2&hash=5786d5"],\
           ["vite", "virtual:8fe8f3f174ac8781a4847fe73dd8bcc9da6ace9f449de24348ebd75a2aef77fa286eb262f8aa0a564b2c4067d85a671cc73da677af4f82910de6c748ff3ea303#npm:7.3.2"],\
-          ["vitest", "virtual:43efd495ee0f9f8258cfc6684f93c04b2fb7bc38a7ce11c13d27e434fbe6616635d58a8f03d41cfbcd1fe47056e882c18ec004f4280b46a34f027dfc36c40d9a#npm:4.1.4"]\
+          ["vitest", "virtual:43efd495ee0f9f8258cfc6684f93c04b2fb7bc38a7ce11c13d27e434fbe6616635d58a8f03d41cfbcd1fe47056e882c18ec004f4280b46a34f027dfc36c40d9a#npm:4.1.4"],\
+          ["zustand", "virtual:43efd495ee0f9f8258cfc6684f93c04b2fb7bc38a7ce11c13d27e434fbe6616635d58a8f03d41cfbcd1fe47056e882c18ec004f4280b46a34f027dfc36c40d9a#npm:5.0.12"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -5628,7 +5629,8 @@ const RAW_RUNTIME_STATE =
           ["tailwindcss", "npm:3.4.19"],\
           ["typescript", "patch:typescript@npm%3A6.0.2#optional!builtin<compat/typescript>::version=6.0.2&hash=5786d5"],\
           ["vite", "virtual:8fe8f3f174ac8781a4847fe73dd8bcc9da6ace9f449de24348ebd75a2aef77fa286eb262f8aa0a564b2c4067d85a671cc73da677af4f82910de6c748ff3ea303#npm:7.3.2"],\
-          ["vitest", "virtual:43efd495ee0f9f8258cfc6684f93c04b2fb7bc38a7ce11c13d27e434fbe6616635d58a8f03d41cfbcd1fe47056e882c18ec004f4280b46a34f027dfc36c40d9a#npm:4.1.4"]\
+          ["vitest", "virtual:43efd495ee0f9f8258cfc6684f93c04b2fb7bc38a7ce11c13d27e434fbe6616635d58a8f03d41cfbcd1fe47056e882c18ec004f4280b46a34f027dfc36c40d9a#npm:4.1.4"],\
+          ["zustand", "virtual:43efd495ee0f9f8258cfc6684f93c04b2fb7bc38a7ce11c13d27e434fbe6616635d58a8f03d41cfbcd1fe47056e882c18ec004f4280b46a34f027dfc36c40d9a#npm:5.0.12"]\
         ],\
         "linkType": "SOFT"\
       }]\
@@ -12917,6 +12919,36 @@ const RAW_RUNTIME_STATE =
         "packagePeers": [\
           "@types/zod",\
           "zod"\
+        ],\
+        "linkType": "HARD"\
+      }]\
+    ]],\
+    ["zustand", [\
+      ["npm:5.0.12", {\
+        "packageLocation": "../../.yarn/berry/cache/zustand-npm-5.0.12-93e0b810d6-10c0.zip/node_modules/zustand/",\
+        "packageDependencies": [\
+          ["zustand", "npm:5.0.12"]\
+        ],\
+        "linkType": "SOFT"\
+      }],\
+      ["virtual:43efd495ee0f9f8258cfc6684f93c04b2fb7bc38a7ce11c13d27e434fbe6616635d58a8f03d41cfbcd1fe47056e882c18ec004f4280b46a34f027dfc36c40d9a#npm:5.0.12", {\
+        "packageLocation": "./.yarn/__virtual__/zustand-virtual-8f41df4d37/3/.yarn/berry/cache/zustand-npm-5.0.12-93e0b810d6-10c0.zip/node_modules/zustand/",\
+        "packageDependencies": [\
+          ["@types/immer", null],\
+          ["@types/react", "npm:19.2.14"],\
+          ["@types/use-sync-external-store", null],\
+          ["immer", null],\
+          ["react", "npm:19.2.5"],\
+          ["use-sync-external-store", null],\
+          ["zustand", "virtual:43efd495ee0f9f8258cfc6684f93c04b2fb7bc38a7ce11c13d27e434fbe6616635d58a8f03d41cfbcd1fe47056e882c18ec004f4280b46a34f027dfc36c40d9a#npm:5.0.12"]\
+        ],\
+        "packagePeers": [\
+          "@types/immer",\
+          "@types/react",\
+          "@types/use-sync-external-store",\
+          "immer",\
+          "react",\
+          "use-sync-external-store"\
         ],\
         "linkType": "HARD"\
       }]\

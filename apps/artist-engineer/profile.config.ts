@@ -13,7 +13,7 @@
  * Style switcher is on. The role explorer guides you to try each theme with its role.
  */
 
-import type { ProfileConfig } from "../../types/profile.types";
+import type { ProfileConfig } from "../../src/types/profile.types";
 
 export const profileConfig: ProfileConfig = {
   theme: {
@@ -44,10 +44,16 @@ export const profileConfig: ProfileConfig = {
     },
   ],
   sections: [
-    { id: "hero", enabled: true, order: 1 },
+    { id: "hero", enabled: true, order: 1, layout: "split" },
     { id: "role-explorer", enabled: true, order: 2 },
-    { id: "projects", enabled: true, order: 3, requiresContent: "projects" },
-    { id: "contact", enabled: true, order: 4 },
+    {
+      id: "projects",
+      enabled: true,
+      order: 3,
+      requiresContent: "projects",
+      layout: "list",
+    },
+    { id: "contact", enabled: true, order: 4, layout: "split" },
   ],
   contactMessage:
     "Available for engineering contracts, creative technology collaborations, and commissioned art. Let us make something together.",

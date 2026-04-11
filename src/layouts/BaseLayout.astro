@@ -84,7 +84,7 @@ const { resolvedThemes, defaultTheme: effectiveDefaultTheme } = validateThemeCon
       template strings reference var(--token) and therefore produce identical
       class names on server and client, eliminating the hydration mismatch.
     -->
-    <script is:inline define:vars={{ defaultStyle: theme.style, defaultMode: theme.defaultMode, themeDefinitions: THEME_DEFINITIONS, cssVarMap: CSS_VAR_MAP }}>
+    <script is:inline define:vars={{ defaultStyle: theme.style, defaultMode: theme.defaultMode, themeDefinitions: THEME_DEFINITIONS, cssVarMap: CSS_VAR_MAP, defaultStyleTheme: appConfig.themes?.default ?? 'minimalist', themeLayouts: appConfig.themeLayouts ?? null }}>
       (function () {
         function parseStored(raw, fallback) {
           if (!raw) return fallback;
@@ -126,6 +126,17 @@ const { resolvedThemes, defaultTheme: effectiveDefaultTheme } = validateThemeCon
             }
           }
         }
+
+        // Layout variant FOUC prevention — write data-layout-<section> attributes to <html>
+        // before first paint so the CSS activation rules show the correct pre-rendered variant.
+        var layoutTheme = themeLayouts && (themeLayouts[savedStyle] || themeLayouts[defaultStyleTheme]);
+        if (layoutTheme) {
+          for (var section in layoutTheme) {
+            if (Object.prototype.hasOwnProperty.call(layoutTheme, section)) {
+              document.documentElement.setAttribute('data-layout-' + section, layoutTheme[section]);
+            }
+          }
+        }
       })();
     </script>
   </head>
@@ -134,8 +145,11 @@ const { resolvedThemes, defaultTheme: effectiveDefaultTheme } = validateThemeCon
       Make custom themes available to client-side React components before hydration.
       This window variable is accessed by ThemeContext to resolve custom themes.
     -->
-    <script is:inline define:vars={{ resolvedThemesJson: JSON.stringify(resolvedThemes) }}>
+    <script is:inline define:vars={{ resolvedThemesJson: JSON.stringify(resolvedThemes), themeLayoutsJson: JSON.stringify(appConfig.themeLayouts ?? null) }}>
       window.__FACHADA_THEME_POOL__ = JSON.parse(resolvedThemesJson);
+      if (themeLayoutsJson !== null) {
+        window.__FACHADA_THEME_LAYOUTS__ = JSON.parse(themeLayoutsJson);
+      }
     </script>
 
     <LayoutWrapper
@@ -144,6 +158,7 @@ const { resolvedThemes, defaultTheme: effectiveDefaultTheme } = validateThemeCon
       enableStyleSwitcher={theme.enableStyleSwitcher}
       appThemeVariants={appThemeVariants}
       defaultTheme={effectiveDefaultTheme}
+      appThemeGlobals={appConfig.themes?.globals ?? []}
     >
       <slot />
     </LayoutWrapper>

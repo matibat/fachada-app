@@ -53,6 +53,16 @@ export interface PageSectionConfig {
   requiresRole?: string[];
   /** Only show this section when the named content collection is non-empty */
   requiresContent?: "projects" | "blog";
+  /**
+   * Layout variant for this widget. Valid values depend on the widget type:
+   * - hero:     HeroLayout     — "centered" | "split"
+   * - about:    AboutLayout    — "card" | "plain"
+   * - skills:   SkillsLayout   — "grid-3" | "grid-2" | "list"
+   * - projects: ProjectsLayout — "grid-3" | "grid-2" | "list"
+   * - contact:  ContactLayout  — "centered" | "split"
+   * Omit to use each widget's built-in default.
+   */
+  layout?: string;
 }
 
 // ─── Multi-Role Display ───────────────────────────────────────────────────────

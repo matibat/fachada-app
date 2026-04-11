@@ -4,7 +4,7 @@
  * Style switcher is on — hit the corner widget to see what Fachada can look like in each theme.
  */
 
-import type { ProfileConfig } from "../../types/profile.types";
+import type { ProfileConfig } from "../../src/types/profile.types";
 
 export const profileConfig: ProfileConfig = {
   theme: {

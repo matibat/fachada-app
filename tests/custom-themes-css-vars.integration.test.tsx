@@ -21,6 +21,7 @@ import {
     useThemeActions,
 } from "../src/context/ThemeContext";
 import { THEME_DEFINITIONS } from "../src/utils/theme.config";
+import { useThemeStore } from "../src/stores/themeStore";
 
 /**
  * Test component that displays CSS custom property values
@@ -84,6 +85,15 @@ describe("BDD: Custom Themes CSS Variables Application", () => {
         document.documentElement.classList.remove("dark");
         // Clear inline styles
         document.documentElement.style.cssText = "";
+        // Reset Zustand store to prevent test pollution
+        useThemeStore.setState({
+            tokens: THEME_DEFINITIONS.minimalist.light,
+            styleTheme: 'minimalist',
+            colorMode: 'auto',
+            effectiveColorMode: 'light',
+            availableThemes: [],
+            customThemePool: {},
+        });
     });
 
     afterEach(() => {

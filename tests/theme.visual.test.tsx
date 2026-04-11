@@ -14,6 +14,7 @@ import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/re
 import type { ReactNode } from 'react';
 import { ThemeProvider, useTheme, useThemeActions } from '../src/context/ThemeContext';
 import { THEME_DEFINITIONS } from '../src/utils/theme.config';
+import { useThemeStore } from '../src/stores/themeStore';
 
 // ============================================================================
 // ThemeConsumer — reads activeTokens from context and exposes as text content
@@ -183,6 +184,18 @@ describe('Visual: theme token changes apply to all page sections', () => {
         });
 
         document.documentElement.classList.remove('dark');
+        document.documentElement.removeAttribute('data-theme');
+        document.documentElement.style.cssText = '';
+
+        // Reset Zustand store to prevent test pollution
+        useThemeStore.setState({
+            tokens: THEME_DEFINITIONS.minimalist.light,
+            styleTheme: 'minimalist',
+            colorMode: 'auto',
+            effectiveColorMode: 'light',
+            availableThemes: [],
+            customThemePool: {},
+        });
         document.documentElement.removeAttribute('data-theme');
         document.documentElement.removeAttribute('style');
     });

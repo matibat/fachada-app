@@ -15,6 +15,7 @@ import type {
   PageSectionConfig,
   ThemeConfig,
 } from "./profile.types";
+import type { WidgetLayoutConfig } from "./layout.types";
 
 /** Sentinel value — used by tests to confirm the module loaded correctly. */
 export const APP_CONFIG_VERSION = "v2" as const;
@@ -129,6 +130,8 @@ export interface AppConfig {
   themes?: AppThemes;
   /** Asset references, optionally with per-variant overrides */
   assets: AssetConfig;
+  /** Per-theme widget layout overrides; keys match theme names */
+  themeLayouts?: Record<string, WidgetLayoutConfig>;
   /** Page composition hierarchy */
   page: PageConfig;
 }

@@ -1,6 +1,10 @@
+import { useEffect } from 'react';
 import { ThemeProvider } from '../../context/ThemeContext';
+import { useThemeStore } from '../../stores/themeStore';
+import { THEME_DEFINITIONS } from '../../utils/theme.config';
 import ThemeToggle from './ThemeToggle';
 import ThemeSwitcher from './ThemeSwitcher';
+import LayoutController from './LayoutController';
 import type { ReactNode } from 'react';
 
 interface ThemeVariantDef {
@@ -14,7 +18,10 @@ interface LayoutWrapperProps {
     appThemeVariants?: Record<string, ThemeVariantDef>;
     /** Default theme to load when no stored preference */
     defaultTheme?: string;
+    appThemeGlobals?: string[];
 }
+
+const KNOWN_SECTIONS = ['hero', 'about', 'skills', 'projects', 'contact'];
 
 /**
  * LayoutWrapper
@@ -31,9 +38,27 @@ export default function LayoutWrapper({
     enableStyleSwitcher,
     appThemeVariants = {},
     defaultTheme = 'minimalist',
+    appThemeGlobals,
 }: LayoutWrapperProps) {
+    const themeLayouts =
+        typeof window !== 'undefined' &&
+        typeof (window as any).__FACHADA_THEME_LAYOUTS__ === 'object' &&
+        (window as any).__FACHADA_THEME_LAYOUTS__ !== null
+            ? (window as any).__FACHADA_THEME_LAYOUTS__
+            : undefined;
+
+    useEffect(() => {
+        useThemeStore.getState().initFromEnvironment(
+            { default: defaultTheme, globals: appThemeGlobals ?? Object.keys(THEME_DEFINITIONS) },
+            undefined,
+            themeLayouts,
+        );
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, []);
+
     return (
         <ThemeProvider defaultTheme={defaultTheme}>
+            <LayoutController themeLayouts={themeLayouts ?? {}} knownSections={KNOWN_SECTIONS} />
             {children}
             {enableModeToggle && <ThemeToggle />}
             {enableStyleSwitcher && <ThemeSwitcher />}

@@ -5,9 +5,10 @@
  * This file is data only — no logic, no domain imports from outside /apps/.
  */
 
-import { siteConfig } from "../../src/profiles/default-fachada/site.config";
-import { profileConfig } from "../../src/profiles/default-fachada/profile.config";
+import { siteConfig } from "./site.config";
+import { profileConfig } from "./profile.config";
 import type { AppConfig } from "../../src/types/app.types";
+import type { WidgetLayoutConfig } from "../../src/types/layout.types";
 
 export const appConfig: AppConfig = {
   seo: siteConfig,
@@ -17,6 +18,18 @@ export const appConfig: AppConfig = {
     default: "minimalist",
   },
   themeVariants: {},
+  themeLayouts: {
+    minimalist: {
+      hero: "centered",
+      skills: "grid-3",
+      about: "card",
+    } satisfies WidgetLayoutConfig,
+    "modern-tech": {
+      hero: "split",
+      skills: "list",
+      about: "plain",
+    } satisfies WidgetLayoutConfig,
+  },
   assets: {
     ogImage: siteConfig.ogImage,
   },
