@@ -15,17 +15,9 @@ import type {
     ThemeError,
     ThemeDependencies,
 } from '../utils/theme.types';
-import type { ThemeTokens } from '../utils/theme.config';
-import { CSS_VAR_MAP } from '../utils/theme.config';
+import type { ThemeTokens, ThemeDefinition } from '../utils/theme.config';
+import { CSS_VAR_MAP, THEME_DEFINITIONS } from '../utils/theme.config';
 import { resolveTheme } from '../core/theme/ThemeResolver';
-
-/** Internal helper — computes tokens via ThemeResolver with no variant overlay. */
-function computeTokens(style: ThemeStyle, effectiveMode: 'light' | 'dark'): ThemeTokens {
-    return resolveTheme(
-        { style, defaultMode: effectiveMode, enableStyleSwitcher: false, enableModeToggle: false },
-        {}
-    );
-}
 
 import {
     validateColorMode,
@@ -45,8 +37,8 @@ export interface ThemeContextState {
     /** Resolved effective theme (considering auto preference) */
     effectiveColorMode: 'light' | 'dark';
 
-    /** Current style theme */
-    styleTheme: ThemeStyle;
+    /** Current style theme — now accepts dynamic string keys for custom themes */
+    styleTheme: string;
 
     /** Whether client-side initialization has completed */
     isInitialized: boolean;
@@ -70,8 +62,8 @@ export interface ThemeActions {
     /** Update color mode and persist to storage */
     setColorMode(mode: ColorMode): Promise<void>;
 
-    /** Update style theme and persist to storage */
-    setStyleTheme(style: ThemeStyle): Promise<void>;
+    /** Update style theme and persist to storage — now accepts any string (custom themes) */
+    setStyleTheme(style: string): Promise<void>;
 
     /** Manually apply current theme to DOM */
     applyTheme(): Promise<void>;
@@ -92,6 +84,7 @@ const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 interface ThemeProviderProps {
     children: ReactNode;
+    defaultTheme?: string;
 }
 
 /**
@@ -106,22 +99,47 @@ const STORAGE_KEYS = {
  * Default values
  */
 const DEFAULT_COLOR_MODE: ColorMode = 'auto';
-const DEFAULT_STYLE_THEME: ThemeStyle = 'minimalist';
+const DEFAULT_STYLE_THEME = 'minimalist';
 
 /**
  * ThemeProvider component
- * Initializes theme from localStorage, handles storage events, and provides context
+ * Initializes theme from localStorage, handles storage events, and provides context.
+ * 
+ * Available themes are accessed from window.__FACHADA_THEME_POOL__ which is set by
+ * BaseLayout.astro before React hydrates. This allows custom themes to be available
+ * on the client side without requiring complex serialization of large objects.
  */
-export function ThemeProvider({ children }: ThemeProviderProps) {
+export function ThemeProvider({ children, defaultTheme = DEFAULT_STYLE_THEME }: ThemeProviderProps) {
+    // Get available themes from window (set by BaseLayout.astro before hydration).
+    // Falls back to THEME_DEFINITIONS when window global is absent (SSR / test environments).
+    const getAvailableThemes = (): Record<string, ThemeDefinition> => {
+        if (typeof window !== 'undefined' && (window as any).__FACHADA_THEME_POOL__) {
+            const pool = (window as any).__FACHADA_THEME_POOL__;
+            if (Object.keys(pool).length > 0) return pool;
+        }
+        return THEME_DEFINITIONS;
+    };
+
+    /** Helper — computes tokens via ThemeResolver, with access to available themes */
+    const computeTokens = (style: string, effectiveMode: 'light' | 'dark'): ThemeTokens => {
+        const availableThemes = getAvailableThemes();
+        return resolveTheme(
+            { style: style as any, defaultMode: effectiveMode, enableStyleSwitcher: false, enableModeToggle: false },
+            {},
+            undefined,
+            availableThemes
+        );
+    };
+
     const [state, setState] = useState<ThemeContextState>({
         colorMode: DEFAULT_COLOR_MODE,
         effectiveColorMode: 'light',
-        styleTheme: DEFAULT_STYLE_THEME,
+        styleTheme: defaultTheme,
         isInitialized: false,
         syncStatus: 'pending',
         lastError: null,
-        activeTokens: resolveTheme({ style: DEFAULT_STYLE_THEME, defaultMode: 'light', enableStyleSwitcher: false, enableModeToggle: false }, {}),
-        tokens: resolveTheme({ style: DEFAULT_STYLE_THEME, defaultMode: 'light', enableStyleSwitcher: false, enableModeToggle: false }, {}),
+        activeTokens: computeTokens(defaultTheme, 'light'),
+        tokens: computeTokens(defaultTheme, 'light'),
     });
 
     /**
@@ -238,8 +256,9 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
             if (event.key === STORAGE_KEYS.STYLE_THEME) {
                 try {
                     const newStyleTheme = JSON.parse(event.newValue || DEFAULT_STYLE_THEME);
-                    const validation = validateThemeStyle(newStyleTheme);
-                    if (validation.success) {
+                    const pool = getAvailableThemes();
+                    const isValid = newStyleTheme in pool || validateThemeStyle(newStyleTheme).success;
+                    if (isValid) {
                         setState((prev) => ({
                             ...prev,
                             styleTheme: newStyleTheme,
@@ -323,15 +342,19 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
      * Set style theme action
      */
     const setStyleTheme = useCallback(
-        async (style: ThemeStyle): Promise<void> => {
-            const validation = validateThemeStyle(style);
-            if (!validation.success) {
-                setState((prev) => ({
-                    ...prev,
-                    lastError: validation.error || null,
-                    syncStatus: 'error',
-                }));
-                return;
+        async (style: string): Promise<void> => {
+            const pool = getAvailableThemes();
+            const isInPool = style in pool;
+            if (!isInPool) {
+                const validation = validateThemeStyle(style);
+                if (!validation.success) {
+                    setState((prev) => ({
+                        ...prev,
+                        lastError: validation.error || null,
+                        syncStatus: 'error',
+                    }));
+                    return;
+                }
             }
 
             const deps = getDeps();

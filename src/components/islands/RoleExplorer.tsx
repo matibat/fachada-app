@@ -62,7 +62,7 @@ export default function RoleExplorer({ roles, primaryRole }: RoleExplorerProps) 
                                             key={s}
                                             className="text-xs px-2 py-0.5 rounded-full"
                                             style={{
-                                                backgroundColor: isActive ? 'rgba(0,0,0,0.15)' : 'var(--bg-tertiary, var(--bg-primary))',
+                                                backgroundColor: isActive ? 'rgba(0,0,0,0.15)' : 'var(--bg-primary)',
                                                 border: '1px solid',
                                                 borderColor: isActive ? 'rgba(0,0,0,0.2)' : 'var(--border)',
                                             }}

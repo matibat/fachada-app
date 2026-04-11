@@ -9,7 +9,7 @@
  */
 
 import { THEME_DEFINITIONS } from "../../utils/theme.config";
-import type { ThemeTokens } from "../../utils/theme.config";
+import type { ThemeTokens, ThemeDefinition } from "../../utils/theme.config";
 import type { ThemeConfig } from "../../types/profile.types";
 import type { ThemeOverride } from "../../types/app.types";
 
@@ -20,17 +20,30 @@ import type { ThemeOverride } from "../../types/app.types";
  * @param variants     - Named partial overrides keyed by variant identifier.
  * @param activeVariant - Optional key selecting which variant to apply.
  *                        When absent or unknown, base tokens are returned as-is.
+ * @param availableThemes - Optional pool of theme definitions (includes custom themes).
+ *                          Falls back to THEME_DEFINITIONS if not provided.
  * @returns A new ThemeTokens object (never mutates inputs).
  */
 export function resolveTheme(
   base: ThemeConfig,
   variants: Record<string, ThemeOverride>,
   activeVariant?: string,
+  availableThemes?: Record<string, ThemeDefinition>,
 ): ThemeTokens {
   const colorMode: "light" | "dark" =
     base.defaultMode === "dark" ? "dark" : "light";
 
-  const baseTokens: ThemeTokens = THEME_DEFINITIONS[base.style][colorMode];
+  // Use provided availableThemes (merged pool) or fall back to global THEME_DEFINITIONS
+  const themePool = availableThemes || THEME_DEFINITIONS;
+  const baseThemeDef = themePool[base.style];
+
+  if (!baseThemeDef || !baseThemeDef[colorMode]) {
+    // Fallback to minimalist if requested theme not found
+    const fallbackTheme = THEME_DEFINITIONS["minimalist"];
+    return { ...fallbackTheme[colorMode] };
+  }
+
+  const baseTokens: ThemeTokens = baseThemeDef[colorMode];
 
   if (!activeVariant || !(activeVariant in variants)) {
     return { ...baseTokens };

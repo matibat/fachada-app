@@ -1,6 +1,7 @@
 import { useState, useEffect, useRef } from 'react';
-import { THEME_DEFINITIONS, THEME_STYLES, type ThemeStyle } from '../../utils/theme.config';
 import { useTheme, useThemeActions } from '../../context/ThemeContext';
+import type { ThemeDefinition } from '../../utils/theme.config';
+import { THEME_DEFINITIONS } from '../../utils/theme.config';
 import {
     StyledWrapper,
     StyledTriggerButton,
@@ -17,7 +18,27 @@ import {
     StyledErrorText,
 } from './ThemeSwitcher.styles';
 
+/**
+ * Reads the resolved theme pool from window.__FACHADA_THEME_POOL__, which is
+ * set by BaseLayout.astro before React hydrates.
+ * Falls back to THEME_DEFINITIONS when the window global is absent (SSR / tests).
+ */
+function getThemesFromWindow(): Record<string, ThemeDefinition> {
+    if (typeof window !== 'undefined' && (window as any).__FACHADA_THEME_POOL__) {
+        const pool = (window as any).__FACHADA_THEME_POOL__;
+        if (Object.keys(pool).length > 0) return pool;
+    }
+    return THEME_DEFINITIONS;
+}
+
+/**
+ * ThemeSwitcher
+ *
+ * Reads the available themes from window.__FACHADA_THEME_POOL__ (set by
+ * BaseLayout.astro before hydration) and renders a dropdown for all of them.
+ */
 export default function ThemeSwitcher() {
+    const availableThemes = getThemesFromWindow();
     const [isOpen, setIsOpen] = useState(false);
     const [error, setError] = useState<string | null>(null);
     const wrapperRef = useRef<HTMLDivElement>(null);
@@ -25,7 +46,7 @@ export default function ThemeSwitcher() {
     const { styleTheme } = useTheme();
     const { setStyleTheme } = useThemeActions();
 
-    const handleStyleChange = async (style: ThemeStyle) => {
+    const handleStyleChange = async (style: string) => {
         try {
             setError(null);
             await setStyleTheme(style);
@@ -87,19 +108,17 @@ export default function ThemeSwitcher() {
                     )}
 
                     <StyledOptionsList>
-                        {THEME_STYLES.map((style) => {
-                            const meta = THEME_DEFINITIONS[style];
-                            const isActive = styleTheme === style;
-
+                        {Object.entries(availableThemes).map(([key, theme]) => {
+                            const isActive = styleTheme === key;
                             return (
                                 <StyledOptionButton
-                                    key={style}
+                                    key={key}
                                     $isActive={isActive}
                                     aria-pressed={isActive}
-                                    onClick={() => handleStyleChange(style)}
+                                    onClick={() => handleStyleChange(key)}
                                 >
-                                    <StyledOptionName>{meta.name}</StyledOptionName>
-                                    <StyledOptionDescription>{meta.description}</StyledOptionDescription>
+                                    <StyledOptionName>{theme.name}</StyledOptionName>
+                                    <StyledOptionDescription>{theme.description}</StyledOptionDescription>
                                 </StyledOptionButton>
                             );
                         })}

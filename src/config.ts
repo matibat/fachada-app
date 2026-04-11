@@ -1,10 +1,10 @@
 /**
- * Site configuration — loaded from the active profile.
+ * Site configuration — loaded from the active app profile.
  *
- * The active profile is selected by the PROFILE environment variable at build time.
- * Example: PROFILE=engineer-single-role yarn build
+ * The active app is selected by the APP environment variable at build time.
+ * Example: APP=artist-engineer yarn build
  *
- * To add a new profile, see src/profiles/index.ts.
+ * To add a new app, see src/profiles/index.ts.
  */
 
 import { activeProfile } from "./profiles/index";

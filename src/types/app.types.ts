@@ -9,8 +9,12 @@
  * by structural subtyping — no import from /apps/ or external context allowed.
  */
 
-import type { ThemeConfig, ThemeTokens } from "../utils/theme.config";
-import type { SiteConfig, PageSectionConfig } from "./profile.types";
+import type { ThemeTokens } from "../utils/theme.config";
+import type {
+  SiteConfig,
+  PageSectionConfig,
+  ThemeConfig,
+} from "./profile.types";
 
 /** Sentinel value — used by tests to confirm the module loaded correctly. */
 export const APP_CONFIG_VERSION = "v2" as const;
@@ -55,6 +59,41 @@ export interface ThemeOverride {
   tokens?: Partial<ThemeTokens>;
 }
 
+/**
+ * CustomThemeDefinition — a complete theme definition for an app-specific theme.
+ * Must include both light and dark token sets.
+ */
+export interface CustomThemeDefinition {
+  name: string;
+  description: string;
+  light: ThemeTokens;
+  dark: ThemeTokens;
+}
+
+/**
+ * AppThemes — per-app theme configuration.
+ *
+ * Apps select exactly which themes are available to their users:
+ *   - `globals`: subset of built-in global theme keys to include
+ *     (omit to include none, or include all with all 4 global keys)
+ *   - `custom`: app-specific theme definitions with full light/dark tokens
+ *   - `default`: the theme key loaded on first visit
+ *     (must exist in globals or custom — validated at build time)
+ *
+ * Build-time validation catches:
+ *   - `default` not present in the configured themes
+ *   - collision between a custom key and a global key
+ *   - custom theme missing light or dark token set
+ */
+export interface AppThemes {
+  /** Global theme keys to include. Each must be a key in THEME_DEFINITIONS. */
+  globals?: string[];
+  /** App-specific custom theme definitions. */
+  custom?: Record<string, CustomThemeDefinition>;
+  /** Default theme key. Must exist in globals or custom keys. */
+  default: string;
+}
+
 // ─── Asset Domain ─────────────────────────────────────────────────────────────
 
 /**
@@ -77,12 +116,17 @@ export interface AssetConfig {
 export interface AppConfig {
   /** Identity and SEO metadata (maps to current SiteConfig) */
   seo: SiteConfig;
-  /** Base theme configuration */
+  /** Base theme configuration (color mode defaults, enables) */
   theme: ThemeConfig;
   /** Named partial token overlays; keys match the activeTheme selector */
   themeVariants: Record<string, ThemeOverride>;
-  /** Active theme variant key — selects from themeVariants */
-  activeTheme?: string;
+  /**
+   * Per-app theme selection.
+   * Defines exactly which themes are available and which is the default.
+   * Validated at build time.
+   * If omitted, no theme switcher themes will be registered.
+   */
+  themes?: AppThemes;
   /** Asset references, optionally with per-variant overrides */
   assets: AssetConfig;
   /** Page composition hierarchy */

@@ -14,14 +14,14 @@ The new requirements are **feasible**. The current codebase already contains the
 
 ### What Already Exists
 
-| Requirement                     | Current State                                                                  |
-| ------------------------------- | ------------------------------------------------------------------------------ |
-| Multiple apps from one codebase | `PROFILE` env var + `/src/profiles/` registry — semantically equivalent        |
-| Build-time config selection     | `import.meta.env.PROFILE` resolved in `astro.config.mjs`                       |
-| Token-based theming             | `ThemeTokens` interface + `CSS_VAR_MAP` in `theme.config.ts`                   |
-| `useTheme()` hook               | `ThemeContext.tsx` exposes `activeTokens`                                      |
-| Color-mode variants             | `ThemeDefinition.light / .dark` structure                                      |
-| Decoupled profile config        | `SiteConfig + ProfileConfig` split already isolates identity from presentation |
+| Requirement                     | Current State                                                                   |
+| ------------------------------- | ------------------------------------------------------------------------------- |
+| Multiple apps from one codebase | `APP` env var + `/src/profiles/` registry — semantically equivalent to profiles |
+| Build-time config selection     | `import.meta.env.APP` resolved in `astro.config.mjs`                            |
+| Token-based theming             | `ThemeTokens` interface + `CSS_VAR_MAP` in `theme.config.ts`                    |
+| `useTheme()` hook               | `ThemeContext.tsx` exposes `activeTokens`                                       |
+| Color-mode variants             | `ThemeDefinition.light / .dark` structure                                       |
+| Decoupled profile config        | `SiteConfig + ProfileConfig` split already isolates identity from presentation  |
 
 ### What Is Missing
 
@@ -105,7 +105,7 @@ ThemeResolver (Domain Service — deepMerge strategy)
 **Acceptance criteria**:
 
 - `AppConfig` compiles with no errors
-- All existing profile configs (`default-fachada`, `engineer-single-role`, `artist-engineer-multi`) satisfy `AppConfig` by structural subtyping or explicit cast
+- All registered app profiles (`default-fachada`, `artist-engineer`) satisfy `AppConfig` by structural subtyping or explicit cast
 - No existing component imports break
 
 **DDD notes**:
@@ -203,14 +203,13 @@ ThemeResolver (Domain Service — deepMerge strategy)
 - `/apps/engineer/app.config.ts`
 - `/apps/artist-engineer/app.config.ts`
 - Update `src/core/app/AppLoader.ts` — replaces `src/profiles/index.ts`; reads `APP` env var
-- Update `astro.config.mjs` — `APP` env var replaces `PROFILE`
+- Update `astro.config.mjs` — `APP` env var replaces `PROFILE` (removed; no backward compatibility)
 - Update `README.md` build instructions
 
 **Acceptance criteria**:
 
 - `APP=engineer yarn build` produces engineer app; `APP=default-fachada yarn build` produces default
-- Old `PROFILE=*` env var still works (deprecated alias) for one release cycle
-- Existing CI/CD pipeline passes without modification
+- Existing CI/CD pipeline passes without modification (requires APP env var update)
 
 **DDD notes**:
 

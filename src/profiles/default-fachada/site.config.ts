@@ -1,39 +1,46 @@
 /**
- * Default Fachada site configuration.
- * This is the default portfolio profile for Fachada.
+ * Fachada project site configuration.
+ * The default-fachada app IS Fachada itself — a self-describing portfolio framework.
+ * This page demonstrates what Fachada can do by literally being the thing it builds.
  */
 
 import type { SiteConfig } from "../../types/profile.types";
 
 export const siteConfig: SiteConfig = {
   name: "Fachada",
-  title: "Fachada — Software Engineer",
+  title: "Fachada — Build your portfolio, your way",
   description:
-    "Software engineer based in Montevideo, Uruguay. Building elegant web experiences with modern technologies.",
+    "An open-source portfolio framework built with Astro. Config-driven, multi-theme, multi-role. Everything on this page came from a single config file.",
   author: "Fachada",
   url: "https://fachada.dev",
   ogImage: "/og-image.png",
   social: {
-    github: "https://github.com/fachada",
-    linkedin: "https://linkedin.com/in/fachada",
-    twitter: "https://twitter.com/fachada",
+    github: "https://github.com/fachada/fachada",
+    linkedin: "https://linkedin.com/company/fachada-dev",
+    twitter: "https://twitter.com/fachada_dev",
     email: "hello@fachada.dev",
   },
   location: {
-    city: "Montevideo",
-    country: "Uruguay",
+    city: "Open Source",
+    country: "Internet",
   },
   roles: [
     {
-      id: "engineer",
-      title: "Software Engineer",
-      specialties: ["Web Development", "TypeScript", "Astro", "React"],
+      id: "framework",
+      title: "Portfolio Framework",
+      specialties: [
+        "Astro",
+        "TypeScript",
+        "Config-Driven",
+        "Multi-Theme",
+        "Open Source",
+      ],
       featured: true,
       description:
-        "Full-stack engineer focused on building elegant web experiences",
+        "A portfolio framework that renders itself — every pixel on this page was composed from a config file.",
     },
   ],
-  primaryRole: "engineer",
+  primaryRole: "framework",
   analytics: {
     plausibleDomain: "fachada.dev",
   },

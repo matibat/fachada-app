@@ -1,16 +1,16 @@
 /**
  * Artist-engineer multi-role site configuration.
- * Demonstrates a multi-role portfolio where someone is both
- * a software engineer and a digital artist.
+ * A single person existing across two disciplines:
+ * code as infrastructure and code as medium.
  */
 
 import type { SiteConfig } from "../../types/profile.types";
 
 export const siteConfig: SiteConfig = {
   name: "Matías Batista",
-  title: "Matías Batista — Engineer & Digital Artist",
+  title: "Matías Batista — Engineer & Artist",
   description:
-    "Full-stack engineer and digital artist. I build scalable web applications and create immersive 3D experiences at the intersection of code and art.",
+    "Software engineer and digital artist. I build systems that scale and pieces that stop you. The separation between the two is thinner than you think.",
   author: "Matías Batista",
   url: "https://matiasbatista.dev",
   ogImage: "/og-image.png",
@@ -28,41 +28,29 @@ export const siteConfig: SiteConfig = {
     {
       id: "engineer",
       title: "Software Engineer",
-      specialties: ["TypeScript", "React", "WebGL", "Three.js", "Node.js"],
+      specialties: ["TypeScript", "WebGL", "React", "Node.js", "GLSL"],
       featured: true,
       description:
-        "Building performant web applications and real-time 3D experiences.",
+        "Real-time systems, web graphics, and the infrastructure that makes both fast and honest.",
       about: {
         paragraphs: [
-          "On the engineering side, I specialize in real-time web graphics with Three.js and WebGL — building the full-stack systems that bring complex visualizations to life in the browser.",
-          "I approach software as a craft: readable code, tight feedback loops, and systems that hold up at scale. TypeScript, React, and Node.js are my daily tools; WebAssembly and GLSL are the ones that get me out of bed.",
-          "I've shipped production systems for creative studios and startups, usually at the intersection of performance and visual fidelity — where the compiler and the renderer have to agree.",
+          "Engineering, to me, is the discipline of constraint. Every millisecond budget, every memory limit, every API contract is a creative boundary — and working inside it precisely is its own art form.",
+          "I build real-time 3D systems in WebGL and Three.js, architect the Node.js and PostgreSQL backends that feed them, and write the TypeScript that holds it together. I care about readable code, tight feedback loops, and systems that explain themselves at a glance.",
+          "The work I am proudest of lives at the edge of what the browser can do: procedural geometry, custom GLSL shaders, sub-16ms render budgets reached not by luck but by method. Switch the theme to Modern Tech to see the engineering aesthetic.",
         ],
       },
       skills: [
         {
-          name: "Languages & Runtimes",
-          skills: [
-            "TypeScript",
-            "JavaScript",
-            "Node.js",
-            "GLSL",
-            "WebAssembly",
-          ],
+          name: "Languages",
+          skills: ["TypeScript", "JavaScript", "GLSL", "WebAssembly", "SQL"],
         },
         {
-          name: "Frontend & 3D",
-          skills: ["React", "Three.js", "WebGL", "Astro", "Tailwind CSS"],
+          name: "Rendering & Frontend",
+          skills: ["WebGL", "Three.js", "React", "Astro", "Tailwind CSS"],
         },
         {
-          name: "Backend & Infra",
-          skills: [
-            "PostgreSQL",
-            "Redis",
-            "Docker",
-            "Vercel",
-            "Cloudflare Workers",
-          ],
+          name: "Backend & Data",
+          skills: ["Node.js", "PostgreSQL", "Redis", "Docker", "Vercel"],
         },
       ],
     },
@@ -70,19 +58,19 @@ export const siteConfig: SiteConfig = {
       id: "artist",
       title: "Digital Artist",
       specialties: [
-        "3D Modeling",
-        "Animation",
         "Generative Art",
-        "Creative Coding",
+        "3D Sculpture",
+        "Creative Code",
+        "Large-Format Print",
       ],
       featured: true,
       description:
-        "Creating immersive 3D worlds and generative experiences at the edge of code and art.",
+        "Generative systems, 3D sculpture, and code that arrives somewhere it was never told to go.",
       about: {
         paragraphs: [
-          "My art practice lives in the space between algorithm and intuition — I write code the way a painter mixes colours, iterating until something unexpected appears that I couldn't have planned.",
-          "I create generative sculptures, animated installations, and interactive pieces using Blender, Cinema 4D, and custom GLSL shaders. The output might be a looping video, a real-time web experience, or a physical print from a parametric model.",
-          "I'm drawn to impermanence: pieces that look different every time they run, systems that evolve over hours, outputs that can never be exactly reproduced. Technology as a collaborator, not just a tool.",
+          "My art practice starts where the algorithm runs out of intention. I write code the way a sculptor works clay — iterating past what I planned until something unexpected arrives that is better than anything I designed.",
+          "The output varies: large-format archival prints from generative colour fields, real-time WebGL installations seeded by live data, animated 3D sculptures rendered in Blender and Houdini. The medium is always code; the result always something that cannot be replicated exactly.",
+          "I am drawn to impermanence and emergence: pieces that mutate under time or input, outputs that document a conversation between intention and entropy. Stay in the Minimalist theme here — the silence is intentional.",
         ],
       },
       skills: [
@@ -90,8 +78,8 @@ export const siteConfig: SiteConfig = {
           name: "3D & Motion",
           skills: [
             "Blender",
-            "Cinema 4D",
             "Houdini",
+            "Cinema 4D",
             "After Effects",
             "DaVinci Resolve",
           ],
@@ -101,13 +89,12 @@ export const siteConfig: SiteConfig = {
           skills: ["GLSL", "p5.js", "TouchDesigner", "Processing", "Hydra"],
         },
         {
-          name: "Output & Print",
+          name: "Output",
           skills: [
+            "Archival Print",
+            "WebGL Installation",
+            "Generative Video",
             "Substance Painter",
-            "Octane Render",
-            "Figma",
-            "Photoshop",
-            "Lightroom",
           ],
         },
       ],
@@ -115,6 +102,6 @@ export const siteConfig: SiteConfig = {
   ],
   primaryRole: "engineer",
   analytics: {
-    plausibleDomain: "sorakenji.dev",
+    plausibleDomain: "matiasbatista.dev",
   },
 };

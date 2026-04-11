@@ -7,9 +7,11 @@
  *
  * The active app is resolved in priority order:
  *   1. `activeApp` argument passed to `fachadaPlugin()`
- *   2. `APP` environment variable  (v2)
- *   3. `PROFILE` environment variable (v1 — mapped via PROFILE_ALIASES)
- *   4. `defaultApp` field from .fachadarc.json
+ *   2. `APP` environment variable
+ *   3. `defaultApp` field from .fachadarc.json
+ *
+ * Usage: APP=app-name yarn dev
+ *        APP=app-name yarn build
  *
  * Adding a new app: create `apps/<name>/app.config.ts`, add one entry to
  * `.fachadarc.json`. No changes to core code required.
@@ -29,25 +31,17 @@ export interface FachadaRc {
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-/** v1 PROFILE env var values → v2 APP names. */
-const PROFILE_ALIASES: Record<string, string> = {
-  "engineer-single-role": "engineer",
-  "artist-engineer-multi": "artist-engineer",
-};
-
 export function readFachadarc(cwd: string = process.cwd()): FachadaRc {
   const path = resolve(cwd, ".fachadarc.json");
   return JSON.parse(readFileSync(path, "utf-8")) as FachadaRc;
 }
 
 /**
- * Resolves a raw app/profile name to the registered v2 app name.
- * Applies PROFILE_ALIASES, then falls back to `fachadarc.defaultApp` if
- * the resolved name is not in the registry.
+ * Resolves an app name to a registered app from the registry.
+ * Returns defaultApp if the name is not found.
  */
 export function resolveAppName(rawName: string, fachadarc: FachadaRc): string {
-  const aliased = PROFILE_ALIASES[rawName] ?? rawName;
-  return aliased in fachadarc.apps ? aliased : fachadarc.defaultApp;
+  return rawName in fachadarc.apps ? rawName : fachadarc.defaultApp;
 }
 
 // ─── Plugin ───────────────────────────────────────────────────────────────────
@@ -72,11 +66,7 @@ export function fachadaPlugin(activeApp?: string, cwd: string = process.cwd()) {
       if (id !== RESOLVED_ID) return;
 
       const fachadarc = readFachadarc(cwd);
-      const rawName =
-        activeApp ??
-        process.env.APP ??
-        process.env.PROFILE ??
-        fachadarc.defaultApp;
+      const rawName = activeApp ?? process.env.APP ?? fachadarc.defaultApp;
       const appName = resolveAppName(rawName, fachadarc);
       const appRelPath = fachadarc.apps[appName];
       const absPath = resolve(cwd, appRelPath);

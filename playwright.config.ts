@@ -8,23 +8,37 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: "html",
   use: {
-    baseURL: "http://localhost:4321",
     trace: "on-first-retry",
   },
-  webServer: {
-    command: "yarn dev",
-    url: "http://localhost:4321",
-    reuseExistingServer: !process.env.CI,
-    timeout: 120000,
-  },
-  projects: [
+  webServer: [
     {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
+      command: "yarn dev",
+      url: "http://localhost:4321",
+      reuseExistingServer: !process.env.CI,
+      timeout: 120000,
     },
     {
-      name: "firefox",
-      use: { ...devices["Desktop Firefox"] },
+      command: "APP=artist-engineer yarn dev --port 4322",
+      url: "http://localhost:4322",
+      reuseExistingServer: !process.env.CI,
+      timeout: 120000,
+    },
+  ],
+  projects: [
+    {
+      name: "default-fachada-chromium",
+      use: { ...devices["Desktop Chrome"], baseURL: "http://localhost:4321" },
+      testMatch: "**/theme.spec.ts",
+    },
+    {
+      name: "default-fachada-firefox",
+      use: { ...devices["Desktop Firefox"], baseURL: "http://localhost:4321" },
+      testMatch: "**/theme.spec.ts",
+    },
+    {
+      name: "artist-engineer-chromium",
+      use: { ...devices["Desktop Chrome"], baseURL: "http://localhost:4322" },
+      testMatch: "**/theme-artist-engineer.spec.ts",
     },
   ],
 });

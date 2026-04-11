@@ -1,6 +1,6 @@
 /**
  * Profile system tests — validates profile loading, schema conformance,
- * and multi-role support.
+ * and multi-role support. Profiles are selected via the APP env var at build time.
  */
 import { describe, it, expect } from "vitest";
 import { getProfile, AVAILABLE_PROFILES } from "../src/profiles/index";
@@ -63,8 +63,7 @@ function assertValidProfileConfig(profile: ProfileConfig) {
 describe("Profile Registry", () => {
   it("should list all available profiles", () => {
     expect(AVAILABLE_PROFILES).toContain("default-fachada");
-    expect(AVAILABLE_PROFILES).toContain("engineer-single-role");
-    expect(AVAILABLE_PROFILES).toContain("artist-engineer-multi");
+    expect(AVAILABLE_PROFILES).toContain("artist-engineer");
   });
 
   it("should fall back to default-fachada for unknown profile name", () => {
@@ -88,7 +87,7 @@ describe("default-fachada profile", () => {
 
   it("is a single-role profile", () => {
     expect(siteConfig.roles).toHaveLength(1);
-    expect(siteConfig.roles[0].id).toBe("engineer");
+    expect(siteConfig.roles[0].id).toBe("framework");
   });
 
   it("has theme switcher and mode toggle enabled", () => {
@@ -106,51 +105,10 @@ describe("default-fachada profile", () => {
   });
 });
 
-// ─── engineer-single-role profile ────────────────────────────────────────────
+// ─── artist-engineer profile ────────────────────────────────────────────────
 
-describe("engineer-single-role profile", () => {
-  const { siteConfig, profileConfig } = getProfile("engineer-single-role");
-
-  it("loads a valid SiteConfig", () => {
-    assertValidSiteConfig(siteConfig);
-  });
-
-  it("loads a valid ProfileConfig", () => {
-    assertValidProfileConfig(profileConfig);
-  });
-
-  it("is a single-role profile", () => {
-    expect(siteConfig.roles).toHaveLength(1);
-  });
-
-  it("has style switcher DISABLED", () => {
-    // Given: engineer profile locks the theme
-    // When: enableStyleSwitcher is read
-    // Then: it is false so users cannot change the visual style
-    expect(profileConfig.theme.enableStyleSwitcher).toBe(false);
-  });
-
-  it("has mode toggle enabled", () => {
-    expect(profileConfig.theme.enableModeToggle).toBe(true);
-  });
-
-  it("uses modern-tech theme style", () => {
-    expect(profileConfig.theme.style).toBe("modern-tech");
-  });
-
-  it("defaults to dark mode", () => {
-    expect(profileConfig.theme.defaultMode).toBe("dark");
-  });
-
-  it("does not have multiRoleDisplay", () => {
-    expect(profileConfig.multiRoleDisplay).toBeUndefined();
-  });
-});
-
-// ─── artist-engineer-multi profile ───────────────────────────────────────────
-
-describe("artist-engineer-multi profile", () => {
-  const { siteConfig, profileConfig } = getProfile("artist-engineer-multi");
+describe("artist-engineer profile", () => {
+  const { siteConfig, profileConfig } = getProfile("artist-engineer");
 
   it("loads a valid SiteConfig", () => {
     assertValidSiteConfig(siteConfig);

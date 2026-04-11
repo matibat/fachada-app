@@ -1,0 +1,83 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sky-bg" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" style="stop-color:#020C1B"/>
+      <stop offset="40%" style="stop-color:#0A2240"/>
+      <stop offset="75%" style="stop-color:#1A4A60"/>
+      <stop offset="100%" style="stop-color:#2A6A50"/>
+    </linearGradient>
+    <linearGradient id="terrain-line-grad" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#0A3060;stop-opacity:0"/>
+      <stop offset="20%" style="stop-color:#1A6090;stop-opacity:0.8"/>
+      <stop offset="50%" style="stop-color:#40A0C0;stop-opacity:1"/>
+      <stop offset="80%" style="stop-color:#1A6090;stop-opacity:0.8"/>
+      <stop offset="100%" style="stop-color:#0A3060;stop-opacity:0"/>
+    </linearGradient>
+    <filter id="glow-line">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="2" result="blur"/>
+      <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+    </filter>
+  </defs>
+
+  <!-- Sky/depth bg -->
+  <rect width="1200" height="630" fill="url(#sky-bg)"/>
+
+  <!-- Topographic contour lines — terrain elevation layers -->
+  <!-- Each path represents a different elevation band, lines are slightly irregular for organic feel -->
+  <g stroke="url(#terrain-line-grad)" stroke-width="1.2" fill="none" opacity="0.9" filter="url(#glow-line)">
+    <!-- High elevation (top, compressed) -->
+    <path d="M0,480 Q200,468 400,472 Q600,476 800,466 Q1000,458 1200,464"/>
+    <path d="M0,494 Q180,480 380,486 Q580,492 780,480 Q980,470 1200,478"/>
+    <path d="M0,508 Q220,498 420,502 Q620,508 820,496 Q1020,486 1200,494"/>
+
+    <!-- Mid elevation -->
+    <path d="M0,520 Q250,510 480,516 Q700,522 900,508 Q1080,496 1200,508"/>
+    <path d="M0,532 Q200,520 440,527 Q680,534 880,520 Q1060,508 1200,520"/>
+    <path d="M0,544 Q230,534 460,540 Q700,546 920,532 Q1080,520 1200,532"/>
+
+    <!-- Low elevation (valley) — more spread -->
+    <path d="M0,556 Q280,546 520,554 Q760,562 960,548 Q1100,536 1200,548"/>
+    <path d="M0,570 Q260,560 520,568 Q800,576 1020,562 Q1120,552 1200,562"/>
+    <path d="M0,584 Q240,576 500,582 Q780,590 1040,576 Q1140,568 1200,576"/>
+
+    <!-- Coastal/deep valley -->
+    <path d="M0,598 Q200,592 480,598 Q800,604 1060,592 Q1160,585 1200,590"/>
+    <path d="M0,612 Q240,606 500,613 Q800,620 1080,608 Q1160,602 1200,606"/>
+    <path d="M0,626 Q300,620 560,626 Q840,632 1100,622 Q1160,618 1200,622"/>
+  </g>
+
+  <!-- Subtle glow at horizon -->
+  <ellipse cx="600" cy="470" rx="500" ry="80" fill="#20A0E0" opacity="0.04"/>
+
+  <!-- Title area -->
+  <text
+    x="600"
+    y="120"
+    font-family="'Courier New', monospace"
+    font-size="13"
+    fill="rgba(64,160,200,0.7)"
+    text-anchor="middle"
+    letter-spacing="5"
+  >GENERATIVE TERRAIN SYSTEM</text>
+
+  <!-- Seed display -->
+  <text
+    x="600"
+    y="155"
+    font-family="'Courier New', monospace"
+    font-size="11"
+    fill="rgba(64,160,200,0.35)"
+    text-anchor="middle"
+    letter-spacing="2"
+  >SEED: 0x4F2A9C · WebGL · GLSL · Real-Time</text>
+
+  <!-- Subtle coordinate mark -->
+  <text
+    x="100"
+    y="50"
+    font-family="'Courier New', monospace"
+    font-size="10"
+    fill="rgba(64,160,200,0.3)"
+    letter-spacing="1"
+  >lat: -34.9011 · lon: -56.1645</text>
+</svg>

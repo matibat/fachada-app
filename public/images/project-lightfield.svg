@@ -1,0 +1,79 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sky-gradient" x1="0%" y1="0%" x2="0%" y2="100%">
+      <!-- Pre-dawn: deep indigo at top -->
+      <stop offset="0%" style="stop-color:#0B1A3D"/>
+      <stop offset="20%" style="stop-color:#1A2A5A"/>
+      <!-- Transition to golden hour -->
+      <stop offset="48%" style="stop-color:#6B3D1A"/>
+      <stop offset="62%" style="stop-color:#C06010"/>
+      <stop offset="76%" style="stop-color:#E8921A"/>
+      <!-- Warm horizon glow -->
+      <stop offset="90%" style="stop-color:#F5C842"/>
+      <stop offset="100%" style="stop-color:#FDE080"/>
+    </linearGradient>
+    <linearGradient id="cloud-band1" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#1A3060;stop-opacity:0"/>
+      <stop offset="25%" style="stop-color:#2A4888;stop-opacity:0.7"/>
+      <stop offset="50%" style="stop-color:#3A5898;stop-opacity:0.5"/>
+      <stop offset="75%" style="stop-color:#2A4888;stop-opacity:0.7"/>
+      <stop offset="100%" style="stop-color:#1A3060;stop-opacity:0"/>
+    </linearGradient>
+    <linearGradient id="cloud-band2" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#8B4A10;stop-opacity:0"/>
+      <stop offset="30%" style="stop-color:#C06820;stop-opacity:0.6"/>
+      <stop offset="60%" style="stop-color:#D07830;stop-opacity:0.4"/>
+      <stop offset="100%" style="stop-color:#8B4A10;stop-opacity:0"/>
+    </linearGradient>
+    <filter id="sky-blur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="20"/>
+    </filter>
+    <filter id="light-blur">
+      <feGaussianBlur in="SourceGraphic" stdDeviation="40"/>
+    </filter>
+  </defs>
+
+  <!-- Base sky gradient -->
+  <rect width="1200" height="630" fill="url(#sky-gradient)"/>
+
+  <!-- Atmospheric cloud layers — blurred organic bands -->
+  <ellipse cx="600" cy="200" rx="700" ry="120" fill="url(#cloud-band1)" filter="url(#sky-blur)" opacity="0.8"/>
+  <ellipse cx="400" cy="320" rx="600" ry="80" fill="url(#cloud-band2)" filter="url(#sky-blur)" opacity="0.7"/>
+  <ellipse cx="800" cy="280" rx="500" ry="90" fill="url(#cloud-band1)" filter="url(#sky-blur)" opacity="0.5"/>
+
+  <!-- Low sun / horizon glow -->
+  <ellipse cx="600" cy="640" rx="400" ry="120" fill="#F5C842" filter="url(#light-blur)" opacity="0.35"/>
+  <ellipse cx="600" cy="620" rx="200" ry="80" fill="#FDE080" filter="url(#sky-blur)" opacity="0.3"/>
+
+  <!-- Subtle light rays from horizon -->
+  <g opacity="0.06">
+    <line x1="600" y1="630" x2="200" y2="0" stroke="#FDE080" stroke-width="80"/>
+    <line x1="600" y1="630" x2="600" y2="0" stroke="#FDE080" stroke-width="60"/>
+    <line x1="600" y1="630" x2="1000" y2="0" stroke="#FDE080" stroke-width="80"/>
+  </g>
+
+  <!-- Very faint ground/horizon line -->
+  <rect x="0" y="600" width="1200" height="30" fill="#0A0803" opacity="0.4"/>
+
+  <!-- Minimal label — bottom third, non-intrusive -->
+  <text
+    x="600"
+    y="498"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="18"
+    font-weight="400"
+    fill="rgba(255,240,200,0.6)"
+    text-anchor="middle"
+    letter-spacing="5"
+  >LIGHT FIELD STUDY</text>
+
+  <text
+    x="600"
+    y="524"
+    font-family="'Courier New', monospace"
+    font-size="10"
+    fill="rgba(240,200,120,0.35)"
+    text-anchor="middle"
+    letter-spacing="3"
+  >NO. 07 · -34.9011, -56.1645 · 06:14 · JUNE SOLSTICE</text>
+</svg>

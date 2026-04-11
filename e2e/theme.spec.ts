@@ -1,13 +1,15 @@
 /**
- * Theme E2E — single test asserting that switching theme style visually
- * changes the page.  Persistence, cross-tab sync, and token correctness are
- * covered at the integration level (tests/theme.integration.test.tsx).
+ * Theme E2E — default-fachada app global theme switching.
+ *
+ * Asserts that switching between the built-in global themes (minimalist,
+ * modern-tech, professional, vaporwave) updates the page visually.
+ * Persistence, cross-tab sync, and token correctness are covered at the
+ * integration level (tests/theme.integration.test.tsx).
  *
  * BDD scenario
- * Given  a visitor opens the portfolio with the default (minimalist) theme
- * When   they select a different theme (Modern Tech) from the style switcher
- * Then   the page's CSS custom properties and data-theme attribute update,
- *        and at least one visual property is different from the baseline.
+ * Given  a visitor opens the default-fachada portfolio (minimalist theme)
+ * When   they select the Modern Tech theme from the style picker
+ * Then   the data-theme attribute and CSS custom properties update
  */
 
 import { test, expect } from "@playwright/test";

@@ -1,6 +1,6 @@
 # Fachada Portfolio Template
 
-A modern, SEO-optimized portfolio template built with Astro 6, React, and Tailwind CSS. Features **4 visual themes**, dark mode, comprehensive testing, and automated deployment. **Profile-extensible**: Create new portfolios for different people with configuration alone.
+A modern, SEO-optimized portfolio template built with Astro 6, React, and Tailwind CSS. Features **4 visual themes**, dark mode, comprehensive testing, and automated deployment. **App-extensible**: Create entirely new SPAs for different people with configuration alone.
 
 ## ✨ Features
 
@@ -16,7 +16,7 @@ A modern, SEO-optimized portfolio template built with Astro 6, React, and Tailwi
 - 🔄 **CI/CD** - GitHub Actions for automated testing and Firebase deployment
 - ⚙️ **Configuration-Driven** - Rebrand from a single config file
 - 🏗️ **Makefile Automation** - Common tasks automated (dev, build, test, deploy)
-- 👥 **Multi-Profile Support** - Create entirely new SPAs for different people by extending profiles
+- 👥 **Multi-App Support** - Create entirely new SPAs for different people by extending apps
 
 ## 🎨 Theme System
 
@@ -59,13 +59,13 @@ make dev
 make test
 # or: yarn test
 
-# Build for production (default profile)
+# Build for production (default app)
 make build
 # or: yarn build
 
-# Build with a specific profile
-PROFILE=engineer-single-role yarn build
-PROFILE=artist-engineer-multi yarn build
+# Build with a specific app
+APP=engineer yarn build
+APP=artist-engineer yarn build
 ```
 
 Visit `http://localhost:4321` to see your site.
@@ -94,11 +94,10 @@ Visit `http://localhost:4321` to see your site.
 │   ├── content/
 │   │   ├── projects/              # Project case studies (.md)
 │   │   └── blog/                  # Blog posts (.md)
-│   ├── profiles/                  # ← All profiles live here
-│   │   ├── index.ts               # Profile registry
-│   │   ├── default-fachada/       # Default portfolio
-│   │   ├── engineer-single-role/  # Example: single-role engineer
-│   │   └── artist-engineer-multi/ # Example: multi-role artist + engineer
+│   ├── profiles/                  # ← All app profiles live here
+│   │   ├── index.ts               # App registry (maps APP env var to profiles)
+│   │   ├── default-fachada/       # Default developer portfolio
+│   │   └── artist-engineer-multi/ # Artist-engineer portfolio with 3 custom themes
 │   ├── types/
 │   │   └── profile.types.ts       # All profile TypeScript interfaces
 │   ├── layouts/
@@ -248,21 +247,133 @@ This template is designed to be **profile-extensible**. Changing the active prof
    };
    ```
 
-5. **Build or dev with your profile**:
+## 📋 Creating New Apps
+
+This template is designed to be **app-extensible**. Each app produces a completely different SPA with its own name, bio, skills, theme settings, and visible sections.
+
+### Quick App Creation
+
+1. **Create an app directory**:
+
    ```bash
-   PROFILE=your-name yarn dev
-   PROFILE=your-name yarn build
+   mkdir -p apps/your-app/
    ```
 
-### Included Example Profiles
+2. **Create profile config files** in `src/profiles/your-app/`:
 
-| Profile                 | Description                                    | Theme Widget | Mode Toggle |
-| ----------------------- | ---------------------------------------------- | ------------ | ----------- |
-| `default-fachada`       | Default single-role engineer portfolio         | ✅ Enabled   | ✅ Enabled  |
-| `engineer-single-role`  | Backend engineer — locked to modern-tech theme | ❌ Disabled  | ✅ Enabled  |
-| `artist-engineer-multi` | Multi-role: engineer + digital artist          | ✅ Enabled   | ✅ Enabled  |
+   Create `src/profiles/your-app/site.config.ts`:
 
-### Multi-Role Profiles (Artist + Engineer, etc.)
+   ```typescript
+   import type { SiteConfig } from "../../types/profile.types";
+
+   export const siteConfig: SiteConfig = {
+     name: "Your Name",
+     title: "Your Name — Your Role",
+     description: "Your professional description",
+     author: "Your Name",
+     url: "https://your-domain.dev",
+     ogImage: "/og-image.png",
+     social: {
+       github: "https://github.com/yourusername",
+       linkedin: "https://linkedin.com/in/yourusername",
+       twitter: "https://twitter.com/yourusername",
+       email: "your@email.dev",
+     },
+     location: { city: "Your City", country: "Your Country" },
+     roles: [
+       {
+         id: "engineer",
+         title: "Software Engineer",
+         specialties: ["TypeScript", "React"],
+         featured: true,
+       },
+     ],
+     primaryRole: "engineer",
+     analytics: { plausibleDomain: "your-domain.dev" },
+   };
+   ```
+
+   Create `src/profiles/your-app/profile.config.ts`:
+
+   ```typescript
+   import type { ProfileConfig } from "../../types/profile.types";
+
+   export const profileConfig: ProfileConfig = {
+     theme: {
+       style: "minimalist", // minimalist | modern-tech | professional | vaporwave
+       defaultMode: "system", // light | dark | system
+       enableStyleSwitcher: true,
+       enableModeToggle: true,
+     },
+     about: {
+       paragraphs: [
+         "Your first bio paragraph.",
+         "Your second bio paragraph.",
+         "Your third bio paragraph.",
+       ],
+     },
+     skills: [{ name: "Category 1", skills: ["Tech A", "Tech B", "Tech C"] }],
+     sections: [
+       { id: "hero", enabled: true, order: 1 },
+       { id: "about", enabled: true, order: 2 },
+       { id: "skills", enabled: true, order: 3 },
+       { id: "projects", enabled: true, order: 4, requiresContent: "projects" },
+       { id: "contact", enabled: true, order: 5 },
+     ],
+   };
+   ```
+
+3. **Create `apps/your-app/app.config.ts`**:
+
+   ```typescript
+   import { siteConfig } from "../../src/profiles/your-app/site.config";
+   import { profileConfig } from "../../src/profiles/your-app/profile.config";
+   import type { AppConfig } from "../../src/types/app.types";
+
+   export const appConfig: AppConfig = {
+     seo: siteConfig,
+     theme: profileConfig.theme,
+     themes: {
+       globals: ["minimalist", "modern-tech", "professional", "vaporwave"],
+       default: "minimalist",
+     },
+     themeVariants: {},
+     assets: {
+       ogImage: siteConfig.ogImage,
+     },
+     page: {
+       sections: profileConfig.sections.map((s) => ({ ...s, widgets: [] })),
+     },
+   };
+   ```
+
+4. **Register the app in `.fachadarc.json`**:
+
+   ```json
+   {
+     "defaultApp": "default-fachada",
+     "apps": {
+       "default-fachada": "apps/default-fachada/app.config.ts",
+       "your-app": "apps/your-app/app.config.ts"
+     }
+   }
+   ```
+
+5. **Build or dev with your app**:
+   ```bash
+   APP=your-app yarn dev
+   APP=your-app yarn build
+   ```
+
+### Included Example Apps
+
+| App               | Description                                    | Theme Widget | Mode Toggle |
+| ----------------- | ---------------------------------------------- | ------------ | ----------- |
+| `default-fachada` | Default single-role engineer portfolio         | ✅ Enabled   | ✅ Enabled  |
+| `engineer`        | Backend engineer — locked to modern-tech theme | ❌ Disabled  | ✅ Enabled  |
+| `artist-engineer` | Multi-role: engineer + digital artist          | ✅ Enabled   | ✅ Enabled  |
+
+### Multi-Role Portfolios (Artist + Engineer, etc.)
 
 To represent someone with multiple professional identities, add multiple entries to `roles`:
 

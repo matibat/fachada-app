@@ -12,6 +12,10 @@ import type { AppConfig } from "../../src/types/app.types";
 export const appConfig: AppConfig = {
   seo: siteConfig,
   theme: profileConfig.theme,
+  themes: {
+    globals: ["minimalist", "modern-tech", "professional", "vaporwave"],
+    default: "minimalist",
+  },
   themeVariants: {},
   assets: {
     ogImage: siteConfig.ogImage,

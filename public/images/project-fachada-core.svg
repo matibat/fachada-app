@@ -1,0 +1,61 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <!-- Dark architectural background -->
+  <rect width="1200" height="630" fill="#0E0E0C"/>
+
+  <!-- Subtle grid lines — framework structure metaphor -->
+  <g stroke="#2A2A26" stroke-width="1" opacity="0.6">
+    <!-- Vertical lines -->
+    <line x1="150" y1="0" x2="150" y2="630"/>
+    <line x1="300" y1="0" x2="300" y2="630"/>
+    <line x1="450" y1="0" x2="450" y2="630"/>
+    <line x1="600" y1="0" x2="600" y2="630"/>
+    <line x1="750" y1="0" x2="750" y2="630"/>
+    <line x1="900" y1="0" x2="900" y2="630"/>
+    <line x1="1050" y1="0" x2="1050" y2="630"/>
+    <!-- Horizontal lines -->
+    <line x1="0" y1="105" x2="1200" y2="105"/>
+    <line x1="0" y1="210" x2="1200" y2="210"/>
+    <line x1="0" y1="315" x2="1200" y2="315"/>
+    <line x1="0" y1="420" x2="1200" y2="420"/>
+    <line x1="0" y1="525" x2="1200" y2="525"/>
+  </g>
+
+  <!-- Accent corner marks — frame the composition -->
+  <g stroke="#F0EFE8" stroke-width="2" fill="none">
+    <polyline points="80,80 54,80 54,54 80,54"/>
+    <polyline points="1120,80 1146,80 1146,54 1120,54"/>
+    <polyline points="80,550 54,550 54,576 80,576"/>
+    <polyline points="1120,550 1146,550 1146,576 1120,576"/>
+  </g>
+
+  <!-- Thin horizontal rule above title -->
+  <line x1="504" y1="258" x2="696" y2="258" stroke="#F0EFE8" stroke-width="1" opacity="0.4"/>
+
+  <!-- Main title -->
+  <text
+    x="600"
+    y="310"
+    font-family="Georgia, 'Times New Roman', serif"
+    font-size="72"
+    font-weight="400"
+    fill="#F0EFE8"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    letter-spacing="-1"
+  >Fachada</text>
+
+  <!-- Thin horizontal rule below title -->
+  <line x1="504" y1="338" x2="696" y2="338" stroke="#F0EFE8" stroke-width="1" opacity="0.4"/>
+
+  <!-- Subtitle in mono -->
+  <text
+    x="600"
+    y="378"
+    font-family="'Courier New', monospace"
+    font-size="13"
+    fill="#A8A89E"
+    text-anchor="middle"
+    dominant-baseline="middle"
+    letter-spacing="3"
+  >PORTFOLIO FRAMEWORK</text>
+</svg>

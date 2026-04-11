@@ -5,16 +5,13 @@
  * 1. Create src/profiles/<name>/site.config.ts
  * 2. Create src/profiles/<name>/profile.config.ts
  * 3. Add an entry to PROFILES below
- * 4. Build with: PROFILE=<name> yarn build
+ * 4. Build with: APP=<name> yarn build
  */
 
 import type { ProfileConfig, SiteConfig } from "../types/profile.types";
 
 import { siteConfig as fachadaSite } from "./default-fachada/site.config";
 import { profileConfig as fachadaProfile } from "./default-fachada/profile.config";
-
-import { siteConfig as engineerSite } from "./engineer-single-role/site.config";
-import { profileConfig as engineerProfile } from "./engineer-single-role/profile.config";
 
 import { siteConfig as artistEngineerSite } from "./artist-engineer-multi/site.config";
 import { profileConfig as artistEngineerProfile } from "./artist-engineer-multi/profile.config";
@@ -29,11 +26,7 @@ const PROFILES: Record<string, LoadedProfile> = {
     siteConfig: fachadaSite,
     profileConfig: fachadaProfile,
   },
-  "engineer-single-role": {
-    siteConfig: engineerSite,
-    profileConfig: engineerProfile,
-  },
-  "artist-engineer-multi": {
+  "artist-engineer": {
     siteConfig: artistEngineerSite,
     profileConfig: artistEngineerProfile,
   },
@@ -49,8 +42,7 @@ export function getProfile(name: string): LoadedProfile {
   return PROFILES[name] ?? PROFILES["default-fachada"];
 }
 
-/** The active profile, selected via the PROFILE env var at build time. */
-const ACTIVE_PROFILE_NAME =
-  (import.meta.env.PROFILE as string) || "default-fachada";
+/** The active app, selected via the APP env var at build time. */
+const ACTIVE_APP_NAME = (import.meta.env.APP as string) || "default-fachada";
 
-export const activeProfile = getProfile(ACTIVE_PROFILE_NAME);
+export const activeProfile = getProfile(ACTIVE_APP_NAME);

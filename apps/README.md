@@ -38,7 +38,7 @@ The `.fachadarc.json` file at the project root registers all available apps:
 }
 ```
 
-- **`defaultApp`** — the fallback app name when neither `APP` nor `PROFILE` env vars are set
+- **`defaultApp`** — the fallback app name when the `APP` env var is not set
 - **`apps`** — map of app name → path (relative to project root)
 
 This registry is read at build/test time by the **vite-plugin-fachada** Vite plugin (see [src/vite/fachada-plugin.ts](../src/vite/fachada-plugin.ts)).
@@ -54,26 +54,16 @@ APP=default-fachada yarn dev
 
 `APP` is resolved to `import.meta.env.APP` at build time by the plugin.
 
-### Backward compatibility
-
-The legacy `PROFILE` variable is still accepted and mapped to its v2 equivalent via `PROFILE_ALIASES` in the plugin:
-
-| Legacy `PROFILE` value  | Resolves to app   |
-| ----------------------- | ----------------- |
-| `default-fachada`       | `default-fachada` |
-| `artist-engineer-multi` | `artist-engineer` |
-
-When neither `APP` nor `PROFILE` is set, the `defaultApp` from `.fachadarc.json` is used.
+When `APP` is not set, the `defaultApp` from `.fachadarc.json` is used.
 
 ## How it works: vite-plugin-fachada
 
 The plugin creates a virtual Vite module (`virtual:fachada/active-app`) that is resolved at build/test time:
 
 1. Reads `.fachadarc.json` from the project root
-2. Resolves the active app name from `APP` → `PROFILE` → `defaultApp`
-3. Applies `PROFILE_ALIASES` for backward compat
-4. Generates ES module code that imports the matched `AppConfig`
-5. Exports it alongside `AVAILABLE_APPS`
+2. Resolves the active app name from `APP` → `defaultApp`
+3. Generates ES module code that imports the matched `AppConfig`
+4. Exports it alongside `AVAILABLE_APPS`
 
 **Core benefit:** `AppLoader.ts` imports only from `virtual:fachada/active-app`. It has zero hardcoded references to any file in `/apps/`.
 

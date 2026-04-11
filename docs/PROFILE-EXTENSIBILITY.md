@@ -10,9 +10,9 @@
 
 ### What Is Implemented
 
-- ✅ Profile system with 3 example profiles (`default-fachada`, `engineer-single-role`, `artist-engineer-multi`)
+- ✅ App system with 2 registered apps (`default-fachada`, `artist-engineer`)
 - ✅ Type-safe profile interfaces in `src/types/profile.types.ts`
-- ✅ Profile registry and active profile selection via `PROFILE` env var
+- ✅ App registry and active app selection via `APP` env var
 - ✅ About and Skills content driven by profile config (no hardcoded text)
 - ✅ Contact message driven by profile config
 - ✅ Hero section supports multi-role display (shows all featured roles in overline)
@@ -31,9 +31,9 @@
 ### Profile Selection Flow
 
 ```
-PROFILE env var at build time
+APP env var at build time
    ↓
-astro.config.mjs (sets import.meta.env.PROFILE)
+astro.config.mjs (sets import.meta.env.APP)
    ↓
 src/profiles/index.ts (getProfile() → PROFILES[name])
    ↓
@@ -47,16 +47,13 @@ All components: Hero, About, Skills, Contact, RoleExplorer, index.astro
 
 ```
 src/profiles/
-├── index.ts                         # Registry: getProfile(), AVAILABLE_PROFILES
+├── index.ts                         # Registry: AVAILABLE_PROFILES (app names)
 ├── default-fachada/
 │   ├── site.config.ts               # Name, URL, social, roles
 │   └── profile.config.ts            # Theme, about text, skills, sections
-├── engineer-single-role/
-│   ├── site.config.ts
-│   └── profile.config.ts            # enableStyleSwitcher: false
 └── artist-engineer-multi/
     ├── site.config.ts               # Two roles, each with role.about + role.skills
-    └── profile.config.ts            # sections: [hero, role-explorer, projects, contact]
+    └── profile.config.ts            # Sections: hero, role-explorer, projects, contact
 ```
 
 ---
@@ -207,8 +204,8 @@ const PROFILES: Record<string, LoadedProfile> = {
 ### Step 5: Build
 
 ```bash
-PROFILE=your-name yarn build    # Production build
-PROFILE=your-name yarn dev      # Development server
+APP=your-name yarn build    # Production build
+APP=your-name yarn dev      # Development server
 ```
 
 ---
@@ -328,9 +325,9 @@ theme: {
 ### Profile Selection Flow
 
 ```
-PROFILE env var at build time
+APP env var at build time
    ↓
-astro.config.mjs (sets import.meta.env.PROFILE)
+astro.config.mjs (sets import.meta.env.APP)
    ↓
 src/profiles/index.ts (getProfile() → PROFILES[name])
    ↓
@@ -344,55 +341,50 @@ All components: Hero, About, Skills, Contact, index.astro
 
 ```
 src/profiles/
-├── index.ts                         # Registry: getProfile(), AVAILABLE_PROFILES
+├── index.ts                         # Registry: AVAILABLE_PROFILES (app names)
 ├── default-fachada/
 │   ├── site.config.ts               # Name, URL, social, roles
 │   └── profile.config.ts            # Theme, about text, skills, sections
-├── engineer-single-role/
-│   ├── site.config.ts
-│   └── profile.config.ts            # enableStyleSwitcher: false
 └── artist-engineer-multi/
     ├── site.config.ts               # Two roles: engineer + artist
-    └── profile.config.ts            # multiRoleDisplay: { style: "tabs" }
+    └── profile.config.ts            # Sections: hero, role-explorer, projects, contact
 ```
 
 ---
 
 ## Type System
 
-All profile types are in `src/types/profile.types.ts`:
-
-```typescript
 interface SiteConfig {
-  name: string;
-  title: string;
-  description: string;
-  url: string;
-  roles: Role[]; // All professional identities
-  primaryRole: string; // ID of default role
-  social: { github; linkedin; twitter; email };
-  location: { city; country };
-  analytics: { plausibleDomain };
-  ogImage: string;
+name: string;
+title: string;
+description: string;
+url: string;
+roles: Role[]; // All professional identities
+primaryRole: string; // ID of default role
+social: { github; linkedin; twitter; email };
+location: { city; country };
+analytics: { plausibleDomain };
+ogImage: string;
 }
 
 interface ProfileConfig {
-  theme: ThemeConfig; // Style, mode, widget flags
-  about: AboutContent; // 3 bio paragraphs
-  skills: SkillCategory[]; // Skill table data
-  sections: PageSectionConfig[]; // Which sections to render and in what order
-  contactMessage?: string;
-  multiRoleDisplay?: MultiRoleDisplayConfig;
+theme: ThemeConfig; // Style, mode, widget flags
+about: AboutContent; // 3 bio paragraphs
+skills: SkillCategory[]; // Skill table data
+sections: PageSectionConfig[]; // Which sections to render and in what order
+contactMessage?: string;
+multiRoleDisplay?: MultiRoleDisplayConfig;
 }
 
 interface PageSectionConfig {
-  id: string;
-  enabled: boolean;
-  order: number;
-  requiresRole?: string[]; // Only show if primaryRole matches
-  requiresContent?: "projects" | "blog"; // Only show if collection non-empty
+id: string;
+enabled: boolean;
+order: number;
+requiresRole?: string[]; // Only show if primaryRole matches
+requiresContent?: "projects" | "blog"; // Only show if collection non-empty
 }
-```
+
+````
 
 ---
 
@@ -402,7 +394,7 @@ interface PageSectionConfig {
 
 ```bash
 mkdir -p src/profiles/your-name
-```
+````
 
 ### Step 2: Create `site.config.ts`
 
@@ -488,8 +480,8 @@ const PROFILES: Record<string, LoadedProfile> = {
 ### Step 5: Build
 
 ```bash
-PROFILE=your-name yarn build    # Production build
-PROFILE=your-name yarn dev      # Development server
+APP=your-name yarn build    # Production build
+APP=your-name yarn dev      # Development server
 ```
 
 ---

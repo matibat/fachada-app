@@ -58,25 +58,26 @@ describe("Scenario 2: AVAILABLE_APPS reflects the .fachadarc.json registry", () 
   });
 });
 
-// ─── Scenario 3: resolveAppName maps legacy PROFILE names ────────────────────
+// ─── Scenario 3: resolveAppName handles app name resolution ────────────────
 
-describe("Scenario 3: resolveAppName handles v1 PROFILE aliases", () => {
+describe("Scenario 3: resolveAppName resolves registered app names", () => {
   const fachadarc = readFachadarc();
 
-  it("maps 'artist-engineer-multi' → 'artist-engineer'", () => {
-    expect(resolveAppName("artist-engineer-multi", fachadarc)).toBe(
+  it("resolves a registered app name unchanged", () => {
+    expect(resolveAppName("artist-engineer", fachadarc)).toBe(
       "artist-engineer",
     );
   });
 
-  it("passes through a v2 app name unchanged", () => {
+  it("passes through another registered v2 app name unchanged", () => {
     expect(resolveAppName("default-fachada", fachadarc)).toBe(
       "default-fachada",
     );
   });
 
-  it("falls back to defaultApp for unknown names", () => {
-    expect(resolveAppName("does-not-exist", fachadarc)).toBe(
+  it("falls back to defaultApp for unknown names (including legacy PROFILE names)", () => {
+    // Legacy names like 'artist-engineer-multi' are no longer mapped
+    expect(resolveAppName("artist-engineer-multi", fachadarc)).toBe(
       fachadarc.defaultApp,
     );
   });

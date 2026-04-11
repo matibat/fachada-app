@@ -5,8 +5,9 @@ import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
 import { fachadaPlugin } from "./src/vite/fachada-plugin";
 
-// APP (v2) takes precedence; PROFILE (v1) is kept for backward compatibility
-const activeApp = process.env.APP || process.env.PROFILE || "default-fachada";
+// APP environment variable selects the active app at build time.
+// Defaults to 'default-fachada' if not set.
+const activeApp = process.env.APP || "default-fachada";
 
 // https://astro.build/config
 export default defineConfig({
@@ -17,8 +18,6 @@ export default defineConfig({
     define: {
       // Expose the active app name to import.meta.env at build time
       "import.meta.env.APP": JSON.stringify(activeApp),
-      // Backward compat: PROFILE still resolves to the active app name
-      "import.meta.env.PROFILE": JSON.stringify(activeApp),
     },
   },
 });

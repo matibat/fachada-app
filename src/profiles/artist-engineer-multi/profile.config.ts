@@ -1,23 +1,32 @@
 /**
  * Artist-engineer multi-role profile configuration.
- * Both style switcher and mode toggle are enabled.
- * Shows role switcher widget with tabs display.
+ *
+ * Base theme: minimalist dark — unexpected for a creative profile, intentionally so.
+ * The restraint is the statement: the content does the work, not the decoration.
+ *
+ * Two-theme concept:
+ *   Minimalist (dark) → the artist's deliberate silence: off-white on near-black,
+ *     generous whitespace, serif typography. Organic, honest, timeless.
+ *   Modern Tech → the engineer's precision: gradient headings, grid background,
+ *     glow accents. Structured, digital, sharp.
+ *
+ * Style switcher is on. The role explorer guides you to try each theme with its role.
  */
 
 import type { ProfileConfig } from "../../types/profile.types";
 
 export const profileConfig: ProfileConfig = {
   theme: {
-    style: "vaporwave",
+    style: "professional",
     defaultMode: "dark",
     enableStyleSwitcher: true,
     enableModeToggle: true,
   },
   about: {
     paragraphs: [
-      "I'm a software engineer and digital artist exploring the intersection of code and creativity — building tools by day, making worlds by night.",
-      "On the engineering side I specialize in real-time web graphics with Three.js and WebGL, and build the full-stack systems that power them. On the art side I create generative 3D sculptures, animations, and interactive installations.",
-      "I believe technology is a canvas and code is a medium. Every project is a chance to make something that didn't exist before.",
+      "I am a software engineer and digital artist. I write systems that handle a hundred thousand requests and pieces that take three minutes to look at. The two practices are not as different as they sound.",
+      "During the day I build real-time web graphics and the distributed systems behind them: TypeScript, WebGL, Node.js, PostgreSQL, deployed at scale. After hours I make generative 3D sculptures, colour field prints, and interactive installations — sometimes using the same GLSL code.",
+      "Use the role switcher to go deeper into either world. Try the theme switcher in the corner: three modern variants — Minimal (clean, cool), Warm (personal, human), Bold (professional, strong). Each one is the same person and work, seen through a different lens.",
     ],
   },
   skills: [
@@ -26,18 +35,12 @@ export const profileConfig: ProfileConfig = {
       skills: ["TypeScript", "React", "WebGL", "Three.js", "Node.js"],
     },
     {
-      name: "3D & Design",
-      skills: [
-        "Blender",
-        "Cinema 4D",
-        "3D Modeling",
-        "Animation",
-        "Generative Art",
-      ],
+      name: "Art & Creative Code",
+      skills: ["Blender", "Cinema 4D", "GLSL", "p5.js", "Generative Systems"],
     },
     {
-      name: "Tools",
-      skills: ["Git", "Figma", "Substance Painter", "TouchDesigner", "GLSL"],
+      name: "Shared Craft",
+      skills: ["Git", "Figma", "TouchDesigner", "Substance Painter", "Houdini"],
     },
   ],
   sections: [
@@ -47,7 +50,7 @@ export const profileConfig: ProfileConfig = {
     { id: "contact", enabled: true, order: 4 },
   ],
   contactMessage:
-    "Interested in creative tech collaborations, commissions, and engineering contracts.",
+    "Available for engineering contracts, creative technology collaborations, and commissioned art. Let us make something together.",
   multiRoleDisplay: {
     style: "storytelling",
   },

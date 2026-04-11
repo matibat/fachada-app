@@ -1,0 +1,105 @@
+<svg width="1200" height="630" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <!-- Minimalist: near-white light -->
+    <linearGradient id="minimalist-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#F9F8F5"/>
+      <stop offset="100%" style="stop-color:#E5E4DF"/>
+    </linearGradient>
+    <!-- Modern Tech: dark with blue glow -->
+    <linearGradient id="tech-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#05070A"/>
+      <stop offset="100%" style="stop-color:#0D1117"/>
+    </linearGradient>
+    <!-- Professional: cool gray-blue -->
+    <linearGradient id="pro-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#EEF2F7"/>
+      <stop offset="100%" style="stop-color:#D8E0EB"/>
+    </linearGradient>
+    <!-- Vaporwave: purple-pink dark -->
+    <linearGradient id="vapor-grad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#0D0014"/>
+      <stop offset="100%" style="stop-color:#1A0028"/>
+    </linearGradient>
+    <!-- Tech accent glow -->
+    <linearGradient id="tech-accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#3B82F6"/>
+      <stop offset="100%" style="stop-color:#06B6D4"/>
+    </linearGradient>
+    <!-- Vaporwave accent -->
+    <linearGradient id="vapor-accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FF6EC7"/>
+      <stop offset="100%" style="stop-color:#9B4DCA"/>
+    </linearGradient>
+  </defs>
+
+  <!-- Dividing lines -->
+  <line x1="600" y1="0" x2="600" y2="630" stroke="#1a1a1a" stroke-width="2"/>
+  <line x1="0" y1="315" x2="1200" y2="315" stroke="#1a1a1a" stroke-width="2"/>
+
+  <!-- Q1: Minimalist (top-left) -->
+  <rect x="0" y="0" width="599" height="314" fill="url(#minimalist-grad)"/>
+  <text x="300" y="140" font-family="Georgia, serif" font-size="28" font-weight="400" fill="#141414" text-anchor="middle" letter-spacing="-0.5">Minimalist</text>
+  <line x1="240" y1="158" x2="360" y2="158" stroke="#141414" stroke-width="1" opacity="0.3"/>
+  <text x="300" y="185" font-family="'Courier New', monospace" font-size="11" fill="#555550" text-anchor="middle" letter-spacing="2">EDITORIAL · HONEST · SERIF</text>
+  <!--  Three mini "body lines" suggestion -->
+  <rect x="220" y="210" width="160" height="6" rx="0" fill="#141414" opacity="0.12"/>
+  <rect x="220" y="224" width="130" height="6" rx="0" fill="#141414" opacity="0.08"/>
+  <rect x="220" y="238" width="148" height="6" rx="0" fill="#141414" opacity="0.08"/>
+
+  <!-- Q2: Modern Tech (top-right) -->
+  <rect x="601" y="0" width="599" height="314" fill="url(#tech-grad)"/>
+  <!-- Grid dots -->
+  <g fill="#1E2A3A" opacity="0.8">
+    <circle cx="640" cy="40" r="1.5"/><circle cx="688" cy="40" r="1.5"/><circle cx="736" cy="40" r="1.5"/><circle cx="784" cy="40" r="1.5"/><circle cx="832" cy="40" r="1.5"/><circle cx="880" cy="40" r="1.5"/><circle cx="928" cy="40" r="1.5"/><circle cx="976" cy="40" r="1.5"/><circle cx="1024" cy="40" r="1.5"/><circle cx="1072" cy="40" r="1.5"/><circle cx="1120" cy="40" r="1.5"/><circle cx="1168" cy="40" r="1.5"/>
+    <circle cx="640" cy="88" r="1.5"/><circle cx="688" cy="88" r="1.5"/><circle cx="736" cy="88" r="1.5"/><circle cx="784" cy="88" r="1.5"/><circle cx="832" cy="88" r="1.5"/><circle cx="880" cy="88" r="1.5"/><circle cx="928" cy="88" r="1.5"/><circle cx="976" cy="88" r="1.5"/><circle cx="1024" cy="88" r="1.5"/><circle cx="1072" cy="88" r="1.5"/><circle cx="1120" cy="88" r="1.5"/>
+    <circle cx="640" cy="136" r="1.5"/><circle cx="688" cy="136" r="1.5"/><circle cx="736" cy="136" r="1.5"/><circle cx="784" cy="136" r="1.5"/><circle cx="832" cy="136" r="1.5"/><circle cx="880" cy="136" r="1.5"/><circle cx="928" cy="136" r="1.5"/><circle cx="976" cy="136" r="1.5"/><circle cx="1024" cy="136" r="1.5"/><circle cx="1072" cy="136" r="1.5"/>
+    <circle cx="640" cy="184" r="1.5"/><circle cx="688" cy="184" r="1.5"/><circle cx="736" cy="184" r="1.5"/><circle cx="784" cy="184" r="1.5"/><circle cx="832" cy="184" r="1.5"/><circle cx="880" cy="184" r="1.5"/><circle cx="928" cy="184" r="1.5"/><circle cx="976" cy="184" r="1.5"/>
+    <circle cx="640" cy="232" r="1.5"/><circle cx="688" cy="232" r="1.5"/><circle cx="736" cy="232" r="1.5"/><circle cx="784" cy="232" r="1.5"/><circle cx="832" cy="232" r="1.5"/>
+    <circle cx="640" cy="280" r="1.5"/><circle cx="688" cy="280" r="1.5"/><circle cx="736" cy="280" r="1.5"/>
+  </g>
+  <!-- Gradient text effect suggestion (filled rect) -->
+  <rect x="660" y="120" width="580" height="52" fill="url(#tech-accent)" opacity="0.15" rx="2"/>
+  <text x="900" y="155" font-family="'Arial', sans-serif" font-size="26" font-weight="700" fill="#E0F2FE" text-anchor="middle" letter-spacing="1">Modern Tech</text>
+  <rect x="720" y="175" width="360" height="3" fill="url(#tech-accent)" rx="1"/>
+  <text x="900" y="202" font-family="'Courier New', monospace" font-size="11" fill="#38BDF8" text-anchor="middle" letter-spacing="2">BOLD · DIGITAL · PRECISE</text>
+
+  <!-- Q3: Professional (bottom-left) -->
+  <rect x="0" y="316" width="599" height="314" fill="url(#pro-grad)"/>
+  <text x="60" y="386" font-family="'Arial', sans-serif" font-size="11" font-weight="500" fill="#4F46E5" letter-spacing="2">02</text>
+  <text x="90" y="386" font-family="'Arial', sans-serif" font-size="24" font-weight="600" fill="#1E293B" letter-spacing="0.3">Professional</text>
+  <rect x="60" y="400" width="240" height="3" rx="2" fill="#4F46E5"/>
+  <text x="60" y="434" font-family="'Courier New', monospace" font-size="11" fill="#64748B" letter-spacing="2">STRUCTURED · CREDIBLE</text>
+  <!-- Card suggestion -->
+  <rect x="60" y="458" width="480" height="110" rx="6" fill="white" opacity="0.8"/>
+  <rect x="60" y="458" width="480" height="110" rx="6" fill="none" stroke="#CBD5E1" stroke-width="1"/>
+  <rect x="80" y="478" width="120" height="10" rx="1" fill="#1E293B" opacity="0.2"/>
+  <rect x="80" y="496" width="200" height="8" rx="1" fill="#64748B" opacity="0.3"/>
+  <rect x="80" y="512" width="160" height="8" rx="1" fill="#64748B" opacity="0.2"/>
+  <rect x="80" y="536" width="60" height="20" rx="3" fill="#4F46E5" opacity="0.8"/>
+
+  <!-- Q4: Vaporwave (bottom-right) -->
+  <rect x="601" y="316" width="599" height="314" fill="url(#vapor-grad)"/>
+  <!-- Neon grid lines -->
+  <g stroke="#FF6EC7" stroke-width="0.5" opacity="0.3">
+    <line x1="601" y1="380" x2="1200" y2="380"/>
+    <line x1="601" y1="440" x2="1200" y2="440"/>
+    <line x1="601" y1="500" x2="1200" y2="500"/>
+    <line x1="601" y1="560" x2="1200" y2="560"/>
+    <line x1="660" y1="316" x2="660" y2="630"/>
+    <line x1="720" y1="316" x2="720" y2="630"/>
+    <line x1="780" y1="316" x2="780" y2="630"/>
+    <line x1="840" y1="316" x2="840" y2="630"/>
+    <line x1="900" y1="316" x2="900" y2="630"/>
+    <line x1="960" y1="316" x2="960" y2="630"/>
+    <line x1="1020" y1="316" x2="1020" y2="630"/>
+    <line x1="1080" y1="316" x2="1080" y2="630"/>
+    <line x1="1140" y1="316" x2="1140" y2="630"/>
+  </g>
+  <text x="900" y="410" font-family="'Arial Black', 'Arial', sans-serif" font-size="30" font-weight="800" fill="#FF6EC7" text-anchor="middle" letter-spacing="4"
+    style="filter: drop-shadow(0 0 12px #FF6EC7)">VAPORWAVE</text>
+  <rect x="700" y="425" width="400" height="3" fill="url(#vapor-accent)" rx="1"/>
+  <text x="900" y="462" font-family="'Courier New', monospace" font-size="11" fill="#9B4DCA" text-anchor="middle" letter-spacing="3">RETRO · MAXIMAL · LOUD</text>
+
+  <!-- Center label -->
+  <text x="600" y="320" font-family="'Courier New', monospace" font-size="10" fill="#888" text-anchor="middle" dominant-baseline="middle" letter-spacing="2"></text>
+</svg>
