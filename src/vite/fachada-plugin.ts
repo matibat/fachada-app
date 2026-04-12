@@ -76,6 +76,7 @@ export function fachadaPlugin(activeApp?: string, cwd: string = process.cwd()) {
         `export { appConfig } from ${JSON.stringify(absPath)};`,
         `export { profileConfig } from ${JSON.stringify(absPath)};`,
         `export const AVAILABLE_APPS = Object.freeze(${availableApps});`,
+        `export const ACTIVE_APP_NAME = ${JSON.stringify(appName)};`,
       ].join("\n");
     },
   };

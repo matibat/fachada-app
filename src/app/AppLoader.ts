@@ -12,7 +12,11 @@
  */
 
 import type { AppConfig } from "../types/app.types";
-import { appConfig, AVAILABLE_APPS } from "virtual:fachada/active-app";
+import {
+  appConfig,
+  AVAILABLE_APPS,
+  ACTIVE_APP_NAME,
+} from "virtual:fachada/active-app";
 
 export { AVAILABLE_APPS };
 
@@ -23,4 +27,12 @@ export { AVAILABLE_APPS };
  */
 export function getActiveAppConfig(): AppConfig {
   return appConfig;
+}
+
+/**
+ * Returns the active app identifier (e.g. "default-fachada").
+ * Determined by the APP env var at build time, falling back to defaultApp.
+ */
+export function getActiveAppName(): string {
+  return ACTIVE_APP_NAME;
 }

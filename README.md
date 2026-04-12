@@ -158,8 +158,6 @@ export const siteConfig = {
 
 ## 📋 Creating New Apps
 
-> **Note:** The `src/profiles/` directory is deprecated. New apps should be created under `apps/`.
-
 This template is designed to be **app-extensible**. Changing the active app at build time produces a completely different SPA — different name, bio, skills, theme settings, and visible sections.
 
 ### Quick App Creation (Legacy Profile Setup)
@@ -253,7 +251,7 @@ This template is designed to be **app-extensible**. Changing the active app at b
 
 ## 📋 Creating New Apps
 
-This template is designed to be **app-extensible**. Each app produces a completely different SPA with its own name, bio, skills, theme settings, and visible sections.
+This template is designed to be **app-extensible**. Each app produces a completely different SPA with its own content and style.
 
 ### Quick App Creation
 

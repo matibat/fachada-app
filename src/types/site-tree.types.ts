@@ -77,6 +77,23 @@ export interface DocumentPageData {
 }
 
 /**
+ * MarkdownPageData — configuration passed to the "markdown" core template.
+ *
+ * The markdown template renders a content-collection entry as a full page,
+ * resolved at render time by contentId.
+ */
+export interface MarkdownPageData {
+  /** Content collection entry ID for resolving content at render time. */
+  contentId: string;
+  /** Filename offered by the download button. Omit to hide the button. */
+  downloadFilename?: string;
+  /** Back navigation link (← …). */
+  backLink?: { href: string; label: string };
+  /** Forward navigation link (… →). */
+  nextLink?: { href: string; label: string };
+}
+
+/**
  * HubPageData — configuration passed to the "hub" core template.
  *
  * The hub template renders a card grid linking to sibling pages.
@@ -172,11 +189,16 @@ export interface SubsectionDefinition {
    *   "document" — Renders a navigable guide page from a docs/ markdown file.
    *   "hub"      — Renders a card-grid linking to sibling pages.
    *   "sections" — Renders widget sections from appConfig.page.sections (default).
+   *   "markdown" — Renders a content-collection entry as a full page.
    * @default "sections"
    */
-  template?: "sections" | "role" | "document" | "hub";
+  template?: "sections" | "role" | "document" | "hub" | "markdown";
   /** Template-specific configuration. Shape is determined by template type. */
-  templateData?: RolePageData | DocumentPageData | HubPageData;
+  templateData?:
+    | RolePageData
+    | DocumentPageData
+    | HubPageData
+    | MarkdownPageData;
 }
 
 /**

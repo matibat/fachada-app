@@ -17,4 +17,7 @@ declare module "virtual:fachada/active-app" {
 
   /** Frozen array of all app names registered in .fachadarc.json. */
   export const AVAILABLE_APPS: readonly string[];
+
+  /** The build-time-selected active app name (e.g. "default-fachada"). */
+  export const ACTIVE_APP_NAME: string;
 }

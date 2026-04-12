@@ -9,35 +9,38 @@
  *   "role"     → RolePage
  *   "document" → DocumentPage
  *   "hub"      → HubPage
+ *   "markdown" → MarkdownPage (content-collection entry, resolved at render time)
  *   "sections" → SectionsPage (widget-based, future extension)
  *
- * Apps declare pages purely through configuration in their app.config.ts.
+ * Apps declare pages through configuration in their app.config.ts.
+ * Markdown pages in src/content/pages/ are auto-discovered via getCollection.
  * No app-specific .astro files are required or permitted.
  */
-import { getActiveAppConfig } from "../app/AppLoader";
+import { getCollection, getEntry, render } from "astro:content";
+import { getActiveAppConfig, getActiveAppName } from "../app/AppLoader";
+import { buildMergedStaticPaths } from "../site-tree/StaticPathBuilder";
 import type {
   SubsectionDefinition,
   RolePageData,
   DocumentPageData,
   HubPageData,
+  MarkdownPageData,
 } from "../types/site-tree.types";
 import RolePage from "../templates/RolePage.astro";
 import DocumentPage from "../templates/DocumentPage.astro";
 import HubPage from "../templates/HubPage.astro";
+import MarkdownPage from "../templates/MarkdownPage.astro";
 
 export async function getStaticPaths() {
   const appConfig = getActiveAppConfig();
-  const subsections = appConfig.siteTree?.landing.subsections ?? [];
+  const appName = getActiveAppName();
+  const configSubsections: SubsectionDefinition[] =
+    appConfig.siteTree?.landing.subsections ?? [];
 
-  return subsections.map((subsection: SubsectionDefinition) => {
-    // Strip the leading "/"  → Astro slug (e.g. "/engineering" → "engineering")
-    const slug = subsection.meta.path.replace(/^\//, "");
+  // Fetch content-collection entries (pages collection only; no I/O at render time)
+  const rawEntries = await getCollection("pages");
 
-    return {
-      params: { slug },
-      props: { subsection },
-    };
-  });
+  return buildMergedStaticPaths(configSubsections, rawEntries as any, appName);
 }
 
 interface Props {
@@ -46,6 +49,20 @@ interface Props {
 
 const { subsection } = Astro.props;
 const template = subsection.template ?? "sections";
+
+// Resolve Markdown content entry at render time (only for "markdown" template)
+let markdownContent: unknown = null;
+let markdownContentMissing = false;
+if (template === "markdown") {
+  const templateData = subsection.templateData as MarkdownPageData;
+  const entry = await getEntry("pages", templateData.contentId);
+  if (entry) {
+    const { Content } = await render(entry);
+    markdownContent = Content;
+  } else {
+    markdownContentMissing = true;
+  }
+}
 ---
 
 {template === "role" && (
@@ -67,6 +84,19 @@ const template = subsection.template ?? "sections";
     meta={subsection.meta}
     data={subsection.templateData as HubPageData}
   />
+)}
+
+{template === "markdown" && !markdownContentMissing && (
+  <MarkdownPage
+    meta={subsection.meta}
+    data={{ ...(subsection.templateData as MarkdownPageData), Content: markdownContent }}
+  />
+)}
+
+{template === "markdown" && markdownContentMissing && (
+  <div data-page={subsection.id} data-error="content-not-found">
+    <p>Page content not found: {(subsection.templateData as MarkdownPageData).contentId}</p>
+  </div>
 )}
 
 {template === "sections" && (

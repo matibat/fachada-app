@@ -1,5 +1,9 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
+import { pagesSchema } from "./content/pages.schema";
+import { resolveAppContentPath } from "./content/AppContentPathResolver";
+
+const activeApp = process.env.APP ?? "default-fachada";
 
 const projects = defineCollection({
   loader: glob({ pattern: "*.md", base: "./src/content/projects" }),
@@ -17,7 +21,10 @@ const projects = defineCollection({
 });
 
 const blog = defineCollection({
-  loader: glob({ pattern: "*.md", base: "./src/content/blog" }),
+  loader: glob({
+    pattern: "*.md",
+    base: resolveAppContentPath(activeApp, "blog"),
+  }),
   schema: z.object({
     title: z.string(),
     description: z.string(),
@@ -28,7 +35,16 @@ const blog = defineCollection({
   }),
 });
 
+const pages = defineCollection({
+  loader: glob({
+    pattern: "*.md",
+    base: resolveAppContentPath(activeApp, "pages"),
+  }),
+  schema: pagesSchema,
+});
+
 export const collections = {
   projects,
   blog,
+  pages,
 };

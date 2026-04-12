@@ -88,9 +88,9 @@ describe("default-fachada profile", () => {
 
   it("has a contact message defined", () => {
     expect(typeof defaultFachadaProfile.contactMessage).toBe("string");
-    expect(
-      (defaultFachadaProfile.contactMessage ?? "").length,
-    ).toBeGreaterThan(0);
+    expect((defaultFachadaProfile.contactMessage ?? "").length).toBeGreaterThan(
+      0,
+    );
   });
 
   it("does not have multiRoleDisplay (single role)", () => {

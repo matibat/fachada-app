@@ -117,9 +117,9 @@ export const appConfig: AppConfig = {
             description:
               "Complete checklist of text, image, and branding assets needed before building a Fachada app.",
           },
-          template: "document",
+          template: "markdown",
           templateData: {
-            contentKey: "fachada-asset-manual",
+            contentId: "fachada-asset-manual",
             downloadFilename: "fachada-asset-manual.md",
             backLink: { href: "/resources", label: "Back to Resources" },
             nextLink: {
@@ -137,9 +137,9 @@ export const appConfig: AppConfig = {
             description:
               "Step-by-step technical instructions for creating and deploying a new Fachada app.",
           },
-          template: "document",
+          template: "markdown",
           templateData: {
-            contentKey: "fachada-app-builder-guide",
+            contentId: "fachada-app-builder-guide",
             downloadFilename: "fachada-app-builder-guide.md",
             backLink: {
               href: "/resources/asset-manual",
@@ -160,9 +160,9 @@ export const appConfig: AppConfig = {
             description:
               "How to configure visual themes, color palettes, and layout variants in a Fachada app.",
           },
-          template: "document",
+          template: "markdown",
           templateData: {
-            contentKey: "fachada-theme-guide",
+            contentId: "fachada-theme-guide",
             downloadFilename: "fachada-theme-guide.md",
             backLink: {
               href: "/resources/app-builder-guide",

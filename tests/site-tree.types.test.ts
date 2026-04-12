@@ -11,6 +11,7 @@ import {
   type PageMeta,
   type SubsectionDefinition,
   type LandingDefinition,
+  type MarkdownPageData,
 } from "../src/types/site-tree.types";
 
 // ─── Scenario 0: module exports a version sentinel ────────────────────────────
@@ -144,5 +145,57 @@ describe("Scenario 5: SiteTreeConfig has a mandatory landing field", () => {
       },
     };
     expect(tree.landing.subsections).toHaveLength(2);
+  });
+});
+
+// ─── Scenario 6: SubsectionDefinition accepts template "markdown" ──────────────
+
+describe("Scenario 6: SubsectionDefinition accepts template 'markdown'", () => {
+  it("Given: a SubsectionDefinition with template 'markdown', When: accessed, Then: template equals 'markdown'", () => {
+    const sub: SubsectionDefinition = {
+      id: "my-guide",
+      meta: { path: "/my-guide", title: "My Guide", description: "A guide." },
+      sections: [],
+      template: "markdown",
+    };
+    expect(sub.template).toBe("markdown");
+  });
+});
+
+// ─── Scenario 7: MarkdownPageData has required contentId and optional layout props ─
+
+describe("Scenario 7: MarkdownPageData has required contentId and optional layout props", () => {
+  it("Given: a MarkdownPageData with only contentId, When: accessed, Then: contentId is present", () => {
+    const data: MarkdownPageData = {
+      contentId: "my-guide",
+    };
+    expect(data.contentId).toBe("my-guide");
+    expect(data.downloadFilename).toBeUndefined();
+    expect(data.backLink).toBeUndefined();
+    expect(data.nextLink).toBeUndefined();
+  });
+
+  it("Given: a MarkdownPageData with all optional props, When: accessed, Then: all fields are present", () => {
+    const data: MarkdownPageData = {
+      contentId: "my-guide",
+      downloadFilename: "my-guide.pdf",
+      backLink: { href: "/", label: "Home" },
+      nextLink: { href: "/other", label: "Next" },
+    };
+    expect(data.downloadFilename).toBe("my-guide.pdf");
+    expect(data.backLink).toEqual({ href: "/", label: "Home" });
+    expect(data.nextLink).toEqual({ href: "/other", label: "Next" });
+  });
+
+  it("Given: a SubsectionDefinition with template 'markdown' and MarkdownPageData, When: accessed, Then: templateData.contentId is present", () => {
+    const sub: SubsectionDefinition = {
+      id: "my-guide",
+      meta: { path: "/my-guide", title: "My Guide", description: "A guide." },
+      sections: [],
+      template: "markdown",
+      templateData: { contentId: "my-guide" } satisfies MarkdownPageData,
+    };
+    const data = sub.templateData as MarkdownPageData;
+    expect(data.contentId).toBe("my-guide");
   });
 });
