@@ -14,7 +14,7 @@
  * is currently active.
  */
 import { describe, it, expect } from "vitest";
-import { getActiveAppConfig, AVAILABLE_APPS } from "../src/core/app/AppLoader";
+import { getActiveAppConfig, AVAILABLE_APPS } from "../src/app/AppLoader";
 import { readFachadarc, resolveAppName } from "../src/vite/fachada-plugin";
 import type { AppConfig } from "../src/types/app.types";
 
@@ -123,7 +123,7 @@ describe("Scenario 4: each app config satisfies the AppConfig aggregate structur
 
 // ─── Scenario 5: artist-engineer siteTree ────────────────────────────────────
 
-import { validateSiteTree } from "../src/core/site-tree/SiteTreeValidator";
+import { validateSiteTree } from "../src/site-tree/SiteTreeValidator";
 
 describe("Scenario 5: artist-engineer app config declares a valid siteTree", () => {
   it("Given: artist-engineer appConfig, When: siteTree is checked, Then: it is defined", () => {

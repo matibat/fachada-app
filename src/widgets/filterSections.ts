@@ -8,7 +8,7 @@
  * the original template array produced.
  */
 
-import type { PageSectionConfig } from "../../types/profile.types";
+import type { PageSectionConfig } from "../types/profile.types";
 
 export interface FilterSectionsContext {
   /** Number of entries in the 'projects' content collection */

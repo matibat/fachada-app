@@ -15,6 +15,81 @@
 /** Sentinel value — used by tests to confirm the module loaded correctly. */
 export const SITE_TREE_VERSION = "v1" as const;
 
+// ─── Page Template Data ───────────────────────────────────────────────────────
+
+/**
+ * LandingPageData — configuration passed to the "landing" core template.
+ *
+ * The landing template auto-generates layout from siteConfig.roles.
+ * These fields let apps customise the marketing copy without code.
+ */
+export interface LandingPageData {
+  /** Primary hero headline. Falls back to siteConfig.title when omitted. */
+  hook?: string;
+  /** Hero sub-headline. Falls back to siteConfig.description when omitted. */
+  subheading?: string;
+}
+
+/**
+ * RolePageData — configuration passed to the "role" core template.
+ *
+ * The role template renders a full-page role presentation driven entirely by
+ * siteConfig.roles[roleId]. No app-specific .astro required.
+ */
+export interface RolePageData {
+  /** Must match a role id in siteConfig.roles. */
+  roleId: string;
+  /**
+   * Hero visual style.
+   *   "split"       — 60vh two-column layout (technical/engineering feel)
+   *   "atmospheric" — full-viewport centred layout (artistic/ambient feel)
+   * @default "split"
+   */
+  heroStyle?: "split" | "atmospheric";
+  /** Show a breadcrumb nav back to "/". @default true */
+  showBreadcrumb?: boolean;
+  /** Override for the contact section message. */
+  contactMessage?: string;
+  /** Contact widget layout. @default "split" */
+  contactLayout?: "split" | "centered";
+  /** Projects widget grid layout. @default "grid-3" */
+  projectsLayout?: "grid-2" | "grid-3";
+}
+
+/**
+ * DocumentPageData — configuration passed to the "document" core template.
+ *
+ * The document template renders a navigable guide page with an optional
+ * download button. Content is loaded from docs/ via a glob key.
+ */
+export interface DocumentPageData {
+  /**
+   * Key used to resolve the content file.
+   * Resolved as /docs/{contentKey}.md via import.meta.glob at build time.
+   */
+  contentKey: string;
+  /** Filename offered by the download button. Omit to hide the button. */
+  downloadFilename?: string;
+  /** Back navigation link (← …). */
+  backLink?: { href: string; label: string };
+  /** Forward navigation link (… →). */
+  nextLink?: { href: string; label: string };
+}
+
+/**
+ * HubPageData — configuration passed to the "hub" core template.
+ *
+ * The hub template renders a card grid linking to sibling pages.
+ */
+export interface HubPageData {
+  cards: Array<{
+    title: string;
+    description: string;
+    link: string;
+    bullets: string[];
+  }>;
+}
+
 // ─── Robots Domain ────────────────────────────────────────────────────────────
 
 /**
@@ -91,6 +166,17 @@ export interface SubsectionDefinition {
   meta: PageMeta;
   /** Ordered visual sections rendered on this subsection's page. */
   sections: SectionRef[];
+  /**
+   * Core rendering template for this page.
+   *   "role"     — Renders full-page role presentation from siteConfig.roles.
+   *   "document" — Renders a navigable guide page from a docs/ markdown file.
+   *   "hub"      — Renders a card-grid linking to sibling pages.
+   *   "sections" — Renders widget sections from appConfig.page.sections (default).
+   * @default "sections"
+   */
+  template?: "sections" | "role" | "document" | "hub";
+  /** Template-specific configuration. Shape is determined by template type. */
+  templateData?: RolePageData | DocumentPageData | HubPageData;
 }
 
 /**
@@ -104,6 +190,15 @@ export interface LandingDefinition {
   sections: SectionRef[];
   /** Optional child pages accessible from the landing. */
   subsections?: SubsectionDefinition[];
+  /**
+   * Core rendering template for the landing page.
+   *   "landing"  — Auto-builds from siteConfig.roles (default).
+   *   "sections" — Renders widget sections from appConfig.page.sections.
+   * @default "landing"
+   */
+  template?: "landing" | "sections";
+  /** Landing page copy overrides. */
+  templateData?: LandingPageData;
 }
 
 // ─── Aggregate Root ───────────────────────────────────────────────────────────

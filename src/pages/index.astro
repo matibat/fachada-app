@@ -1,253 +1,32 @@
 ---
 /**
- * Landing page — artist-engineer dual identity presentation.
+ * Landing page dispatcher — app-agnostic.
  *
- * Hook: "I build software. I make art. Sometimes both."
- * Meat: Featured work (2 engineering + 2 art) + role bridge paragraph
- * CTA: Two equal fork buttons (→ Engineering | → Art)
- * Contact: Secondary CTA
+ * Reads appConfig.siteTree.landing and delegates to the appropriate
+ * core template. Apps configure all content and layout through their
+ * app.config.ts — no app-specific markup lives here.
  *
- * Marketing principles:
- * - Hook-Meat-CTA pyramid
- * - Dual positioning (warm audience from referral/social)
- * - Section fork for traffic routing
- * - Featured work as social proof
+ * Supported landing templates:
+ *   "landing"  — auto-builds from siteConfig.roles (default)
+ *   "sections" — renders widget sections from appConfig.page.sections
  */
-import BaseLayout from '../layouts/BaseLayout.astro';
-import Header from '../components/Header.astro';
-import Footer from '../components/Footer.astro';
-import StructuredData from '../components/StructuredData.astro';
-import { siteConfig } from '../config';
-import { profileConfig } from '../profile.config';
-import { getCollection } from 'astro:content';
+import { getActiveAppConfig } from "../app/AppLoader";
+import type { LandingPageData } from "../types/site-tree.types";
+import LandingPage from "../templates/LandingPage.astro";
 
-const personSchema = {
-  name: siteConfig.name,
-  url: siteConfig.url,
-  description: `${siteConfig.title} — ${siteConfig.description}`,
-  jobTitle: siteConfig.roles.map(r => r.title).join(' & '),
-  sameAs: [
-    siteConfig.social.github,
-    siteConfig.social.linkedin,
-    siteConfig.social.twitter,
-  ].filter(Boolean),
+const appConfig = getActiveAppConfig();
+const landing = appConfig.siteTree?.landing;
+
+const meta = landing?.meta ?? {
+  path: "/",
+  title: appConfig.seo.title,
+  description: appConfig.seo.description,
 };
 
-const projects = await getCollection('projects');
-const featuredEngineering = projects.filter(p =>
-  p.data.featured && p.data.roles?.includes('engineer')
-).slice(0, 2);
-
-const featuredArt = projects.filter(p =>
-  p.data.featured && p.data.roles?.includes('artist')
-).slice(0, 2);
-
-const engineeringRole = siteConfig.roles.find(r => r.id === 'engineer');
-const artistRole = siteConfig.roles.find(r => r.id === 'artist');
+const template = landing?.template ?? "landing";
+const templateData = landing?.templateData as LandingPageData | undefined;
 ---
 
-<BaseLayout>
-  <StructuredData type="Person" data={personSchema} />
-  <Header currentPath="/" />
-  <main>
-    <!-- HOOK: Dual-identity hero (100vh, vertical center) -->
-    <section class="min-h-screen flex items-center justify-center px-4">
-      <div class="max-w-4xl w-full space-y-8 text-center">
-        <h1 class="text-5xl md:text-7xl font-bold leading-tight">
-          I build software.
-          <br />
-          I make art.
-          <br />
-          <span class="text-accent">Sometimes both.</span>
-        </h1>
-        
-        <p class="text-xl md:text-2xl text-secondary max-w-2xl mx-auto">
-          TypeScript engineer & digital artist. Depth in WebGL, React, Node.js — and generative systems, 3D sculpture, algorithmic prints.
-        </p>
-
-        <!-- Primary CTAs: Fork to sections -->
-        <div class="flex flex-col sm:flex-row gap-6 justify-center pt-8">
-          <a
-            href="/engineering"
-            class="px-8 py-4 bg-accent text-accent-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity"
-          >
-            → Engineering
-          </a>
-          <a
-            href="/art"
-            class="px-8 py-4 border-2 border-accent text-accent font-semibold rounded-lg hover:bg-accent hover:text-accent-foreground transition-colors"
-          >
-            → Art
-          </a>
-        </div>
-      </div>
-    </section>
-
-    <!-- MEAT: Featured work preview (2 engineering + 2 art) -->
-    <section class="px-4 py-20 bg-secondary">
-      <div class="max-w-7xl mx-auto">
-        <h2 class="text-3xl font-bold text-center mb-16">Featured Work</h2>
-        
-        <div class="grid grid-cols-1 md:grid-cols-4 gap-6">
-          {/* Engineering projects */}
-          {featuredEngineering.map(project => (
-            <a
-              href={`/projects/${project.slug}`}
-              class="group bg-primary rounded-lg overflow-hidden border border-border hover:shadow-lg transition-all p-4"
-            >
-              <div class="aspect-video bg-secondary rounded mb-4">
-                {project.data.image && (
-                  <img
-                    src={project.data.image}
-                    alt={project.data.title}
-                    class="w-full h-full object-cover"
-                  />
-                )}
-              </div>
-              <h3 class="font-semibold text-lg mb-2 group-hover:text-accent transition-colors">
-                {project.data.title}
-              </h3>
-              {project.data.stack && (
-                <div class="flex flex-wrap gap-2">
-                  {project.data.stack.slice(0, 3).map(tech => (
-                    <span class="text-xs px-2 py-1 bg-secondary rounded">
-                      {tech}
-                    </span>
-                  ))}
-                </div>
-              )}
-            </a>
-          ))}
-
-          {/* Art projects */}
-          {featuredArt.map(project => (
-            <a
-              href={`/projects/${project.slug}`}
-              class="group bg-primary rounded-lg overflow-hidden border border-border hover:shadow-lg transition-all p-4"
-            >
-              <div class="aspect-video bg-secondary rounded mb-4">
-                {project.data.image && (
-                  <img
-                    src={project.data.image}
-                    alt={project.data.title}
-                    class="w-full h-full object-cover"
-                  />
-                )}
-              </div>
-              <h3 class="font-semibold text-lg mb-2 group-hover:text-accent transition-colors">
-                {project.data.title}
-              </h3>
-              {project.data.medium && (
-                <p class="text-sm text-secondary">{project.data.medium}</p>
-              )}
-            </a>
-          ))}
-        </div>
-      </div>
-    </section>
-
-    <!-- Role bridge paragraph (context connection) -->
-    <section class="px-4 py-20">
-      <div class="max-w-2xl mx-auto text-center space-y-6">
-        <p class="text-lg leading-relaxed text-secondary">
-          Engineering is the discipline of building within constraints — solving real problems with elegant code, shipped performance, and real-time systems. Art is where I let constraints dissolve and explore what emerges when intention meets emergence — generative systems, 3D sculpture, algorithmic prints.
-        </p>
-        <p class="text-lg leading-relaxed text-secondary">
-          Sometimes these worlds meet. Always they inform each other.
-        </p>
-      </div>
-    </section>
-
-    <!-- Section navigator (two equal cards) -->
-    <section class="px-4 py-20 bg-secondary">
-      <div class="max-w-4xl mx-auto">
-        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Engineering card */}
-          {engineeringRole && (
-            <a
-              href="/engineering"
-              class="p-8 bg-primary rounded-lg border-2 border-border hover:border-accent transition-colors group"
-            >
-              <h3 class="text-2xl font-bold mb-2 group-hover:text-accent transition-colors">
-                {engineeringRole.title}
-              </h3>
-              <p class="text-sm text-secondary mb-6">
-                {engineeringRole.specialties.join(' · ')}
-              </p>
-              <p class="text-secondary mb-6">{engineeringRole.description}</p>
-              <span class="text-accent font-semibold">Explore →</span>
-            </a>
-          )}
-
-          {/* Art card */}
-          {artistRole && (
-            <a
-              href="/art"
-              class="p-8 bg-primary rounded-lg border-2 border-border hover:border-accent transition-colors group"
-            >
-              <h3 class="text-2xl font-bold mb-2 group-hover:text-accent transition-colors">
-                {artistRole.title}
-              </h3>
-              <p class="text-sm text-secondary mb-6">
-                {artistRole.specialties.join(' · ')}
-              </p>
-              <p class="text-secondary mb-6">{artistRole.description}</p>
-              <span class="text-accent font-semibold">Explore →</span>
-            </a>
-          )}
-        </div>
-      </div>
-    </section>
-
-    <!-- Contact CTA (secondary) -->
-    <section class="px-4 py-20">
-      <div class="max-w-2xl mx-auto text-center space-y-6">
-        <h2 class="text-3xl font-bold">Let's work on something.</h2>
-        <p class="text-lg text-secondary">
-          Whether it's engineering, art, or the weird space between — I'm open to interesting projects.
-        </p>
-        <a
-          href={`mailto:${siteConfig.social.email}`}
-          class="inline-block px-8 py-4 bg-accent text-accent-foreground font-semibold rounded-lg hover:opacity-90 transition-opacity"
-        >
-          Get in touch
-        </a>
-      </div>
-    </section>
-  </main>
-  <Footer />
-</BaseLayout>
-
-<style>
-  .bg-secondary {
-    background-color: var(--bg-secondary);
-  }
-
-  .text-secondary {
-    color: var(--text-secondary);
-  }
-
-  .text-accent {
-    color: var(--accent);
-  }
-
-  .bg-accent {
-    background-color: var(--accent);
-  }
-
-  .border-accent {
-    border-color: var(--accent);
-  }
-
-  .border-border {
-    border-color: var(--border);
-  }
-
-  .bg-primary {
-    background-color: var(--bg-primary);
-  }
-
-  .text-accent-foreground {
-    color: var(--text-primary);
-  }
-</style>
+{template === "landing" && (
+  <LandingPage meta={meta} data={templateData} />
+)}

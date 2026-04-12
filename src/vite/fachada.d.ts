@@ -7,9 +7,13 @@
 
 declare module "virtual:fachada/active-app" {
   import type { AppConfig } from "../types/app.types";
+  import type { ProfileConfig } from "../types/profile.types";
 
   /** The build-time-selected AppConfig, resolved from .fachadarc.json + APP env var. */
   export const appConfig: AppConfig;
+
+  /** The active app's ProfileConfig (about, skills, sections, contactMessage). */
+  export const profileConfig: ProfileConfig;
 
   /** Frozen array of all app names registered in .fachadarc.json. */
   export const AVAILABLE_APPS: readonly string[];

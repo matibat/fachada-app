@@ -2,10 +2,10 @@
  * RobotsGenerator domain service tests
  *
  * BDD: written before implementation. Importing from RobotsGenerator causes
- * RED until src/core/site-tree/RobotsGenerator.ts exists.
+ * RED until src/site-tree/RobotsGenerator.ts exists.
  */
 import { describe, it, expect } from "vitest";
-import { generateRobotsTxt } from "../src/core/site-tree/RobotsGenerator";
+import { generateRobotsTxt } from "../src/site-tree/RobotsGenerator";
 import type { SiteTreeConfig } from "../src/types/site-tree.types";
 
 // ─── Shared fixtures ──────────────────────────────────────────────────────────

@@ -5,16 +5,15 @@
  * Generated from AppConfig.siteTree when present; falls back to a minimal
  * representation using SiteConfig identity and description.
  */
-import { siteConfig } from "../config";
-import { getActiveAppConfig } from "../core/app/AppLoader";
-import { generateLlmTxt } from "../core/site-tree/LlmTextGenerator";
+import { getActiveAppConfig } from "../app/AppLoader";
+import { generateLlmTxt } from "../site-tree/LlmTextGenerator";
 
 export async function GET() {
   const appConfig = getActiveAppConfig();
 
   const llmTxt = appConfig.siteTree
-    ? generateLlmTxt(siteConfig, appConfig.siteTree)
-    : `# ${siteConfig.name}\n\n> ${siteConfig.description}`;
+    ? generateLlmTxt(appConfig.seo, appConfig.siteTree)
+    : `# ${appConfig.seo.name}\n\n> ${appConfig.seo.description}`;
 
   return new Response(llmTxt, {
     headers: {

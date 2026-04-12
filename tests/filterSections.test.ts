@@ -2,13 +2,13 @@
  * Phase 2 — filterSections domain service tests
  *
  * BDD: written before implementation. Import of filterSections causes RED until
- * src/core/widgets/filterSections.ts exists.
+ * src/widgets/filterSections.ts exists.
  *
  * filterSections is a pure function that replicates the section-filtering and
  * sorting logic currently embedded in src/pages/index.astro — making it testable.
  */
 import { describe, it, expect } from "vitest";
-import { filterSections } from "../src/core/widgets/filterSections";
+import { filterSections } from "../src/widgets/filterSections";
 import type { PageSectionConfig } from "../src/types/profile.types";
 
 // ─── Shared fixtures ──────────────────────────────────────────────────────────

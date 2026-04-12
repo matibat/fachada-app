@@ -2,13 +2,13 @@
  * Phase 2 — WidgetRegistry domain service tests
  *
  * BDD: written before implementation. Import of createWidgetRegistry causes RED
- * until src/core/widgets/WidgetRegistry.ts exists.
+ * until src/widgets/WidgetRegistry.ts exists.
  *
  * WidgetRegistry maps widget type strings to component factories.
  * It is the only place in the codebase that names concrete widget components.
  */
 import { describe, it, expect, vi } from "vitest";
-import { createWidgetRegistry } from "../src/core/widgets/WidgetRegistry";
+import { createWidgetRegistry } from "../src/widgets/WidgetRegistry";
 
 // ─── Shared fixture — minimal component stub ──────────────────────────────────
 

@@ -8,10 +8,10 @@
  * variant token overrides on top.
  */
 
-import { THEME_DEFINITIONS } from "../../utils/theme.config";
-import type { ThemeTokens, ThemeDefinition } from "../../utils/theme.config";
-import type { ThemeConfig } from "../../types/profile.types";
-import type { ThemeOverride } from "../../types/app.types";
+import { THEME_DEFINITIONS } from "../utils/theme.config";
+import type { ThemeTokens, ThemeDefinition } from "../utils/theme.config";
+import type { ThemeConfig } from "../types/profile.types";
+import type { ThemeOverride } from "../types/app.types";
 
 /**
  * Resolves the final ThemeTokens for a given base config and optional variant.

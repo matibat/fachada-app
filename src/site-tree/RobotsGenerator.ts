@@ -13,7 +13,7 @@
  *   <blank line>
  *   Sitemap: https://example.com/sitemap-index.xml
  */
-import type { SiteTreeConfig, PageMeta } from "../../types/site-tree.types";
+import type { SiteTreeConfig, PageMeta } from "../types/site-tree.types";
 
 // ─── Domain Service ───────────────────────────────────────────────────────────
 

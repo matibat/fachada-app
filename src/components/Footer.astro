@@ -1,7 +1,20 @@
 ---
-import { siteConfig } from '../config';
+import { getActiveAppConfig } from '../app/AppLoader';
 
+const appConfig = getActiveAppConfig();
+const siteConfig = appConfig.seo;
 const currentYear = new Date().getFullYear();
+
+const subsections = appConfig.siteTree?.landing.subsections ?? [];
+const navItems = [
+  { href: '/', label: 'Home' },
+  ...subsections
+    .filter(s => !s.meta.path.substring(1).includes('/'))
+    .map(s => ({
+      href: s.meta.path,
+      label: s.id.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+    })),
+];
 ---
 
 <footer class="px-4 py-12 border-t" style="border-color: var(--border);">
@@ -33,15 +46,11 @@ const currentYear = new Date().getFullYear();
       <div>
         <p class="font-semibold mb-4" style="color: var(--text-primary);">Portfolio</p>
         <nav class="flex flex-col gap-2">
-          <a href="/" class="transition-colors footer-link" style="color: var(--text-secondary);">
-            Home
-          </a>
-          <a href="/engineering" class="transition-colors footer-link" style="color: var(--text-secondary);">
-            Engineering
-          </a>
-          <a href="/art" class="transition-colors footer-link" style="color: var(--text-secondary);">
-            Art
-          </a>
+          {navItems.map(item => (
+            <a href={item.href} class="transition-colors footer-link" style="color: var(--text-secondary);">
+              {item.label}
+            </a>
+          ))}
         </nav>
       </div>
 

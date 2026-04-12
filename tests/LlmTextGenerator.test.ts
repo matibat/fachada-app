@@ -2,7 +2,7 @@
  * LlmTextGenerator domain service tests
  *
  * BDD: written before implementation. Importing from LlmTextGenerator causes
- * RED until src/core/site-tree/LlmTextGenerator.ts exists.
+ * RED until src/site-tree/LlmTextGenerator.ts exists.
  *
  * llm.txt follows the llms.txt specification (https://llmstxt.org):
  *   # Site Name
@@ -11,7 +11,7 @@
  *   - [Title](path): Description
  */
 import { describe, it, expect } from "vitest";
-import { generateLlmTxt } from "../src/core/site-tree/LlmTextGenerator";
+import { generateLlmTxt } from "../src/site-tree/LlmTextGenerator";
 import type { SiteConfig } from "../src/types/profile.types";
 import type { SiteTreeConfig } from "../src/types/site-tree.types";
 

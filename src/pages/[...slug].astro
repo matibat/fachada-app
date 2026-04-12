@@ -1,0 +1,76 @@
+---
+/**
+ * Dynamic page dispatcher — app-agnostic route handler.
+ *
+ * Reads appConfig.siteTree.landing.subsections to generate all static
+ * paths at build time. For each path, delegates to the appropriate core
+ * template based on the subsection's `template` field:
+ *
+ *   "role"     → RolePage
+ *   "document" → DocumentPage
+ *   "hub"      → HubPage
+ *   "sections" → SectionsPage (widget-based, future extension)
+ *
+ * Apps declare pages purely through configuration in their app.config.ts.
+ * No app-specific .astro files are required or permitted.
+ */
+import { getActiveAppConfig } from "../app/AppLoader";
+import type {
+  SubsectionDefinition,
+  RolePageData,
+  DocumentPageData,
+  HubPageData,
+} from "../types/site-tree.types";
+import RolePage from "../templates/RolePage.astro";
+import DocumentPage from "../templates/DocumentPage.astro";
+import HubPage from "../templates/HubPage.astro";
+
+export async function getStaticPaths() {
+  const appConfig = getActiveAppConfig();
+  const subsections = appConfig.siteTree?.landing.subsections ?? [];
+
+  return subsections.map((subsection: SubsectionDefinition) => {
+    // Strip the leading "/"  → Astro slug (e.g. "/engineering" → "engineering")
+    const slug = subsection.meta.path.replace(/^\//, "");
+
+    return {
+      params: { slug },
+      props: { subsection },
+    };
+  });
+}
+
+interface Props {
+  subsection: SubsectionDefinition;
+}
+
+const { subsection } = Astro.props;
+const template = subsection.template ?? "sections";
+---
+
+{template === "role" && (
+  <RolePage
+    meta={subsection.meta}
+    data={subsection.templateData as RolePageData}
+  />
+)}
+
+{template === "document" && (
+  <DocumentPage
+    meta={subsection.meta}
+    data={subsection.templateData as DocumentPageData}
+  />
+)}
+
+{template === "hub" && (
+  <HubPage
+    meta={subsection.meta}
+    data={subsection.templateData as HubPageData}
+  />
+)}
+
+{template === "sections" && (
+  <div data-page={subsection.id}>
+    <p>Sections page: {subsection.meta.title}</p>
+  </div>
+)}

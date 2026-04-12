@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
 import { useThemeStore } from "../src/stores/themeStore";
 import { THEME_DEFINITIONS } from "../src/utils/theme.config";
-import { resolveWidgetLayout } from "../src/core/widgets/resolveWidgetLayout";
+import { resolveWidgetLayout } from "../src/widgets/resolveWidgetLayout";
 import type { AppThemes } from "../src/types/app.types";
 import type { WidgetLayoutConfig } from "../src/types/layout.types";
 

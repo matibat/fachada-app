@@ -11,7 +11,7 @@
  * are needed.
  */
 
-import type { AppConfig } from "../../types/app.types";
+import type { AppConfig } from "../types/app.types";
 import { appConfig, AVAILABLE_APPS } from "virtual:fachada/active-app";
 
 export { AVAILABLE_APPS };

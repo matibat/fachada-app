@@ -14,7 +14,7 @@
  * No throws, no side effects, no imports from /apps/.
  */
 
-import type { AssetConfig } from "../../types/app.types";
+import type { AssetConfig } from "../types/app.types";
 
 /**
  * Resolves a single asset URL by logical key and optional theme variant.

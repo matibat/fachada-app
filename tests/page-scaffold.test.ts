@@ -65,7 +65,10 @@ describe("Engineering subsection scaffold", () => {
   it("has engineering-intent keywords (recruiter / client audience)", () => {
     const keywords = engineering?.meta.keywords ?? [];
     const hasEngineeringIntent = keywords.some(
-      (k) => k.includes("engineer") || k.includes("developer") || k.includes("TypeScript"),
+      (k) =>
+        k.includes("engineer") ||
+        k.includes("developer") ||
+        k.includes("TypeScript"),
     );
     expect(hasEngineeringIntent).toBe(true);
   });

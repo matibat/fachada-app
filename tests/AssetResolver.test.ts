@@ -2,13 +2,13 @@
  * Phase 3 — AssetResolver domain service tests
  *
  * BDD: written before implementation. Import of resolveAsset causes RED until
- * src/core/assets/AssetResolver.ts exists.
+ * src/assets/AssetResolver.ts exists.
  *
  * AssetResolver is a pure domain service: theme-aware asset lookups with
  * variant fallback, no side effects, no throws.
  */
 import { describe, it, expect } from "vitest";
-import { resolveAsset } from "../src/core/assets/AssetResolver";
+import { resolveAsset } from "../src/assets/AssetResolver";
 import type { AssetConfig } from "../src/types/app.types";
 
 // ─── Scenario 1: resolves plain string asset with no variant ─────────────────

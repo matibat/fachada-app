@@ -2,10 +2,10 @@
  * SiteTreeValidator domain service tests
  *
  * BDD: written before implementation. Importing from SiteTreeValidator causes
- * RED until src/core/site-tree/SiteTreeValidator.ts exists.
+ * RED until src/site-tree/SiteTreeValidator.ts exists.
  */
 import { describe, it, expect } from "vitest";
-import { validateSiteTree } from "../src/core/site-tree/SiteTreeValidator";
+import { validateSiteTree } from "../src/site-tree/SiteTreeValidator";
 import type { SiteTreeConfig } from "../src/types/site-tree.types";
 
 // ─── Shared fixtures ──────────────────────────────────────────────────────────

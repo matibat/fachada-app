@@ -46,9 +46,9 @@ describe("resolveContactMessage", () => {
 
   describe("Scenario 3: fallback used when both upper sources are absent", () => {
     it("returns custom fallback when messageProp and profileDefault are both undefined", () => {
-      expect(resolveContactMessage(undefined, undefined, "custom fallback")).toBe(
-        "custom fallback",
-      );
+      expect(
+        resolveContactMessage(undefined, undefined, "custom fallback"),
+      ).toBe("custom fallback");
     });
 
     it("returns module default when no arguments supply a message", () => {

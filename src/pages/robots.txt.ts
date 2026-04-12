@@ -1,13 +1,12 @@
-import { siteConfig } from "../config";
-import { getActiveAppConfig } from "../core/app/AppLoader";
-import { generateRobotsTxt } from "../core/site-tree/RobotsGenerator";
+import { getActiveAppConfig } from "../app/AppLoader";
+import { generateRobotsTxt } from "../site-tree/RobotsGenerator";
 
 export async function GET() {
   const appConfig = getActiveAppConfig();
 
   const robotsTxt = appConfig.siteTree
-    ? generateRobotsTxt(appConfig.siteTree, siteConfig.url)
-    : `User-agent: *\nAllow: /\n\nSitemap: ${new URL("sitemap-index.xml", siteConfig.url).href}`;
+    ? generateRobotsTxt(appConfig.siteTree, appConfig.seo.url)
+    : `User-agent: *\nAllow: /\n\nSitemap: ${new URL("sitemap-index.xml", appConfig.seo.url).href}`;
 
   return new Response(robotsTxt, {
     headers: {

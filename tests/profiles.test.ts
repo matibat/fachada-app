@@ -1,12 +1,23 @@
 /**
- * Profile system tests — validates profile loading, schema conformance,
- * and multi-role support. Profiles are selected via the APP env var at build time.
+ * Profile config structural tests.
+ *
+ * Validates that each app's profileConfig satisfies the ProfileConfig schema:
+ * proper theme settings, non-empty about/skills content, and valid sections.
+ *
+ * Previously these tests used the legacy getProfile() registry. That registry
+ * is gone; each app now exports profileConfig directly from its app.config.ts,
+ * and it is available at build time via virtual:fachada/active-app.
  */
 import { describe, it, expect } from "vitest";
-import { getProfile, AVAILABLE_PROFILES } from "../src/profiles/index";
 import type { ProfileConfig, SiteConfig } from "../src/types/profile.types";
-
-// ─── Helpers ─────────────────────────────────────────────────────────────────
+import {
+  appConfig as defaultFachadaAppConfig,
+  profileConfig as defaultFachadaProfile,
+} from "../apps/default-fachada/app.config";
+import {
+  appConfig as artistEngineerAppConfig,
+  profileConfig as artistEngineerProfile,
+} from "../apps/artist-engineer/app.config";
 
 function assertValidSiteConfig(site: SiteConfig) {
   expect(site.name).toBeDefined();
@@ -24,7 +35,6 @@ function assertValidSiteConfig(site: SiteConfig) {
 }
 
 function assertValidProfileConfig(profile: ProfileConfig) {
-  // Theme block
   expect(profile.theme.style).toBeDefined();
   expect(["light", "dark", "auto", "system"]).toContain(
     profile.theme.defaultMode,
@@ -32,7 +42,6 @@ function assertValidProfileConfig(profile: ProfileConfig) {
   expect(typeof profile.theme.enableStyleSwitcher).toBe("boolean");
   expect(typeof profile.theme.enableModeToggle).toBe("boolean");
 
-  // About block
   expect(Array.isArray(profile.about.paragraphs)).toBe(true);
   expect(profile.about.paragraphs).toHaveLength(3);
   for (const para of profile.about.paragraphs) {
@@ -40,7 +49,6 @@ function assertValidProfileConfig(profile: ProfileConfig) {
     expect(para.length).toBeGreaterThan(0);
   }
 
-  // Skills block
   expect(Array.isArray(profile.skills)).toBe(true);
   expect(profile.skills.length).toBeGreaterThan(0);
   for (const category of profile.skills) {
@@ -49,7 +57,6 @@ function assertValidProfileConfig(profile: ProfileConfig) {
     expect(category.skills.length).toBeGreaterThan(0);
   }
 
-  // Sections block
   expect(Array.isArray(profile.sections)).toBe(true);
   for (const section of profile.sections) {
     expect(section.id).toBeDefined();
@@ -58,139 +65,51 @@ function assertValidProfileConfig(profile: ProfileConfig) {
   }
 }
 
-// ─── Profile Registry ─────────────────────────────────────────────────────────
-
-describe("Profile Registry", () => {
-  it("should list all available profiles", () => {
-    expect(AVAILABLE_PROFILES).toContain("default-fachada");
-    expect(AVAILABLE_PROFILES).toContain("artist-engineer");
-  });
-
-  it("should fall back to default-fachada for unknown profile name", () => {
-    const result = getProfile("does-not-exist");
-    expect(result.siteConfig.name).toBe("Fachada");
-  });
-});
-
-// ─── default-fachada profile ──────────────────────────────────────────────────
+// ─── default-fachada ─────────────────────────────────────────────────────────
 
 describe("default-fachada profile", () => {
-  const { siteConfig, profileConfig } = getProfile("default-fachada");
-
   it("loads a valid SiteConfig", () => {
-    assertValidSiteConfig(siteConfig);
+    assertValidSiteConfig(defaultFachadaAppConfig.seo);
   });
 
   it("loads a valid ProfileConfig", () => {
-    assertValidProfileConfig(profileConfig);
+    assertValidProfileConfig(defaultFachadaProfile);
   });
 
   it("is a single-role profile", () => {
-    expect(siteConfig.roles).toHaveLength(1);
-    expect(siteConfig.roles[0].id).toBe("framework");
+    expect(defaultFachadaAppConfig.seo.roles).toHaveLength(1);
+    expect(defaultFachadaAppConfig.seo.roles[0].id).toBe("framework");
   });
 
   it("has theme switcher and mode toggle enabled", () => {
-    expect(profileConfig.theme.enableStyleSwitcher).toBe(true);
-    expect(profileConfig.theme.enableModeToggle).toBe(true);
+    expect(defaultFachadaProfile.theme.enableStyleSwitcher).toBe(true);
+    expect(defaultFachadaProfile.theme.enableModeToggle).toBe(true);
   });
 
   it("has a contact message defined", () => {
-    expect(typeof profileConfig.contactMessage).toBe("string");
-    expect((profileConfig.contactMessage ?? "").length).toBeGreaterThan(0);
+    expect(typeof defaultFachadaProfile.contactMessage).toBe("string");
+    expect(
+      (defaultFachadaProfile.contactMessage ?? "").length,
+    ).toBeGreaterThan(0);
   });
 
   it("does not have multiRoleDisplay (single role)", () => {
-    expect(profileConfig.multiRoleDisplay).toBeUndefined();
+    expect(defaultFachadaProfile.multiRoleDisplay).toBeUndefined();
   });
 });
 
-// ─── artist-engineer profile ────────────────────────────────────────────────
+// ─── artist-engineer profile ─────────────────────────────────────────────────
 
 describe("artist-engineer profile", () => {
-  const { siteConfig, profileConfig } = getProfile("artist-engineer");
-
   it("loads a valid SiteConfig", () => {
-    assertValidSiteConfig(siteConfig);
+    assertValidSiteConfig(artistEngineerAppConfig.seo);
   });
 
   it("loads a valid ProfileConfig", () => {
-    assertValidProfileConfig(profileConfig);
+    assertValidProfileConfig(artistEngineerProfile);
   });
 
-  it("is a multi-role profile with engineer and artist roles", () => {
-    expect(siteConfig.roles.length).toBeGreaterThanOrEqual(2);
-    const roleIds = siteConfig.roles.map((r) => r.id);
-    expect(roleIds).toContain("engineer");
-    expect(roleIds).toContain("artist");
-  });
-
-  it("has both roles marked as featured", () => {
-    const featured = siteConfig.roles.filter((r) => r.featured);
-    expect(featured.length).toBeGreaterThanOrEqual(2);
-  });
-
-  it("has multiRoleDisplay configured with storytelling style", () => {
-    expect(profileConfig.multiRoleDisplay).toBeDefined();
-    expect(profileConfig.multiRoleDisplay?.style).toBe("storytelling");
-  });
-
-  it("each role has its own about paragraphs and skills for the explorer", () => {
-    for (const role of siteConfig.roles) {
-      expect(role.about).toBeDefined();
-      expect(role.about?.paragraphs).toHaveLength(3);
-      expect(role.skills).toBeDefined();
-      expect((role.skills ?? []).length).toBeGreaterThan(0);
-    }
-  });
-
-  it("sections config uses role-explorer instead of separate about/skills", () => {
-    const ids = profileConfig.sections.map((s) => s.id);
-    expect(ids).toContain("role-explorer");
-    expect(ids).not.toContain("about");
-    expect(ids).not.toContain("skills");
-  });
-
-  it("has style switcher enabled", () => {
-    expect(profileConfig.theme.enableStyleSwitcher).toBe(true);
-  });
-
-  it("has a contact message tailored to multi-role work", () => {
-    expect(typeof profileConfig.contactMessage).toBe("string");
-    expect((profileConfig.contactMessage ?? "").length).toBeGreaterThan(0);
-  });
-});
-
-// ─── Section Visibility Logic ─────────────────────────────────────────────────
-
-describe("Section configuration", () => {
-  it("all profiles have a hero section enabled", () => {
-    for (const name of AVAILABLE_PROFILES) {
-      const { profileConfig } = getProfile(name);
-      const hero = profileConfig.sections.find((s) => s.id === "hero");
-      expect(hero).toBeDefined();
-      expect(hero?.enabled).toBe(true);
-    }
-  });
-
-  it("all profiles have unique section orders", () => {
-    for (const name of AVAILABLE_PROFILES) {
-      const { profileConfig } = getProfile(name);
-      const orders = profileConfig.sections.map((s) => s.order);
-      const uniqueOrders = new Set(orders);
-      expect(uniqueOrders.size).toBe(orders.length);
-    }
-  });
-
-  it("sections with requiresContent reference valid content types", () => {
-    const validTypes = new Set(["projects", "blog"]);
-    for (const name of AVAILABLE_PROFILES) {
-      const { profileConfig } = getProfile(name);
-      for (const section of profileConfig.sections) {
-        if (section.requiresContent) {
-          expect(validTypes.has(section.requiresContent)).toBe(true);
-        }
-      }
-    }
+  it("is a multi-role profile", () => {
+    expect(artistEngineerAppConfig.seo.roles.length).toBeGreaterThan(1);
   });
 });

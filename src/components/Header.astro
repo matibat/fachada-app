@@ -1,22 +1,30 @@
 ---
 /**
- * Page header with navigation across landing, engineering, and art pages.
- * - Logo/name on left
- * - Role toggle in center (for subsection pages)
+ * Page header with config-driven navigation.
+ * - Logo/name on left (from appConfig.seo.name)
+ * - Nav items derived from top-level siteTree landing subsections
  * - Contact CTA on right
- * - Breadcrumbs on mobile/small screens
  */
-import { siteConfig } from '../config';
+import { getActiveAppConfig } from '../app/AppLoader';
 
 interface Props {
   currentPath?: string;
 }
 
 const { currentPath = '/' } = Astro.props;
+const appConfig = getActiveAppConfig();
+const siteConfig = appConfig.seo;
+
+const subsections = appConfig.siteTree?.landing.subsections ?? [];
+const navItems = subsections
+  .filter(s => !s.meta.path.substring(1).includes('/'))
+  .map(s => ({
+    href: s.meta.path,
+    label: s.id.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+    active: currentPath === s.meta.path || currentPath.startsWith(s.meta.path + '/'),
+  }));
 
 const isLanding = currentPath === '/';
-const isEngineering = currentPath.startsWith('/engineering');
-const isArt = currentPath.startsWith('/art');
 ---
 
 <header class="border-b sticky top-0 z-50 backdrop-blur" style="border-color: var(--border); background-color: rgba(var(--bg-primary-rgb), 0.95);">
@@ -31,43 +39,31 @@ const isArt = currentPath.startsWith('/art');
       <a
         href="/"
         class="transition-colors"
-        style={{
-          color: isLanding ? 'var(--accent)' : 'var(--text-secondary)',
-        }}
+        style={{ color: isLanding ? 'var(--accent)' : 'var(--text-secondary)' }}
       >
         Home
       </a>
-      <a
-        href="/engineering"
-        class="transition-colors"
-        style={{
-          color: isEngineering ? 'var(--accent)' : 'var(--text-secondary)',
-        }}
-      >
-        Engineering
-      </a>
-      <a
-        href="/art"
-        class="transition-colors"
-        style={{
-          color: isArt ? 'var(--accent)' : 'var(--text-secondary)',
-        }}
-      >
-        Art
-      </a>
+      {navItems.map(item => (
+        <a
+          href={item.href}
+          class="transition-colors"
+          style={{ color: item.active ? 'var(--accent)' : 'var(--text-secondary)' }}
+        >
+          {item.label}
+        </a>
+      ))}
     </nav>
 
     <!-- Right: Contact CTA -->
-    <a
-      href={`mailto:${siteConfig.social.email}`}
-      class="px-4 py-2 rounded-lg transition-colors text-sm font-semibold"
-      style={{
-        backgroundColor: 'var(--accent)',
-        color: 'var(--text-primary)',
-      }}
-    >
-      Get in touch
-    </a>
+    {siteConfig.social.email && (
+      <a
+        href={`mailto:${siteConfig.social.email}`}
+        class="px-4 py-2 rounded-lg transition-colors text-sm font-semibold"
+        style={{ backgroundColor: 'var(--accent)', color: 'var(--text-primary)' }}
+      >
+        Get in touch
+      </a>
+    )}
   </div>
 </header>
 

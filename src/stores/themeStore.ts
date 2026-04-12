@@ -7,7 +7,7 @@
  */
 
 import { create } from "zustand";
-import { resolveTheme } from "../core/theme/ThemeResolver";
+import { resolveTheme } from "../theme/ThemeResolver";
 import { THEME_DEFINITIONS, CSS_VAR_MAP } from "../utils/theme.config";
 import type { ThemeTokens, ThemeDefinition } from "../utils/theme.config";
 import type { ColorMode } from "../utils/theme.types";

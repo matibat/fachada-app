@@ -18,8 +18,8 @@
  *   - [Landing Title](/): Landing description
  *   - [Subsection Title](/path): Subsection description
  */
-import type { SiteConfig } from "../../types/profile.types";
-import type { SiteTreeConfig } from "../../types/site-tree.types";
+import type { SiteConfig } from "../types/profile.types";
+import type { SiteTreeConfig } from "../types/site-tree.types";
 
 // ─── Domain Service ───────────────────────────────────────────────────────────
 

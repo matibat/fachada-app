@@ -2,13 +2,13 @@
  * Phase 1 — ThemeResolver domain service tests
  *
  * BDD: written before implementation. Import of resolveTheme causes RED until
- * src/core/theme/ThemeResolver.ts exists.
+ * src/theme/ThemeResolver.ts exists.
  *
  * ThemeResolver is a pure function: same inputs always return same outputs.
  * No React, no side effects.
  */
 import { describe, it, expect } from "vitest";
-import { resolveTheme } from "../src/core/theme/ThemeResolver";
+import { resolveTheme } from "../src/theme/ThemeResolver";
 import { THEME_DEFINITIONS } from "../src/utils/theme.config";
 import type { ThemeConfig } from "../src/types/profile.types";
 import type { ThemeOverride } from "../src/types/app.types";

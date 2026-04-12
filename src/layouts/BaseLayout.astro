@@ -1,7 +1,5 @@
 ---
-import { siteConfig } from '../config';
-import { profileConfig } from '../profile.config';
-import { getActiveAppConfig } from '../core/app/AppLoader';
+import { getActiveAppConfig } from '../app/AppLoader';
 import LayoutWrapper from '../components/islands/LayoutWrapper';
 import { THEME_DEFINITIONS, CSS_VAR_MAP } from '../utils/theme.config';
 import { validateThemeConfigOrThrow } from '../utils/theme-validation';
@@ -14,6 +12,9 @@ export interface Props {
   noindex?: boolean;
 }
 
+const appConfig = getActiveAppConfig();
+const siteConfig = appConfig.seo;
+
 const {
   title = siteConfig.title,
   description = siteConfig.description,
@@ -24,8 +25,7 @@ const {
 const canonicalURL = new URL(Astro.url.pathname, Astro.site);
 const ogImageURL = new URL(ogImage, Astro.site);
 
-const { theme } = profileConfig;
-const appConfig = getActiveAppConfig();
+const theme = appConfig.theme;
 const appThemeVariants = appConfig.themeVariants || {};
 
 // Validate theme configuration and get resolved theme pool for this app

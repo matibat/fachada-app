@@ -13,6 +13,7 @@
 
 import { siteConfig } from "./site.config";
 import { profileConfig } from "./profile.config";
+export { profileConfig } from "./profile.config";
 import type {
   AppConfig,
   CustomThemeDefinition,
@@ -272,6 +273,13 @@ export const appConfig: AppConfig = {
           "The landing page presents both professional identities with featured work from engineering and art, " +
           "and links to dedicated sections for each discipline.",
       },
+      template: "landing",
+      templateData: {
+        hook: "I build software. I make art. Sometimes both.",
+        subheading:
+          "TypeScript engineer & digital artist. Depth in WebGL, React, Node.js " +
+          "— and generative systems, 3D sculpture, algorithmic prints.",
+      },
       sections: [
         { id: "hero", order: 1, enabled: true },
         { id: "role-explorer", order: 2, enabled: true },
@@ -300,6 +308,14 @@ export const appConfig: AppConfig = {
               "Showcases real-time 3D web systems, backend architecture, and open source work. " +
               "Available for engineering contracts.",
           },
+          template: "role",
+          templateData: {
+            roleId: "engineer",
+            heroStyle: "split",
+            showBreadcrumb: true,
+            contactLayout: "split",
+            projectsLayout: "grid-3",
+          },
           sections: [
             { id: "hero", order: 1, enabled: true },
             { id: "projects", order: 2, enabled: true },
@@ -326,6 +342,14 @@ export const appConfig: AppConfig = {
               `${siteConfig.name}'s art and creative code portfolio. ` +
               "Works include generative systems, 3D sculpture (Blender, Houdini), GLSL shader experiments, " +
               "and large-format archival prints. Open to commissions and creative technology collaborations.",
+          },
+          template: "role",
+          templateData: {
+            roleId: "artist",
+            heroStyle: "atmospheric",
+            showBreadcrumb: false,
+            contactLayout: "centered",
+            projectsLayout: "grid-2",
           },
           sections: [
             { id: "hero", order: 1, enabled: true },

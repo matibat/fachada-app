@@ -1,4 +1,4 @@
-import type { WidgetLayoutConfig } from "../../types/layout.types";
+import type { WidgetLayoutConfig } from "../types/layout.types";
 
 /**
  * Resolves the effective layout for a section widget.

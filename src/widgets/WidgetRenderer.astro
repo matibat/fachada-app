@@ -19,20 +19,19 @@
  * An unknown section id renders nothing — no runtime crash.
  */
 
-import type { PageSectionConfig } from '../../types/profile.types';
-import type { HeroLayout, AboutLayout, SkillsLayout, ProjectsLayout, ContactLayout } from '../../types/layout.types';
+import type { PageSectionConfig } from '../types/profile.types';
+import type { HeroLayout, AboutLayout, SkillsLayout, ProjectsLayout, ContactLayout } from '../types/layout.types';
 import { filterSections } from './filterSections';
-import { siteConfig } from '../../config';
 import { appConfig } from 'virtual:fachada/active-app';
 import { resolveWidgetLayout } from './resolveWidgetLayout';
 
 // ── Widget imports (static — Astro build requirement) ──────────────────────────
-import Hero    from '../../widgets/Hero.astro';
-import About   from '../../widgets/About.astro';
-import Skills  from '../../widgets/Skills.astro';
-import Projects from '../../widgets/Projects.astro';
-import Contact from '../../widgets/Contact.astro';
-import RoleExplorer from '../../components/islands/RoleExplorer';
+import Hero    from './Hero.astro';
+import About   from './About.astro';
+import Skills  from './Skills.astro';
+import Projects from './Projects.astro';
+import Contact from './Contact.astro';
+import RoleExplorer from '../components/islands/RoleExplorer';
 
 export interface Props {
   sections: PageSectionConfig[];
@@ -45,7 +44,7 @@ const { sections, projectsCount, blogCount } = Astro.props;
 const enabledIds = filterSections(sections, {
   projectsCount,
   blogCount,
-  availableRoles: siteConfig.roles.map(r => r.id),
+  availableRoles: appConfig.seo.roles.map(r => r.id),
 });
 
 // themeLayouts: used to collect all unique variants per section at build time.
@@ -55,7 +54,7 @@ const themeLayouts = appConfig.themeLayouts;
 // Index sections by id for O(1) layout lookup per widget.
 const sectionMap = new Map(sections.map(s => [s.id, s]));
 
-const filterRoles = siteConfig.roles.map(r => r.id);
+const filterRoles = appConfig.seo.roles.map(r => r.id);
 
 // Returns all unique layout variants for a section across every configured theme.
 // Returns an empty array when no theme configures that section.

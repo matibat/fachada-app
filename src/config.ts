@@ -1,14 +1,12 @@
 /**
- * Site configuration — loaded from the active app profile.
+ * Site configuration — loaded from the active app at build time.
  *
- * The active app is selected by the APP environment variable at build time.
- * Example: APP=artist-engineer yarn build
- *
- * To add a new app, see src/profiles/index.ts.
+ * The active app is selected by the APP environment variable.
+ * To add a new app, add an entry to .fachadarc.json.
  */
 
-import { activeProfile } from "./profiles/index";
+import { appConfig } from "virtual:fachada/active-app";
 
-export const siteConfig = activeProfile.siteConfig;
+export const siteConfig = appConfig.seo;
 
 export type { SiteConfig } from "./types/profile.types";

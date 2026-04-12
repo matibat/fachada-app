@@ -10,7 +10,7 @@
  *  3. Subsection paths must be unique across the tree
  *  4. Subsection IDs must be unique across the tree
  */
-import type { SiteTreeConfig } from "../../types/site-tree.types";
+import type { SiteTreeConfig } from "../types/site-tree.types";
 
 // ─── Value Objects ────────────────────────────────────────────────────────────
 
