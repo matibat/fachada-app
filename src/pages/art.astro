@@ -1,0 +1,254 @@
+---
+/**
+ * Art subsection page — emotional depth & artistic vision.
+ *
+ * Marketing: vision-first, then proof. Targets collectors, collaborators, artists.
+ * Hook-Meat-CTA pyramid:
+ *   Hook  — atmospheric full-viewport hero (centered, serif headline, no buttons)
+ *   Meat  — artist statement → gallery (artist-filtered projects) → creative tools
+ *   CTA   — "Open to commissions. Email me your project."
+ *
+ * Scaffold: Header (currentPath=/art) + Footer.
+ * Content: pulled entirely from siteConfig.roles[artist].
+ * Widgets used: Projects (grid-2, filterRoles=['artist']), Contact (centered).
+ */
+import BaseLayout from '../layouts/BaseLayout.astro';
+import Header from '../components/Header.astro';
+import Footer from '../components/Footer.astro';
+import StructuredData from '../components/StructuredData.astro';
+import Projects from '../widgets/Projects.astro';
+import Contact from '../widgets/Contact.astro';
+import { siteConfig } from '../config';
+
+const artistRole = siteConfig.roles.find(r => r.id === 'artist');
+if (!artistRole) {
+  return new Response('Role not found', { status: 404 });
+}
+
+const personSchema = {
+  name: siteConfig.name,
+  url: `${siteConfig.url}/art`,
+  jobTitle: artistRole.title,
+  description: artistRole.description,
+  sameAs: [
+    siteConfig.social.github,
+    siteConfig.social.linkedin,
+    siteConfig.social.twitter,
+  ].filter(Boolean),
+};
+
+const artContactMessage =
+  "Open to commissions, creative tech collaborations, and custom installations. Email me your project — let's explore what's possible.";
+---
+
+<BaseLayout
+  title={`${siteConfig.name} — Digital Art | Generative Systems, 3D Sculpture`}
+  description="Generative art, algorithmic prints, 3D sculpture. Available for commissions and creative collaboration."
+>
+  <StructuredData type="Person" data={personSchema} />
+  <Header currentPath="/art" />
+
+  <main data-page="art">
+
+    <!-- ── HOOK: Full-viewport atmospheric hero ───────────────────────── -->
+    <section class="art-hero" data-testid="art-hero">
+      <div class="art-hero-inner">
+        <p class="art-overline">
+          {artistRole.title}
+        </p>
+        <h1 class="art-headline">
+          Generative Systems.<br />
+          3D Sculpture.<br />
+          Algorithmic Print.
+        </h1>
+        <p class="art-subheading">
+          Art where emergence and intention meet.
+        </p>
+        <a href="#gallery" class="art-scroll-cta" aria-label="Scroll to gallery">
+          ↓ Explore the work
+        </a>
+      </div>
+    </section>
+
+    <!-- ── MEAT 1: Artist statement — narrow, centered, generous space ── -->
+    {artistRole.about && (
+      <section class="art-statement" data-testid="art-statement">
+        <div class="max-w-xl mx-auto px-4 text-center">
+          <div class="statement-body">
+            {artistRole.about.paragraphs.map(para => (
+              <p class="statement-para">{para}</p>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- ── MEAT 2: Gallery — 2-col grid, artist-filtered ─────────────── -->
+    <section id="gallery" class="art-section art-section--alt" data-testid="art-gallery">
+      <div class="max-w-6xl mx-auto px-4">
+        <h2 class="art-section-heading">Gallery</h2>
+        <Projects layout="grid-2" filterRoles={['artist']} />
+      </div>
+    </section>
+
+    <!-- ── MEAT 3: Creative tools — role-specific skill cards ─────────── -->
+    {artistRole.skills && (
+      <section class="art-section" data-testid="art-tools">
+        <div class="max-w-5xl mx-auto px-4">
+          <h2 class="art-section-heading">Creative Code + Tools</h2>
+          <div class="art-tools-grid">
+            {artistRole.skills.map(category => (
+              <div class="art-tool-card">
+                <h3 class="art-tool-heading">{category.name}</h3>
+                <ul class="art-tool-list" role="list">
+                  {category.skills.map(skill => (
+                    <li class="art-tool-item" role="listitem">{skill}</li>
+                  ))}
+                </ul>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+    )}
+
+    <!-- ── CTA: Commission / collaborate ─────────────────────────────── -->
+    <Contact layout="centered" message={artContactMessage} />
+
+  </main>
+  <Footer />
+</BaseLayout>
+
+<style>
+  /* ── Hero ──────────────────────────────────────────────────── */
+  .art-hero {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 6rem 1rem;
+    text-align: center;
+    /*
+      Atmospheric background: subtle radial gradient anchored to theme colours.
+      The gradient darkens the edges, drawing the eye to the centred headline.
+    */
+    background: radial-gradient(
+      ellipse 80% 60% at 50% 40%,
+      var(--bg-secondary) 0%,
+      var(--bg-primary) 100%
+    );
+    position: relative;
+  }
+  .art-hero-inner {
+    max-width: 54rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1.5rem;
+  }
+  .art-overline {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.15em;
+    color: var(--text-secondary);
+  }
+  .art-headline {
+    font-family: var(--font-heading, serif);
+    font-weight: var(--heading-weight, 700);
+    font-size: clamp(2.25rem, 5vw, 4.5rem);
+    line-height: 1.1;
+    letter-spacing: var(--heading-letter-spacing, -0.01em);
+    color: var(--text-primary);
+  }
+  .art-subheading {
+    font-size: clamp(1rem, 2vw, 1.25rem);
+    color: var(--text-secondary);
+    max-width: 36rem;
+    line-height: 1.6;
+  }
+  .art-scroll-cta {
+    display: inline-block;
+    margin-top: 1rem;
+    font-family: var(--font-mono, monospace);
+    font-size: 0.875rem;
+    color: var(--accent);
+    text-decoration: none;
+    letter-spacing: 0.05em;
+    transition: opacity var(--transition);
+  }
+  .art-scroll-cta:hover { opacity: 0.7; }
+
+  /* ── Artist statement ──────────────────────────────────────── */
+  .art-statement {
+    padding: 6rem 0;
+  }
+  .statement-body {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+  .statement-para {
+    font-size: 1.125rem;
+    line-height: 1.85;
+    color: var(--text-secondary);
+    font-family: var(--font-body, sans-serif);
+  }
+
+  /* ── Shared sections ───────────────────────────────────────── */
+  .art-section {
+    padding: var(--spacing-section, 6rem) 0;
+  }
+  .art-section--alt {
+    background-color: var(--bg-secondary);
+  }
+  .art-section-heading {
+    font-family: var(--font-heading, serif);
+    font-weight: var(--heading-weight, 700);
+    font-size: clamp(1.5rem, 2.5vw, 2rem);
+    color: var(--text-primary);
+    margin-bottom: 3rem;
+    letter-spacing: var(--heading-letter-spacing, -0.01em);
+  }
+
+  /* ── Creative tools ────────────────────────────────────────── */
+  .art-tools-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+  @media (min-width: 640px) { .art-tools-grid { grid-template-columns: repeat(2, 1fr); } }
+  @media (min-width: 1024px) { .art-tools-grid { grid-template-columns: repeat(3, 1fr); } }
+  .art-tool-card {
+    padding: 1.75rem;
+    border: 1px solid var(--border);
+    border-radius: var(--border-radius, 12px);
+    background-color: var(--bg-primary);
+  }
+  .art-tool-heading {
+    font-family: var(--font-mono, monospace);
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+    margin-bottom: 1.25rem;
+  }
+  .art-tool-list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+  }
+  .art-tool-item {
+    font-size: 0.975rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+  }
+  .art-tool-item::before {
+    content: '—';
+    margin-right: 0.5em;
+    color: var(--border);
+  }
+</style>

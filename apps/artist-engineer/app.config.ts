@@ -16,6 +16,7 @@ import { profileConfig } from "./profile.config";
 import type {
   AppConfig,
   CustomThemeDefinition,
+  SiteTreeConfig,
 } from "../../src/types/app.types";
 import type { WidgetLayoutConfig } from "../../src/types/layout.types";
 
@@ -214,16 +215,33 @@ export const appConfig: AppConfig = {
     default: "minimal",
   },
   themeLayouts: {
+    /*
+     * minimal — clean, cool, sans-serif (Inter): the engineer's precision.
+     * Landing uses a split hero with 2-col projects and grid-3 skills.
+     * Subsection pages (engineering/art) have their own inline layouts and
+     * are not controlled by themeLayouts; these settings apply to the landing
+     * page LayoutWrapper only.
+     */
     minimal: {
       hero: "split",
       skills: "grid-3",
-      projects: "grid-2",
+      projects: "grid-3",
     } satisfies WidgetLayoutConfig,
+    /*
+     * warm — personal, human, serif (Playfair Display): the artist's silence.
+     * Landing shifts to a centred hero; projects shown as a vertical list
+     * so images breathe. Skills as a narrative list mirrors the contemplative tone.
+     */
     warm: {
       hero: "centered",
       skills: "list",
-      projects: "list",
+      projects: "grid-2",
     } satisfies WidgetLayoutConfig,
+    /*
+     * bold — professional, strong, Space Grotesk: sharp and structured.
+     * Split hero for authority. 3-col projects grid for density. 2-col skills
+     * for clean panel pairings.
+     */
     bold: {
       hero: "split",
       skills: "grid-2",
@@ -234,6 +252,91 @@ export const appConfig: AppConfig = {
   assets: {
     ogImage: siteConfig.ogImage,
   },
+  siteTree: {
+    landing: {
+      meta: {
+        path: "/",
+        title: `${siteConfig.name} — Engineer & Artist`,
+        description:
+          "Software engineer and digital artist. TypeScript, WebGL, React by day — generative art, 3D sculpture, creative code by night.",
+        keywords: [
+          "software engineer digital artist",
+          "TypeScript developer",
+          "WebGL engineer",
+          "React portfolio",
+          "generative art",
+          "creative code",
+        ],
+        llmSummary:
+          `${siteConfig.name} is a software engineer and digital artist. ` +
+          "The landing page presents both professional identities with featured work from engineering and art, " +
+          "and links to dedicated sections for each discipline.",
+      },
+      sections: [
+        { id: "hero", order: 1, enabled: true },
+        { id: "role-explorer", order: 2, enabled: true },
+        { id: "projects", order: 3, enabled: true },
+        { id: "contact", order: 4, enabled: true },
+      ],
+      subsections: [
+        {
+          id: "engineering",
+          meta: {
+            path: "/engineering",
+            title: `${siteConfig.name} — Software Engineer`,
+            description:
+              "Software engineering portfolio: real-time 3D web systems, TypeScript, WebGL, React, Node.js, and open source projects.",
+            keywords: [
+              "software engineer for hire",
+              "TypeScript engineer",
+              "WebGL developer",
+              "React Node.js portfolio",
+              "full-stack engineer",
+              "real-time 3D web",
+            ],
+            llmSummary:
+              `${siteConfig.name}'s engineering portfolio. ` +
+              "Specialises in TypeScript, WebGL, React, and Node.js. " +
+              "Showcases real-time 3D web systems, backend architecture, and open source work. " +
+              "Available for engineering contracts.",
+          },
+          sections: [
+            { id: "hero", order: 1, enabled: true },
+            { id: "projects", order: 2, enabled: true },
+            { id: "skills", order: 3, enabled: true },
+            { id: "contact", order: 4, enabled: true },
+          ],
+        },
+        {
+          id: "art",
+          meta: {
+            path: "/art",
+            title: `${siteConfig.name} — Digital Art & Creative Code`,
+            description:
+              "Digital art and creative code portfolio: generative systems, 3D sculpture, GLSL shaders, and large-format archival prints.",
+            keywords: [
+              "generative art",
+              "creative code artwork",
+              "3D digital sculpture",
+              "algorithmic art prints",
+              "GLSL shader art",
+              "Blender digital art",
+            ],
+            llmSummary:
+              `${siteConfig.name}'s art and creative code portfolio. ` +
+              "Works include generative systems, 3D sculpture (Blender, Houdini), GLSL shader experiments, " +
+              "and large-format archival prints. Open to commissions and creative technology collaborations.",
+          },
+          sections: [
+            { id: "hero", order: 1, enabled: true },
+            { id: "projects", order: 2, enabled: true },
+            { id: "skills", order: 3, enabled: true },
+            { id: "contact", order: 4, enabled: true },
+          ],
+        },
+      ],
+    },
+  } satisfies SiteTreeConfig,
   page: {
     sections: profileConfig.sections.map((s) => ({ ...s, widgets: [] })),
   },

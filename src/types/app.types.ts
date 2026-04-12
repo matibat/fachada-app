@@ -16,6 +16,9 @@ import type {
   ThemeConfig,
 } from "./profile.types";
 import type { WidgetLayoutConfig } from "./layout.types";
+import type { SiteTreeConfig } from "./site-tree.types";
+
+export type { SiteTreeConfig } from "./site-tree.types";
 
 /** Sentinel value — used by tests to confirm the module loaded correctly. */
 export const APP_CONFIG_VERSION = "v2" as const;
@@ -132,6 +135,14 @@ export interface AppConfig {
   assets: AssetConfig;
   /** Per-theme widget layout overrides; keys match theme names */
   themeLayouts?: Record<string, WidgetLayoutConfig>;
+  /**
+   * Site structure and per-page SEO configuration.
+   *
+   * Declares the full page hierarchy (landing + optional subsections) with
+   * metadata sufficient to auto-generate robots.txt and llm.txt.
+   * When omitted, robots.txt falls back to a permissive default.
+   */
+  siteTree?: SiteTreeConfig;
   /** Page composition hierarchy */
   page: PageConfig;
 }

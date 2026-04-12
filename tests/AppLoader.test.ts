@@ -120,3 +120,51 @@ describe("Scenario 4: each app config satisfies the AppConfig aggregate structur
     });
   }
 });
+
+// ─── Scenario 5: artist-engineer siteTree ────────────────────────────────────
+
+import { validateSiteTree } from "../src/core/site-tree/SiteTreeValidator";
+
+describe("Scenario 5: artist-engineer app config declares a valid siteTree", () => {
+  it("Given: artist-engineer appConfig, When: siteTree is checked, Then: it is defined", () => {
+    expect(artistEngineerConfig.siteTree).toBeDefined();
+  });
+
+  it("Given: artist-engineer siteTree, When: validated, Then: isValid is true", () => {
+    expect(validateSiteTree(artistEngineerConfig.siteTree!).isValid).toBe(true);
+  });
+
+  it("Given: artist-engineer siteTree, When: landing is checked, Then: path is '/' and title is set", () => {
+    expect(artistEngineerConfig.siteTree!.landing.meta.path).toBe("/");
+    expect(artistEngineerConfig.siteTree!.landing.meta.title).toBeTruthy();
+  });
+
+  it("Given: artist-engineer siteTree, When: subsections are checked, Then: it has at least two subsections", () => {
+    expect(
+      artistEngineerConfig.siteTree!.landing.subsections?.length,
+    ).toBeGreaterThanOrEqual(2);
+  });
+
+  it("Given: artist-engineer subsections, When: paths are checked, Then: '/engineering' and '/art' are present", () => {
+    const paths = artistEngineerConfig.siteTree!.landing.subsections!.map(
+      (s) => s.meta.path,
+    );
+    expect(paths).toContain("/engineering");
+    expect(paths).toContain("/art");
+  });
+
+  it("Given: artist-engineer subsections, When: keywords are checked, Then: each subsection has keywords", () => {
+    const subsections = artistEngineerConfig.siteTree!.landing.subsections!;
+    for (const sub of subsections) {
+      expect(sub.meta.keywords).toBeDefined();
+      expect(sub.meta.keywords!.length).toBeGreaterThan(0);
+    }
+  });
+
+  it("Given: artist-engineer subsections, When: llmSummary is checked, Then: each subsection has a non-empty summary", () => {
+    const subsections = artistEngineerConfig.siteTree!.landing.subsections!;
+    for (const sub of subsections) {
+      expect(sub.meta.llmSummary).toBeTruthy();
+    }
+  });
+});

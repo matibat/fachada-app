@@ -3,10 +3,14 @@ import { siteConfig } from '../../config';
 import { profileConfig } from '../../profile.config';
 import Card from '../../components/ui/Card.astro';
 import Button from '../../components/ui/Button.astro';
+import { resolveContactMessage } from '../../utils/contact';
 
-const contactMessage =
-  profileConfig.contactMessage ??
-  "I'm always interested in hearing about new projects and opportunities.";
+export interface Props {
+  message?: string;
+}
+
+const { message: messageProp } = Astro.props;
+const contactMessage = resolveContactMessage(messageProp, profileConfig.contactMessage);
 ---
 
 <section

@@ -5,10 +5,12 @@ import ContactSplit from './contact/ContactSplit.astro';
 
 export interface Props {
   layout?: ContactLayout;
+  /** Page-level message override. Takes priority over profileConfig.contactMessage. */
+  message?: string;
 }
 
-const { layout = 'centered' } = Astro.props;
+const { layout = 'centered', message } = Astro.props;
 ---
 
-{layout === 'centered' && <ContactCentered />}
-{layout === 'split' && <ContactSplit />}
+{layout === 'centered' && <ContactCentered message={message} />}
+{layout === 'split' && <ContactSplit message={message} />}

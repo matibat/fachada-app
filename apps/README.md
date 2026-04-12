@@ -86,8 +86,106 @@ interface AppConfig {
   theme: ThemeConfig; // base theme (style + mode)
   themeVariants: Record<string, ThemeOverride>; // optional token overrides
   assets: AssetConfig; // logical asset references
+  siteTree?: SiteTreeConfig; // section hierarchy + per-page SEO (optional)
   page: PageConfig; // section layout & widgets
 }
 ```
 
 Full type definitions: [`src/types/app.types.ts`](../src/types/app.types.ts)
+
+---
+
+## SiteTree: section hierarchy and auto-generated files
+
+An app can declare its full page structure via `siteTree`. When present, it drives automatic generation of `robots.txt` and `llm.txt`.
+
+### Shape
+
+```ts
+interface SiteTreeConfig {
+  landing: LandingDefinition; // mandatory root page at "/"
+}
+
+interface LandingDefinition {
+  meta: PageMeta; // SEO metadata (path must be "/")
+  sections: SectionRef[]; // visual sections on this page
+  subsections?: SubsectionDefinition[]; // optional child pages
+}
+
+interface SubsectionDefinition {
+  id: string; // unique key used as a route identifier
+  meta: PageMeta; // SEO metadata (path must NOT be "/")
+  sections: SectionRef[];
+}
+
+interface PageMeta {
+  path: string; // URL path
+  title: string; // <title> tag for this page
+  description: string; // meta description
+  keywords?: string[]; // SEO keywords
+  canonicalUrl?: string; // override canonical URL
+  ogImage?: string; // override OG image
+  robots?: RobotsConfig; // per-page crawler directives
+  llmSummary?: string; // 1–2 sentence summary for AI indexers (llm.txt)
+}
+```
+
+### What it generates
+
+| File          | Source                            | Behaviour when `siteTree` is absent   |
+| ------------- | --------------------------------- | ------------------------------------- |
+| `/robots.txt` | `RobotsGenerator` domain service  | Falls back to `Allow: /` + Sitemap    |
+| `/llm.txt`    | `LlmTextGenerator` domain service | Falls back to `# Name\n> Description` |
+
+### Example
+
+```ts
+siteTree: {
+  landing: {
+    meta: {
+      path: "/",
+      title: "Matías Batista — Engineer & Artist",
+      description: "Software engineer and digital artist.",
+      keywords: ["TypeScript", "WebGL", "generative art"],
+      llmSummary: "Landing page presenting both engineering and art identities.",
+    },
+    sections: [
+      { id: "hero",         order: 1, enabled: true },
+      { id: "role-explorer", order: 2, enabled: true },
+      { id: "contact",      order: 3, enabled: true },
+    ],
+    subsections: [
+      {
+        id: "engineering",
+        meta: {
+          path: "/engineering",
+          title: "Matías Batista — Software Engineer",
+          description: "TypeScript, WebGL, React, Node.js portfolio.",
+          keywords: ["TypeScript engineer", "WebGL developer"],
+          llmSummary: "Engineering portfolio with real-time 3D projects.",
+        },
+        sections: [
+          { id: "hero",     order: 1, enabled: true },
+          { id: "projects", order: 2, enabled: true },
+          { id: "contact",  order: 3, enabled: true },
+        ],
+      },
+    ],
+  },
+},
+```
+
+### Validation
+
+Call `validateSiteTree(appConfig.siteTree)` at build time to catch structural errors:
+
+- Landing path must be exactly `"/"`
+- Subsection paths must not be `"/"`
+- Subsection paths must be unique
+- Subsection IDs must be unique
+
+```ts
+import { validateSiteTree } from "src/core/site-tree/SiteTreeValidator";
+const result = validateSiteTree(appConfig.siteTree);
+if (!result.isValid) throw new Error(result.errors.join("\n"));
+```

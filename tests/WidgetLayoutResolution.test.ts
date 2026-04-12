@@ -59,12 +59,22 @@ describe("Scenario 5: resolveWidgetLayout — themeLayouts resolution precedence
   // ── B3 ──────────────────────────────────────────────────────────────────────
   describe("B3: falls back when themeLayouts is undefined", () => {
     it("Given: themeLayouts is undefined, When: any activeTheme, Then: returns section.layout", () => {
-      const result = resolveWidgetLayout("hero", "centered", undefined, "minimal");
+      const result = resolveWidgetLayout(
+        "hero",
+        "centered",
+        undefined,
+        "minimal",
+      );
       expect(result).toBe("centered");
     });
 
     it("Given: themeLayouts is undefined and section.layout is undefined, Then: returns undefined", () => {
-      const result = resolveWidgetLayout("hero", undefined, undefined, "minimal");
+      const result = resolveWidgetLayout(
+        "hero",
+        undefined,
+        undefined,
+        "minimal",
+      );
       expect(result).toBeUndefined();
     });
   });

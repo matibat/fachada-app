@@ -1,0 +1,86 @@
+---
+/**
+ * Page header with navigation across landing, engineering, and art pages.
+ * - Logo/name on left
+ * - Role toggle in center (for subsection pages)
+ * - Contact CTA on right
+ * - Breadcrumbs on mobile/small screens
+ */
+import { siteConfig } from '../config';
+
+interface Props {
+  currentPath?: string;
+}
+
+const { currentPath = '/' } = Astro.props;
+
+const isLanding = currentPath === '/';
+const isEngineering = currentPath.startsWith('/engineering');
+const isArt = currentPath.startsWith('/art');
+---
+
+<header class="border-b sticky top-0 z-50 backdrop-blur" style="border-color: var(--border); background-color: rgba(var(--bg-primary-rgb), 0.95);">
+  <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
+    <!-- Left: Logo / Name -->
+    <a href="/" class="font-semibold text-lg transition-colors hover:text-accent" style="color: var(--text-primary);">
+      {siteConfig.name}
+    </a>
+
+    <!-- Center: Navigation (hidden on mobile) -->
+    <nav class="hidden md:flex gap-8">
+      <a
+        href="/"
+        class="transition-colors"
+        style={{
+          color: isLanding ? 'var(--accent)' : 'var(--text-secondary)',
+        }}
+      >
+        Home
+      </a>
+      <a
+        href="/engineering"
+        class="transition-colors"
+        style={{
+          color: isEngineering ? 'var(--accent)' : 'var(--text-secondary)',
+        }}
+      >
+        Engineering
+      </a>
+      <a
+        href="/art"
+        class="transition-colors"
+        style={{
+          color: isArt ? 'var(--accent)' : 'var(--text-secondary)',
+        }}
+      >
+        Art
+      </a>
+    </nav>
+
+    <!-- Right: Contact CTA -->
+    <a
+      href={`mailto:${siteConfig.social.email}`}
+      class="px-4 py-2 rounded-lg transition-colors text-sm font-semibold"
+      style={{
+        backgroundColor: 'var(--accent)',
+        color: 'var(--text-primary)',
+      }}
+    >
+      Get in touch
+    </a>
+  </div>
+</header>
+
+<style>
+  header {
+    --bg-primary-rgb: 15, 23, 42; /* fallback for dark theme */
+    background-color: var(--bg-primary);
+  }
+
+  @media (max-width: 768px) {
+    header {
+      position: relative;
+      backdrop-filter: blur(4px);
+    }
+  }
+</style>

@@ -42,8 +42,8 @@ export default function LayoutWrapper({
 }: LayoutWrapperProps) {
     const themeLayouts =
         typeof window !== 'undefined' &&
-        typeof (window as any).__FACHADA_THEME_LAYOUTS__ === 'object' &&
-        (window as any).__FACHADA_THEME_LAYOUTS__ !== null
+            typeof (window as any).__FACHADA_THEME_LAYOUTS__ === 'object' &&
+            (window as any).__FACHADA_THEME_LAYOUTS__ !== null
             ? (window as any).__FACHADA_THEME_LAYOUTS__
             : undefined;
 
@@ -53,7 +53,7 @@ export default function LayoutWrapper({
             undefined,
             themeLayouts,
         );
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (
