@@ -14,7 +14,7 @@ import { readFileSync, readdirSync, statSync, existsSync } from "fs";
 import { join, resolve } from "path";
 
 const ROOT = resolve(__dirname, "..");
-const SRC_DIR = join(ROOT, "src");
+const SRC_DIR = resolve(ROOT, "../fachada-core/src");
 const APPS_DIR = join(ROOT, "apps");
 
 // ── Helpers ───────────────────────────────────────────────────────────────────
@@ -69,8 +69,8 @@ describe("Scenario 1: src/ files do not directly import from apps/ directories",
 // ─── Scenario 2: Header and Footer have no hardcoded app-specific paths ───────
 
 describe("Scenario 2: Header and Footer navigation is config-driven, not hardcoded", () => {
-  const HEADER_PATH = join(SRC_DIR, "components/Header.astro");
-  const FOOTER_PATH = join(SRC_DIR, "components/Footer.astro");
+  const HEADER_PATH = join(SRC_DIR, "astro/components/Header.astro");
+  const FOOTER_PATH = join(SRC_DIR, "astro/components/Footer.astro");
 
   it("Header.astro does not hardcode app-specific route paths", () => {
     const content = readFileSync(HEADER_PATH, "utf-8");
@@ -95,11 +95,11 @@ describe("Scenario 2: Header and Footer navigation is config-driven, not hardcod
 
 describe("Scenario 3: Legacy profiles/index.ts static multi-app registry is deleted", () => {
   it("src/profiles/index.ts does not exist", () => {
-    expect(existsSync(join(SRC_DIR, "profiles/index.ts"))).toBe(false);
+    expect(existsSync(join(ROOT, "src/profiles/index.ts"))).toBe(false);
   });
 
   it("src/profiles/ directory does not exist", () => {
-    expect(existsSync(join(SRC_DIR, "profiles"))).toBe(false);
+    expect(existsSync(join(ROOT, "src/profiles"))).toBe(false);
   });
 });
 

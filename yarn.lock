@@ -753,7 +753,7 @@ __metadata:
 
 "@fachada/core@file:../fachada-core::locator=fachada%40workspace%3A.":
   version: 0.1.0
-  resolution: "@fachada/core@file:../fachada-core#../fachada-core::hash=4d3d3d&locator=fachada%40workspace%3A."
+  resolution: "@fachada/core@file:../fachada-core#../fachada-core::hash=5be17a&locator=fachada%40workspace%3A."
   dependencies:
     styled-components: "npm:6"
     zustand: "npm:^5"
@@ -761,7 +761,7 @@ __metadata:
     astro: ">=4.0.0"
     react: ">=18.0.0"
     react-dom: ">=18.0.0"
-  checksum: 10c0/9f4980986d57b538b8fa4c53896d3ff1e9058169820f2a28c3b0f3a3d40ec1b9c001ff7ba2767e0eabd6c1f0d18c63a1d0d1ac4bd985790082669e690879ad8b
+  checksum: 10c0/994f74e5e3807e3f7f22f68a0d31f48e0233a632ba835fd5988965e38c4e1aef9cad783cc10691aebb8665f70b23f3b27826cb1bcb18ec46104e32e5c01373f3
   languageName: node
   linkType: hard
 

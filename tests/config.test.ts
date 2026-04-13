@@ -1,5 +1,7 @@
 import { describe, it, expect } from "vitest";
-import { siteConfig } from "../src/config";
+import { appConfig } from "virtual:fachada/active-app";
+
+const siteConfig = appConfig.seo;
 
 describe("Site Configuration", () => {
   it("should have required fields", () => {
