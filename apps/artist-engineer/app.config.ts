@@ -18,8 +18,8 @@ import type {
   AppConfig,
   CustomThemeDefinition,
   SiteTreeConfig,
-} from "../../src/types/app.types";
-import type { WidgetLayoutConfig } from "../../src/types/layout.types";
+} from "@fachada/core/types/app.types";
+import type { WidgetLayoutConfig } from "@fachada/core/types/layout.types";
 
 export const appConfig: AppConfig = {
   seo: siteConfig,

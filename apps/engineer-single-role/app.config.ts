@@ -8,7 +8,7 @@
 import { siteConfig } from "./site.config";
 import { profileConfig } from "./profile.config";
 export { profileConfig } from "./profile.config";
-import type { AppConfig } from "../../src/types/app.types";
+import type { AppConfig } from "@fachada/core/types/app.types";
 
 export const appConfig: AppConfig = {
   seo: siteConfig,

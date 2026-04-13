@@ -8,9 +8,9 @@
 import { siteConfig } from "./site.config";
 import { profileConfig } from "./profile.config";
 export { profileConfig } from "./profile.config";
-import type { AppConfig } from "../../src/types/app.types";
-import type { SiteTreeConfig } from "../../src/types/site-tree.types";
-import type { WidgetLayoutConfig } from "../../src/types/layout.types";
+import type { AppConfig } from "@fachada/core/types/app.types";
+import type { SiteTreeConfig } from "@fachada/core/types/site-tree.types";
+import type { WidgetLayoutConfig } from "@fachada/core/types/layout.types";
 
 export const appConfig: AppConfig = {
   seo: siteConfig,

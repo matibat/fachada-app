@@ -13,7 +13,7 @@
  * Style switcher is on. The role explorer guides you to try each theme with its role.
  */
 
-import type { ProfileConfig } from "../../src/types/profile.types";
+import type { ProfileConfig } from "@fachada/core/types/profile.types";
 
 export const profileConfig: ProfileConfig = {
   theme: {
