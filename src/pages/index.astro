@@ -10,8 +10,8 @@
  *   "landing"  — auto-builds from siteConfig.roles (default)
  *   "sections" — renders widget sections from appConfig.page.sections
  */
-import { getActiveAppConfig } from "../app/AppLoader";
-import type { LandingPageData } from "../types/site-tree.types";
+import { getActiveAppConfig } from "@fachada/core/app/AppLoader";
+import type { LandingPageData } from "@fachada/core/types/site-tree.types";
 import LandingPage from "../templates/LandingPage.astro";
 
 const appConfig = getActiveAppConfig();

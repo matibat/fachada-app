@@ -8,13 +8,13 @@
  *
  * Optionally renders a download button and prev/next navigation.
  */
-import type { MarkdownPageData } from "../types/site-tree.types";
-import type { PageMeta } from "../types/site-tree.types";
+import type { MarkdownPageData } from "@fachada/core/types/site-tree.types";
+import type { PageMeta } from "@fachada/core/types/site-tree.types";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import DownloadButton from "../components/DownloadButton.astro";
-import { getBaseUrl } from "../utils/createLink";
+import { getBaseUrl } from "@fachada/core/utils/createLink";
 
 interface Props {
   meta: PageMeta;

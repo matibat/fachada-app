@@ -17,15 +17,15 @@
  * No app-specific .astro files are required or permitted.
  */
 import { getCollection, getEntry, render } from "astro:content";
-import { getActiveAppConfig, getActiveAppName } from "../app/AppLoader";
-import { buildMergedStaticPaths } from "../site-tree/StaticPathBuilder";
+import { getActiveAppConfig, getActiveAppName } from "@fachada/core/app/AppLoader";
+import { buildMergedStaticPaths } from "@fachada/core/site-tree/StaticPathBuilder";
 import type {
   SubsectionDefinition,
   RolePageData,
   DocumentPageData,
   HubPageData,
   MarkdownPageData,
-} from "../types/site-tree.types";
+} from "@fachada/core/types/site-tree.types";
 import RolePage from "../templates/RolePage.astro";
 import DocumentPage from "../templates/DocumentPage.astro";
 import HubPage from "../templates/HubPage.astro";

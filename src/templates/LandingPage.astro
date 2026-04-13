@@ -9,8 +9,8 @@
  * Marketing copy (hook, subheading) is configurable via LandingPageData
  * in appConfig.siteTree.landing.templateData.
  */
-import type { LandingPageData } from "../types/site-tree.types";
-import type { PageMeta } from "../types/site-tree.types";
+import type { LandingPageData } from "@fachada/core/types/site-tree.types";
+import type { PageMeta } from "@fachada/core/types/site-tree.types";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
@@ -34,7 +34,7 @@ const hook = data?.hook ?? siteConfig.title;
 const subheading = data?.subheading ?? siteConfig.description;
 const ctaHeading = data?.ctaHeading ?? "Let's work on something.";
 const ctaMessageDefault = isMultiRole
-  ? "Pinturas, tatuajes o lo que tengas en mente — escribime."
+  ? "Open to interesting work — get in touch."
   : "Open to interesting projects and conversations.";
 const ctaMessage = data?.ctaMessage ?? ctaMessageDefault;
 const ctaLabel = data?.ctaLabel ?? "Get in touch";

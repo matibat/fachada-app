@@ -1,5 +1,5 @@
-import { getActiveAppConfig } from "../app/AppLoader";
-import { generateRobotsTxt } from "../site-tree/RobotsGenerator";
+import { getActiveAppConfig } from "@fachada/core/app/AppLoader";
+import { generateRobotsTxt } from "@fachada/core/site-tree/RobotsGenerator";
 
 export async function GET() {
   const appConfig = getActiveAppConfig();
