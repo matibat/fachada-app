@@ -1,5 +1,6 @@
 ---
 import { getActiveAppConfig } from '../app/AppLoader';
+import { getBaseUrl } from '../utils/createLink';
 
 const appConfig = getActiveAppConfig();
 const siteConfig = appConfig.seo;
@@ -47,7 +48,7 @@ const navItems = [
         <p class="font-semibold mb-4" style="color: var(--text-primary);">Portfolio</p>
         <nav class="flex flex-col gap-2">
           {navItems.map(item => (
-            <a href={item.href} class="transition-colors footer-link" style="color: var(--text-secondary);">
+            <a href={getBaseUrl(item.href)} class="transition-colors footer-link" style="color: var(--text-secondary);">
               {item.label}
             </a>
           ))}

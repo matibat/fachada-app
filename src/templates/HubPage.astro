@@ -11,6 +11,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { siteConfig } from "../config";
+import { getBaseUrl } from "../utils/createLink";
 
 interface Props {
   meta: PageMeta;
@@ -39,7 +40,7 @@ const { meta, data } = Astro.props;
             <ul class="hub-checklist">
               {card.bullets.map((b) => <li>{b}</li>)}
             </ul>
-            <a href={card.link} class="hub-card-link">View Guide →</a>
+            <a href={getBaseUrl(card.link)} class="hub-card-link">View Guide →</a>
           </article>
         ))}
       </section>

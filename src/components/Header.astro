@@ -6,6 +6,7 @@
  * - Contact CTA on right
  */
 import { getActiveAppConfig } from '../app/AppLoader';
+import { getBaseUrl } from '../utils/createLink';
 
 interface Props {
   currentPath?: string;
@@ -19,7 +20,7 @@ const subsections = appConfig.siteTree?.landing.subsections ?? [];
 const navItems = subsections
   .filter(s => !s.meta.path.substring(1).includes('/'))
   .map(s => ({
-    href: s.meta.path,
+    href: getBaseUrl(s.meta.path),
     label: s.id.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
     active: currentPath === s.meta.path || currentPath.startsWith(s.meta.path + '/'),
   }));
@@ -30,14 +31,14 @@ const isLanding = currentPath === '/';
 <header class="border-b sticky top-0 z-50 backdrop-blur" style="border-color: var(--border); background-color: rgba(var(--bg-primary-rgb), 0.95);">
   <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
     <!-- Left: Logo / Name -->
-    <a href="/" class="font-semibold text-lg transition-colors hover:text-accent" style="color: var(--text-primary);">
+    <a href={getBaseUrl('/')} class="font-semibold text-lg transition-colors hover:text-accent" style="color: var(--text-primary);">
       {siteConfig.name}
     </a>
 
     <!-- Center: Navigation (hidden on mobile) -->
     <nav class="hidden md:flex gap-8">
       <a
-        href="/"
+        href={getBaseUrl('/')}
         class="transition-colors"
         style={{ color: isLanding ? 'var(--accent)' : 'var(--text-secondary)' }}
       >

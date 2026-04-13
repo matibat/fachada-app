@@ -14,6 +14,7 @@ import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import DownloadButton from "../components/DownloadButton.astro";
+import { getBaseUrl } from "../utils/createLink";
 
 interface Props {
   meta: PageMeta;
@@ -34,7 +35,7 @@ const ContentComponent = Content as any;
       <div class="dp-header">
         <div>
           {backLink && (
-            <a href={backLink.href} class="dp-back-link">← {backLink.label}</a>
+            <a href={getBaseUrl(backLink.href)} class="dp-back-link">← {backLink.label}</a>
           )}
           <h1>{meta.title.split("—")[0].trim()}</h1>
           <p class="dp-subtitle">{meta.description}</p>
@@ -51,11 +52,11 @@ const ContentComponent = Content as any;
       {(backLink || nextLink) && (
         <nav class="dp-nav" aria-label="Page navigation">
           {backLink
-            ? <a href={backLink.href} class="dp-nav-link">← {backLink.label}</a>
+            ? <a href={getBaseUrl(backLink.href)} class="dp-nav-link">← {backLink.label}</a>
             : <span />
           }
           {nextLink && (
-            <a href={nextLink.href} class="dp-nav-link dp-nav-link--next">
+            <a href={getBaseUrl(nextLink.href)} class="dp-nav-link dp-nav-link--next">
               {nextLink.label} →
             </a>
           )}
