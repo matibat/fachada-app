@@ -7,7 +7,7 @@
  *   B3: falls back to section.layout when themeLayouts is undefined
  */
 import { describe, it, expect } from "vitest";
-import { resolveWidgetLayout } from "../src/widgets/resolveWidgetLayout";
+import { resolveWidgetLayout } from "@fachada/core/widgets/resolveWidgetLayout";
 
 describe("Scenario 5: resolveWidgetLayout — themeLayouts resolution precedence", () => {
   // ── B1 ──────────────────────────────────────────────────────────────────────

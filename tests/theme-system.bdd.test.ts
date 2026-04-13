@@ -11,12 +11,12 @@ import type {
   AppConfig,
   AppThemes,
   CustomThemeDefinition,
-} from "../src/types/app.types";
-import { THEME_DEFINITIONS } from "../src/utils/theme.config";
+} from "@fachada/core/types/app.types";
+import { THEME_DEFINITIONS } from "@fachada/core/utils/theme.config";
 import {
   validateThemeConfig,
   validateThemeConfigOrThrow,
-} from "../src/utils/theme-validation";
+} from "@fachada/core/utils/theme-validation";
 
 // Minimal valid AppConfig builder for tests
 function makeConfig(themes?: AppThemes): AppConfig {

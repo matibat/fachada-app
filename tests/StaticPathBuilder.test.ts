@@ -12,16 +12,16 @@ import { describe, it, expect, vi, beforeEach } from "vitest";
 
 // vi.mock is hoisted before imports; mock is in effect when StaticPathBuilder
 // is first required/imported.
-vi.mock("../src/site-tree/MarkdownPageCollector", () => ({
+vi.mock("@fachada/core/site-tree/MarkdownPageCollector", () => ({
   collectMarkdownPages: vi
     .fn()
     .mockReturnValue({ pages: [], skipped: [], errors: [] }),
 }));
 
-import { buildMergedStaticPaths } from "../src/site-tree/StaticPathBuilder";
-import { collectMarkdownPages } from "../src/site-tree/MarkdownPageCollector";
-import type { SubsectionDefinition } from "../src/types/site-tree.types";
-import type { CollectionEntry } from "../src/site-tree/MarkdownPageCollector";
+import { buildMergedStaticPaths } from "@fachada/core/site-tree/StaticPathBuilder";
+import { collectMarkdownPages } from "@fachada/core/site-tree/MarkdownPageCollector";
+import type { SubsectionDefinition } from "@fachada/core/types/site-tree.types";
+import type { CollectionEntry } from "@fachada/core/site-tree/MarkdownPageCollector";
 
 // ─── Shared fixtures ──────────────────────────────────────────────────────────
 

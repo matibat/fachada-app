@@ -5,7 +5,7 @@
  * the correct relative path for use as an Astro glob() base.
  */
 import { describe, it, expect } from "vitest";
-import { resolveAppContentPath } from "../src/content/AppContentPathResolver";
+import { resolveAppContentPath } from "@fachada/core/content/AppContentPathResolver";
 
 describe("resolveAppContentPath", () => {
   describe("Behavior 1: default-fachada app with pages contentType", () => {

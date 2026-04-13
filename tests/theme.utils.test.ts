@@ -5,12 +5,12 @@ import {
   getSystemPreference,
   readFromStorage,
   writeToStorage,
-} from "../src/utils/theme.utils";
+} from "@fachada/core/utils/theme.utils";
 import type {
   ColorMode,
   ThemeStyle,
   ThemeDependencies,
-} from "../src/utils/theme.types";
+} from "@fachada/core/utils/theme.types";
 
 /**
  * BDD Test Suite: Theme Utilities

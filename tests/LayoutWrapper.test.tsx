@@ -1,10 +1,10 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, waitFor } from '@testing-library/react';
 import { useTheme as useSCTheme } from 'styled-components';
-import { useThemeStore } from '../src/stores/themeStore';
-import { THEME_DEFINITIONS } from '../src/utils/theme.config';
-import type { ThemeTokens } from '../src/utils/theme.config';
-import LayoutWrapper from '../src/components/islands/LayoutWrapper';
+import { useThemeStore } from '@fachada/core/stores/themeStore';
+import { THEME_DEFINITIONS } from '@fachada/core/utils/theme.config';
+import type { ThemeTokens } from '@fachada/core/utils/theme.config';
+import LayoutWrapper from '@fachada/core/components/islands/LayoutWrapper';
 
 // ─── Shared setup ─────────────────────────────────────────────────────────────
 

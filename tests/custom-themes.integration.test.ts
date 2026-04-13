@@ -14,12 +14,12 @@
  */
 
 import { describe, it, expect, beforeEach } from "vitest";
-import type { AppConfig, CustomThemeDefinition } from "../src/types/app.types";
+import type { AppConfig, CustomThemeDefinition } from "@fachada/core/types/app.types";
 import {
   validateThemeConfig,
   validateThemeConfigOrThrow,
-} from "../src/utils/theme-validation";
-import { THEME_DEFINITIONS } from "../src/utils/theme.config";
+} from "@fachada/core/utils/theme-validation";
+import { THEME_DEFINITIONS } from "@fachada/core/utils/theme.config";
 
 /**
  * Artist-engineer app custom theme definitions

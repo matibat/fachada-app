@@ -12,7 +12,7 @@ import {
   type SubsectionDefinition,
   type LandingDefinition,
   type MarkdownPageData,
-} from "../src/types/site-tree.types";
+} from "@fachada/core/types/site-tree.types";
 
 // ─── Scenario 0: module exports a version sentinel ────────────────────────────
 

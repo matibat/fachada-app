@@ -19,9 +19,9 @@ import {
     ThemeProvider,
     useTheme,
     useThemeActions,
-} from "../src/context/ThemeContext";
-import { THEME_DEFINITIONS } from "../src/utils/theme.config";
-import { useThemeStore } from "../src/stores/themeStore";
+} from "@fachada/core/context/ThemeContext";
+import { THEME_DEFINITIONS } from "@fachada/core/utils/theme.config";
+import { useThemeStore } from "@fachada/core/stores/themeStore";
 
 /**
  * Test component that displays CSS custom property values

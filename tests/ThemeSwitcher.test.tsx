@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
-import ThemeSwitcher from '../src/components/islands/ThemeSwitcher';
-import { useTheme } from '../src/context/ThemeContext';
-import { THEME_DEFINITIONS } from '../src/utils/theme.config';
-import { useThemeStore, getThemeStore } from '../src/stores/themeStore';
+import ThemeSwitcher from '@fachada/core/components/islands/ThemeSwitcher';
+import { useTheme } from '@fachada/core/context/ThemeContext';
+import { THEME_DEFINITIONS } from '@fachada/core/utils/theme.config';
+import { useThemeStore, getThemeStore } from '@fachada/core/stores/themeStore';
 
 const mockAppThemes = { default: 'minimalist', globals: Object.keys(THEME_DEFINITIONS) };
 

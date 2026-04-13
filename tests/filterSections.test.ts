@@ -8,8 +8,8 @@
  * sorting logic currently embedded in src/pages/index.astro — making it testable.
  */
 import { describe, it, expect } from "vitest";
-import { filterSections } from "../src/widgets/filterSections";
-import type { PageSectionConfig } from "../src/types/profile.types";
+import { filterSections } from "@fachada/core/widgets/filterSections";
+import type { PageSectionConfig } from "@fachada/core/types/profile.types";
 
 // ─── Shared fixtures ──────────────────────────────────────────────────────────
 

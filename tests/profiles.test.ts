@@ -9,7 +9,7 @@
  * and it is available at build time via virtual:fachada/active-app.
  */
 import { describe, it, expect } from "vitest";
-import type { ProfileConfig, SiteConfig } from "../src/types/profile.types";
+import type { ProfileConfig, SiteConfig } from "@fachada/core/types/profile.types";
 import {
   appConfig as defaultFachadaAppConfig,
   profileConfig as defaultFachadaProfile,

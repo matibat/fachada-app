@@ -8,10 +8,10 @@
  * No React, no side effects.
  */
 import { describe, it, expect } from "vitest";
-import { resolveTheme } from "../src/theme/ThemeResolver";
-import { THEME_DEFINITIONS } from "../src/utils/theme.config";
-import type { ThemeConfig } from "../src/types/profile.types";
-import type { ThemeOverride } from "../src/types/app.types";
+import { resolveTheme } from "@fachada/core/theme/ThemeResolver";
+import { THEME_DEFINITIONS } from "@fachada/core/utils/theme.config";
+import type { ThemeConfig } from "@fachada/core/types/profile.types";
+import type { ThemeOverride } from "@fachada/core/types/app.types";
 
 // ─── Shared fixtures ──────────────────────────────────────────────────────────
 

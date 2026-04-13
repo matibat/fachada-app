@@ -1,7 +1,7 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
-import { useThemeStore, getThemeStore } from '../src/stores/themeStore';
-import { THEME_DEFINITIONS } from '../src/utils/theme.config';
-import type { AppThemes } from '../src/types/app.types';
+import { useThemeStore, getThemeStore } from '@fachada/core/stores/themeStore';
+import { THEME_DEFINITIONS } from '@fachada/core/utils/theme.config';
+import type { AppThemes } from '@fachada/core/types/app.types';
 
 // ─── Shared test fixtures ─────────────────────────────────────────────────────
 

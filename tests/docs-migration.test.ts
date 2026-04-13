@@ -7,7 +7,7 @@
  */
 import { describe, it, expect } from "vitest";
 import { appConfig } from "../apps/default-fachada/app.config";
-import type { MarkdownPageData } from "../src/types/site-tree.types";
+import type { MarkdownPageData } from "@fachada/core/types/site-tree.types";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
