@@ -7,64 +7,90 @@ const siteConfig = appConfig.seo;
 const currentYear = new Date().getFullYear();
 
 const subsections = appConfig.siteTree?.landing.subsections ?? [];
-const navItems = [
-  { href: '/', label: 'Home' },
-  ...subsections
-    .filter(s => !s.meta.path.substring(1).includes('/'))
-    .map(s => ({
-      href: s.meta.path,
-      label: s.id.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
-    })),
-];
+const navItems = subsections
+  .filter(s => !s.meta.path.substring(1).includes('/'))
+  .map(s => ({
+    href: s.meta.path,
+    label: s.id.split('-').map((w: string) => w.charAt(0).toUpperCase() + w.slice(1)).join(' '),
+  }));
+
+const { social } = siteConfig;
+
+// Build a unified social links list from whatever is configured
+const socialLinks = [
+  social.instagram && { href: social.instagram, label: 'Instagram' },
+  social.facebook  && { href: social.facebook,  label: 'Facebook' },
+  social.blogger   && { href: social.blogger,   label: 'Blogger' },
+  social.github    && { href: social.github,    label: 'GitHub' },
+  social.linkedin  && { href: social.linkedin,  label: 'LinkedIn' },
+  social.twitter   && { href: social.twitter,   label: 'Twitter' },
+].filter(Boolean) as { href: string; label: string }[];
+
+// Primary contact display
+const waHref = social.whatsapp
+  ? social.whatsappMessage
+    ? `${social.whatsapp}?text=${encodeURIComponent(social.whatsappMessage)}`
+    : social.whatsapp
+  : undefined;
+const contactHref = waHref ?? (social.email ? `mailto:${social.email}` : undefined);
+const contactDisplay = social.whatsapp
+  ? 'WhatsApp'
+  : social.email ?? '';
+const contactIsExternal = !!social.whatsapp;
 ---
 
 <footer class="px-4 py-12 border-t" style="border-color: var(--border);">
   <div class="max-w-6xl mx-auto">
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-      <!-- Left: Social Links -->
-      <div>
-        <p class="font-semibold mb-4" style="color: var(--text-primary);">Follow</p>
-        <div class="flex gap-4">
-          {siteConfig.social.github && (
-            <a href={siteConfig.social.github} class="transition-colors footer-link" style="color: var(--text-secondary);">
-              GitHub
-            </a>
-          )}
-          {siteConfig.social.linkedin && (
-            <a href={siteConfig.social.linkedin} class="transition-colors footer-link" style="color: var(--text-secondary);">
-              LinkedIn
-            </a>
-          )}
-          {siteConfig.social.twitter && (
-            <a href={siteConfig.social.twitter} class="transition-colors footer-link" style="color: var(--text-secondary);">
-              Twitter
-            </a>
-          )}
+    <div class="footer-grid mb-8">
+
+      <!-- Navigation sections (only if there are subsections) -->
+      {navItems.length > 0 && (
+        <div>
+          <p class="font-semibold mb-4" style="color: var(--text-primary);">Secciones</p>
+          <nav class="flex flex-col gap-2">
+            {navItems.map(item => (
+              <a href={getBaseUrl(item.href)} class="transition-colors footer-link" style="color: var(--text-secondary);">
+                {item.label}
+              </a>
+            ))}
+          </nav>
         </div>
-      </div>
+      )}
 
-      <!-- Center: Portfolio Sections -->
-      <div>
-        <p class="font-semibold mb-4" style="color: var(--text-primary);">Portfolio</p>
-        <nav class="flex flex-col gap-2">
-          {navItems.map(item => (
-            <a href={getBaseUrl(item.href)} class="transition-colors footer-link" style="color: var(--text-secondary);">
-              {item.label}
-            </a>
-          ))}
-        </nav>
-      </div>
+      <!-- Social links (only if any are configured) -->
+      {socialLinks.length > 0 && (
+        <div>
+          <p class="font-semibold mb-4" style="color: var(--text-primary);">Redes</p>
+          <div class="flex flex-col gap-2">
+            {socialLinks.map(link => (
+              <a
+                href={link.href}
+                class="transition-colors footer-link"
+                style="color: var(--text-secondary);"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {link.label}
+              </a>
+            ))}
+          </div>
+        </div>
+      )}
 
-      <!-- Right: Contact -->
+      <!-- Contact -->
       <div>
-        <p class="font-semibold mb-4" style="color: var(--text-primary);">Contact</p>
-        <a
-          href={`mailto:${siteConfig.social.email}`}
-          class="transition-colors footer-link"
-          style="color: var(--accent);"
-        >
-          {siteConfig.social.email}
-        </a>
+        <p class="font-semibold mb-4" style="color: var(--text-primary);">Contacto</p>
+        {contactHref && (
+          <a
+            href={contactHref}
+            class="transition-colors footer-link"
+            style="color: var(--accent);"
+            target={contactIsExternal ? '_blank' : undefined}
+            rel={contactIsExternal ? 'noopener noreferrer' : undefined}
+          >
+            {contactDisplay}
+          </a>
+        )}
         <p class="text-sm mt-4" style="color: var(--text-secondary);">
           {siteConfig.location.city}, {siteConfig.location.country}
         </p>
@@ -74,13 +100,23 @@ const navItems = [
     <!-- Copyright line -->
     <div class="border-t pt-6" style="border-color: var(--border);">
       <p style="color: var(--text-secondary); text-align: center; font-size: 0.875rem;">
-        © {currentYear} {siteConfig.name}. All rights reserved.
+        © {currentYear} {siteConfig.author}
       </p>
     </div>
   </div>
 </footer>
 
 <style>
+  .footer-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+  }
+  @media (min-width: 640px) {
+    .footer-grid {
+      grid-template-columns: repeat(auto-fit, minmax(10rem, 1fr));
+    }
+  }
   .footer-link:hover {
     color: var(--accent) !important;
   }

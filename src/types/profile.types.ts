@@ -114,10 +114,16 @@ export interface SiteConfig {
   url: string;
   ogImage: string;
   social: {
-    github: string;
-    linkedin: string;
-    twitter: string;
-    email: string;
+    github?: string;
+    linkedin?: string;
+    twitter?: string;
+    instagram?: string;
+    facebook?: string;
+    blogger?: string;
+    whatsapp?: string;
+    /** Pre-filled message appended to the WhatsApp link as ?text= */
+    whatsappMessage?: string;
+    email?: string;
   };
   location: {
     city: string;

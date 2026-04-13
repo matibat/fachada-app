@@ -18,6 +18,8 @@ interface LayoutWrapperProps {
     appThemeVariants?: Record<string, ThemeVariantDef>;
     /** Default theme to load when no stored preference */
     defaultTheme?: string;
+    /** Default color mode — when enableModeToggle is false, this is always applied */
+    defaultColorMode?: string;
     appThemeGlobals?: string[];
 }
 
@@ -38,6 +40,7 @@ export default function LayoutWrapper({
     enableStyleSwitcher,
     appThemeVariants = {},
     defaultTheme = 'minimalist',
+    defaultColorMode,
     appThemeGlobals,
 }: LayoutWrapperProps) {
     const themeLayouts =
@@ -48,11 +51,23 @@ export default function LayoutWrapper({
             : undefined;
 
     useEffect(() => {
+        // The window.__FACHADA_THEME_POOL__ is set by BaseLayout before React hydrates.
+        // It contains all resolved themes (globals + custom) for this app.
+        // We pass them to initFromEnvironment, which will merge them and build availableThemes.
         useThemeStore.getState().initFromEnvironment(
-            { default: defaultTheme, globals: appThemeGlobals ?? Object.keys(THEME_DEFINITIONS) },
+            {
+                default: defaultTheme,
+                globals: appThemeGlobals ?? Object.keys(THEME_DEFINITIONS),
+            },
             undefined,
             themeLayouts,
         );
+        // When the mode toggle is disabled, always enforce the app's default color mode
+        // so localStorage from a previous session doesn't bleed through.
+        if (!enableModeToggle && defaultColorMode) {
+            const mode = defaultColorMode === 'dark' ? 'dark' : 'light';
+            useThemeStore.getState().setColorMode(mode);
+        }
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 

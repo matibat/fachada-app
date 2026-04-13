@@ -48,8 +48,12 @@ const { meta, data } = Astro.props;
       <section class="hub-contact">
         <h2>Need Help?</h2>
         <p>
-          Reach out to{" "}
-          <a href={`mailto:${siteConfig.social.email}`}>{siteConfig.social.email}</a>
+          {siteConfig.social.whatsapp
+            ? <a href={siteConfig.social.whatsapp} target="_blank" rel="noopener noreferrer">WhatsApp</a>
+            : siteConfig.social.email
+              ? <a href={`mailto:${siteConfig.social.email}`}>{siteConfig.social.email}</a>
+              : null
+          }
         </p>
       </section>
 

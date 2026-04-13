@@ -3,11 +3,7 @@
  * Each theme defines light and dark token sets that ThemeProvider applies as CSS custom properties.
  */
 
-export type ThemeStyle =
-  | "minimalist"
-  | "modern-tech"
-  | "professional"
-  | "vaporwave";
+export type ThemeStyle = string;
 export type ColorMode = "light" | "dark" | "auto";
 
 export interface ThemeTokens {

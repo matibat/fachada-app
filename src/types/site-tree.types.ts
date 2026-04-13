@@ -28,6 +28,12 @@ export interface LandingPageData {
   hook?: string;
   /** Hero sub-headline. Falls back to siteConfig.description when omitted. */
   subheading?: string;
+  /** Heading for the bottom CTA section. Falls back to "Let's work on something." */
+  ctaHeading?: string;
+  /** Body copy for the bottom CTA section. Falls back to a generic message. */
+  ctaMessage?: string;
+  /** Label for the bottom CTA button when single-role. Falls back to "Get in touch". */
+  ctaLabel?: string;
 }
 
 /**
@@ -54,6 +60,16 @@ export interface RolePageData {
   contactLayout?: "split" | "centered";
   /** Projects widget grid layout. @default "grid-3" */
   projectsLayout?: "grid-2" | "grid-3";
+  /** Label for the works/gallery section heading. */
+  galleryLabel?: string;
+  /** Label for the skills section heading. */
+  skillsLabel?: string;
+  /** Label for the bio/process section heading. */
+  bioLabel?: string;
+  /** Scroll CTA shown in atmospheric hero. Falls back to "↓ Ver trabajo". */
+  scrollCta?: string;
+  /** Availability line shown in split hero. Omit to hide. */
+  availabilityLine?: string;
 }
 
 /**

@@ -26,12 +26,22 @@ interface Props {
 
 const { meta, data } = Astro.props;
 
-const hook = data?.hook ?? siteConfig.title;
-const subheading = data?.subheading ?? siteConfig.description;
-
 const isMultiRole = siteConfig.roles.length > 1;
 const primaryRole = siteConfig.roles.find((r) => r.id === siteConfig.primaryRole)
   ?? siteConfig.roles[0];
+
+const hook = data?.hook ?? siteConfig.title;
+const subheading = data?.subheading ?? siteConfig.description;
+const ctaHeading = data?.ctaHeading ?? "Let's work on something.";
+const ctaMessageDefault = isMultiRole
+  ? "Pinturas, tatuajes o lo que tengas en mente — escribime."
+  : "Open to interesting projects and conversations.";
+const ctaMessage = data?.ctaMessage ?? ctaMessageDefault;
+const ctaLabel = data?.ctaLabel ?? "Get in touch";
+
+// Primary contact href: prefer WhatsApp, then email
+const primaryContactHref = siteConfig.social.whatsapp
+  ?? (siteConfig.social.email ? `mailto:${siteConfig.social.email}` : undefined);
 
 let featuredByRole: Record<string, typeof projects> = {};
 let projects: any[] = [];
@@ -55,6 +65,7 @@ const personSchema = {
     siteConfig.social.github,
     siteConfig.social.linkedin,
     siteConfig.social.twitter,
+    siteConfig.social.instagram,
   ].filter(Boolean),
 };
 ---
@@ -82,9 +93,9 @@ const personSchema = {
                   → {role.title}
                 </a>
               ))
-            : (
-                <a href={`mailto:${siteConfig.social.email}`} class="lp-cta lp-cta--primary">
-                  Get in touch
+            : primaryContactHref && (
+                <a href={primaryContactHref} class="lp-cta lp-cta--primary">
+                  {ctaLabel}
                 </a>
               )
           }
@@ -169,16 +180,13 @@ const personSchema = {
     <!-- ── CTA ──────────────────────────────────────────────────── -->
     <section class="lp-cta-section">
       <div class="lp-section-inner lp-section-inner--narrow lp-section-inner--center">
-        <h2>Let's work on something.</h2>
-        <p>
-          {isMultiRole
-            ? "Whether it's engineering, art, or the weird space between — I'm open to interesting projects."
-            : "Open to interesting projects and conversations."
-          }
-        </p>
-        <a href={`mailto:${siteConfig.social.email}`} class="lp-cta lp-cta--primary">
-          Get in touch
-        </a>
+        <h2>{ctaHeading}</h2>
+        <p>{ctaMessage}</p>
+        {primaryContactHref && (
+          <a href={primaryContactHref} class="lp-cta lp-cta--primary">
+            {ctaLabel}
+          </a>
+        )}
       </div>
     </section>
 

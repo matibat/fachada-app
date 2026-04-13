@@ -28,7 +28,7 @@ const navItems = subsections
 const isLanding = currentPath === '/';
 ---
 
-<header class="border-b sticky top-0 z-50 backdrop-blur" style="border-color: var(--border); background-color: rgba(var(--bg-primary-rgb), 0.95);">
+<header class="border-b sticky top-0 z-50 backdrop-blur" style="border-color: var(--border); background-color: var(--bg-primary);">
   <div class="max-w-6xl mx-auto px-4 py-4 flex items-center justify-between">
     <!-- Left: Logo / Name -->
     <a href={getBaseUrl('/')} class="font-semibold text-lg transition-colors hover:text-accent" style="color: var(--text-primary);">
@@ -37,13 +37,15 @@ const isLanding = currentPath === '/';
 
     <!-- Center: Navigation (hidden on mobile) -->
     <nav class="hidden md:flex gap-8">
-      <a
-        href={getBaseUrl('/')}
-        class="transition-colors"
-        style={{ color: isLanding ? 'var(--accent)' : 'var(--text-secondary)' }}
-      >
-        Home
-      </a>
+      {!isLanding && (
+        <a
+          href={getBaseUrl('/')}
+          class="transition-colors"
+          style="color: var(--text-secondary);"
+        >
+          ← Inicio
+        </a>
+      )}
       {navItems.map(item => (
         <a
           href={item.href}
@@ -56,13 +58,20 @@ const isLanding = currentPath === '/';
     </nav>
 
     <!-- Right: Contact CTA -->
-    {siteConfig.social.email && (
+    {(siteConfig.social.whatsapp || siteConfig.social.email) && (
       <a
-        href={`mailto:${siteConfig.social.email}`}
+        href={siteConfig.social.whatsapp
+          ? siteConfig.social.whatsappMessage
+            ? `${siteConfig.social.whatsapp}?text=${encodeURIComponent(siteConfig.social.whatsappMessage)}`
+            : siteConfig.social.whatsapp
+          : `mailto:${siteConfig.social.email}`
+        }
         class="px-4 py-2 rounded-lg transition-colors text-sm font-semibold"
-        style={{ backgroundColor: 'var(--accent)', color: 'var(--text-primary)' }}
+        style={{ backgroundColor: 'var(--accent)', color: 'var(--button-text-color, var(--bg-primary))' }}
+        target={siteConfig.social.whatsapp ? '_blank' : undefined}
+        rel={siteConfig.social.whatsapp ? 'noopener noreferrer' : undefined}
       >
-        Get in touch
+        {siteConfig.social.whatsapp ? 'WhatsApp' : 'Contacto'}
       </a>
     )}
   </div>
@@ -70,7 +79,6 @@ const isLanding = currentPath === '/';
 
 <style>
   header {
-    --bg-primary-rgb: 15, 23, 42; /* fallback for dark theme */
     background-color: var(--bg-primary);
   }
 

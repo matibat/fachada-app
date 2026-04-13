@@ -34,6 +34,11 @@ const {
   contactMessage,
   contactLayout = "split",
   projectsLayout = "grid-3",
+  galleryLabel,
+  skillsLabel,
+  bioLabel,
+  scrollCta = "↓ Ver trabajo",
+  availabilityLine,
 } = data;
 
 const role = siteConfig.roles.find((r) => r.id === roleId);
@@ -43,8 +48,12 @@ if (!role) {
 
 const defaultContactMessage =
   contactLayout === "centered"
-    ? `Open to commissions, creative collaborations, and custom work. Email me your project — let's explore what's possible.`
-    : `Available for contracts. Let's build something together.`;
+    ? `¿Te interesa algo? Escribime y lo charlamos.`
+    : `Disponible para proyectos. Hablemos.`;
+
+const resolvedGalleryLabel = galleryLabel ?? (heroStyle === "atmospheric" ? "Trabajos" : "Proyectos");
+const resolvedSkillsLabel = skillsLabel ?? (heroStyle === "atmospheric" ? "Técnicas" : "Habilidades");
+const resolvedBioLabel = bioLabel ?? "Mi enfoque";
 
 const resolvedContactMessage = contactMessage ?? defaultContactMessage;
 
@@ -57,6 +66,7 @@ const personSchema = {
     siteConfig.social.github,
     siteConfig.social.linkedin,
     siteConfig.social.twitter,
+    siteConfig.social.instagram,
   ].filter(Boolean),
 };
 ---
@@ -94,10 +104,19 @@ const personSchema = {
           </div>
           <div class="rp-hero-content">
             <p class="rp-description">{role.description}</p>
-            <a href={`mailto:${siteConfig.social.email}`} class="rp-cta-btn">
-              Email me
-            </a>
-            <p class="rp-availability">Open to contracts · Remote-friendly</p>
+            {(siteConfig.social.whatsapp || siteConfig.social.email) && (
+              <a
+                href={siteConfig.social.whatsapp ?? `mailto:${siteConfig.social.email}`}
+                class="rp-cta-btn"
+                target={siteConfig.social.whatsapp ? '_blank' : undefined}
+                rel={siteConfig.social.whatsapp ? 'noopener noreferrer' : undefined}
+              >
+                {siteConfig.social.whatsapp ? 'WhatsApp' : 'Email me'}
+              </a>
+            )}
+            {availabilityLine && (
+              <p class="rp-availability">{availabilityLine}</p>
+            )}
           </div>
         </div>
       </section>
@@ -117,7 +136,7 @@ const personSchema = {
             <p class="rp-atm-subheading">{role.description}</p>
           )}
           <a href="#gallery" class="rp-atm-scroll-cta" aria-label="Scroll to work">
-            ↓ Explore the work
+            {scrollCta}
           </a>
         </div>
       </section>
@@ -144,7 +163,7 @@ const personSchema = {
     >
       <div class="max-w-6xl mx-auto px-4">
         <h2 class="rp-section-heading">
-          {heroStyle === "atmospheric" ? "Gallery" : "Featured Projects"}
+          {resolvedGalleryLabel}
         </h2>
         <Projects layout={projectsLayout} filterRoles={[roleId]} />
       </div>
@@ -158,7 +177,7 @@ const personSchema = {
       >
         <div class="max-w-6xl mx-auto px-4">
           <h2 class="rp-section-heading">
-            {heroStyle === "atmospheric" ? "Creative Code + Tools" : "Skills & Expertise"}
+            {resolvedSkillsLabel}
           </h2>
           <div class="rp-skills-grid">
             {role.skills.map((category) => (
@@ -188,7 +207,7 @@ const personSchema = {
     {heroStyle === "split" && role.about && (
       <section class="rp-section" data-testid={`${roleId}-process`}>
         <div class="max-w-3xl mx-auto px-4">
-          <h2 class="rp-section-heading">How I approach this</h2>
+          <h2 class="rp-section-heading">{resolvedBioLabel}</h2>
           <div class="rp-process-body">
             {role.about.paragraphs.map((para) => (
               <p class="rp-process-para">{para}</p>

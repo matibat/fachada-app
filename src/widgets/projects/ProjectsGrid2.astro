@@ -5,9 +5,10 @@ import ProjectCard from '../../components/sections/ProjectCard.astro';
 
 export interface Props {
   filterRoles?: string[];
+  heading?: string;
 }
 
-const { filterRoles } = Astro.props;
+const { filterRoles, heading: headingProp } = Astro.props;
 
 const allProjects = await getCollection('projects');
 const projects = allProjects
@@ -22,7 +23,7 @@ const projects = allProjects
   .slice(0, 4);
 
 const isFramework = siteConfig.roles.some(r => r.id === 'framework');
-const heading = isFramework ? 'Featured Work' : 'Featured Projects';
+const heading = headingProp ?? (isFramework ? 'Featured Work' : 'Featured Projects');
 ---
 
 <section id="projects" class="px-4 py-20">

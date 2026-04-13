@@ -83,7 +83,7 @@ const { resolvedThemes, defaultTheme: effectiveDefaultTheme } = validateThemeCon
       template strings reference var(--token) and therefore produce identical
       class names on server and client, eliminating the hydration mismatch.
     -->
-    <script is:inline define:vars={{ defaultStyle: theme.style, defaultMode: theme.defaultMode, themeDefinitions: THEME_DEFINITIONS, cssVarMap: CSS_VAR_MAP, defaultStyleTheme: appConfig.themes?.default ?? 'minimalist', themeLayouts: appConfig.themeLayouts ?? null }}>
+    <script is:inline define:vars={{ defaultStyle: theme.style, defaultMode: theme.defaultMode, enableModeToggle: theme.enableModeToggle ?? true, resolvedThemesJson: JSON.stringify(resolvedThemes), cssVarMap: CSS_VAR_MAP, defaultStyleTheme: appConfig.themes?.default ?? 'minimalist', themeLayouts: appConfig.themeLayouts ?? null }}>
       (function () {
         function parseStored(raw, fallback) {
           if (!raw) return fallback;
@@ -91,7 +91,7 @@ const { resolvedThemes, defaultTheme: effectiveDefaultTheme } = validateThemeCon
         }
 
         var savedStyle = parseStored(localStorage.getItem('themeStyle'), defaultStyle);
-        var savedMode  = parseStored(localStorage.getItem('theme'), null);
+        var savedMode  = enableModeToggle ? parseStored(localStorage.getItem('theme'), null) : null;
         var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 
         var initialMode;
@@ -114,6 +114,7 @@ const { resolvedThemes, defaultTheme: effectiveDefaultTheme } = validateThemeCon
 
         // Apply every CSS custom property so styled elements have the right
         // colour on the very first paint, with no flash of wrong theme.
+        var themeDefinitions = JSON.parse(resolvedThemesJson);
         var styles = themeDefinitions[savedStyle];
         if (!styles) styles = themeDefinitions[defaultStyle];
         var tokens = styles && styles[initialMode];
@@ -157,6 +158,7 @@ const { resolvedThemes, defaultTheme: effectiveDefaultTheme } = validateThemeCon
       enableStyleSwitcher={theme.enableStyleSwitcher}
       appThemeVariants={appThemeVariants}
       defaultTheme={effectiveDefaultTheme}
+      defaultColorMode={theme.defaultMode}
       appThemeGlobals={appConfig.themes?.globals ?? []}
     >
       <slot />
