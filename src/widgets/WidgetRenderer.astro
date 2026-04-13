@@ -19,11 +19,11 @@
  * An unknown section id renders nothing — no runtime crash.
  */
 
-import type { PageSectionConfig } from '../types/profile.types';
-import type { HeroLayout, AboutLayout, SkillsLayout, ProjectsLayout, ContactLayout } from '../types/layout.types';
-import { filterSections } from './filterSections';
+import type { PageSectionConfig } from '@fachada/core/types/profile.types';
+import type { HeroLayout, AboutLayout, SkillsLayout, ProjectsLayout, ContactLayout } from '@fachada/core/types/layout.types';
+import { filterSections } from '@fachada/core/widgets/filterSections';
 import { appConfig } from 'virtual:fachada/active-app';
-import { resolveWidgetLayout } from './resolveWidgetLayout';
+import { resolveWidgetLayout } from '@fachada/core/widgets/resolveWidgetLayout';
 
 // ── Widget imports (static — Astro build requirement) ──────────────────────────
 import Hero    from './Hero.astro';
@@ -31,7 +31,7 @@ import About   from './About.astro';
 import Skills  from './Skills.astro';
 import Projects from './Projects.astro';
 import Contact from './Contact.astro';
-import RoleExplorer from '../components/islands/RoleExplorer';
+import RoleExplorer from '@fachada/core/components/islands/RoleExplorer';
 
 export interface Props {
   sections: PageSectionConfig[];
