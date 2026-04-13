@@ -74,275 +74,153 @@ Visit `http://localhost:4321` to see your site.
 
 ```text
 /
-├── docs/                         # Documentation
-├── dist/                          # Production build output
-│   ├── components/
-│   │   ├── islands/               # React interactive islands
-│   │   │   ├── ThemeToggle.tsx    # Light/dark mode toggle
-│   │   │   ├── ThemeSwitcher.tsx  # Visual style switcher
-│   │   │   └── LayoutWrapper.tsx  # Root provider (conditional widget rendering)
-│   │   ├── sections/              # Homepage sections
-│   │   │   ├── Hero.astro
-│   │   │   ├── About.astro
-│   │   │   ├── Skills.astro
-│   │   │   ├── Projects.astro
-│   │   │   └── Contact.astro
-│   │   └── ui/                    # Reusable UI components
-│   ├── content/
-│   │   ├── projects/              # Project case studies (.md)
-│   │   └── blog/                  # Blog posts (.md)
-│   ├── profiles/
-│   │   └── index.ts               # backward-compatibility shim
-│   ├── types/
-│   │   └── profile.types.ts       # All profile TypeScript interfaces
-│   ├── layouts/
-│   │   └── BaseLayout.astro       # Root layout with SEO
-│   ├── pages/
-│   │   ├── index.astro            # Homepage (profile-driven section rendering)
-│   │   └── ...
-│   ├── utils/
-│   │   └── theme.config.ts        # Theme token definitions
-│   ├── config.ts                  # Re-exports active profile's siteConfig
-│   └── profile.config.ts          # Re-exports active profile's profileConfig
+├── .fachadarc.json               # App registry (defaultApp)
+├── astro.config.mjs              # Astro config — uses fachadaIntegration()
+├── package.json
 ├── apps/
-│   ├── default-fachada/           # Default developer portfolio
-│   ├── artist-engineer/           # Multi-role: engineer + digital artist
-│   └── engineer-single-role/      # Backend engineer locked to modern-tech theme
-├── tests/
-│   ├── profiles.test.ts           # Profile loading and multi-role tests
-│   ├── config.test.ts             # Site config contract tests
-│   └── Theme*.test.tsx            # Theme system tests
-├── astro.config.mjs               # Astro configuration
-└── package.json
+│   ├── default-fachada/          # Default developer portfolio
+│   │   ├── app.config.ts         # AppConfig — seo + siteTree
+│   │   ├── site.config.ts        # SiteConfig — SEO metadata
+│   │   ├── profile.config.ts     # ProfileConfig — theme, about, skills
+│   │   ├── blog/                 # Markdown blog posts
+│   │   └── pages/                # Markdown landing page content
+│   ├── artist-engineer/          # Multi-role: engineer + digital artist
+│   ├── engineer-single-role/     # Backend engineer, locked to modern-tech theme
+│   └── unbati/                   # Additional app
+├── public/                       # Static assets (favicons, og-image, images/)
+├── tests/                        # Vitest unit tests (526 passing)
+└── docs/                         # Documentation
 ```
+
+> All Astro routes, layouts, components, and widgets are provided by `@fachada/core`.
 
 ## ⚙️ Configuration
 
 ### Rebrand the Template
 
-Edit `src/config.ts` to customize your portfolio:
+Edit `apps/your-app-name/app.config.ts` to customize your portfolio:
 
 ```typescript
-export const siteConfig = {
-  name: "Your Name",
-  title: "Your Name | Portfolio",
-  description: "Your tagline or description",
-  url: "https://yoursite.com",
-  ogImage: "/og-image.png",
-  social: {
-    github: "https://github.com/yourusername",
-    linkedin: "https://linkedin.com/in/yourusername",
-    twitter: "https://x.com/yourusername",
-    email: "you@example.com",
+import type { AppConfig } from "@fachada/core";
+
+export const appConfig: AppConfig = {
+  seo: {
+    site: "https://your-domain.dev",
+    name: "Your Name",
+    author: "Your Name",
+    description: "Your professional tagline or description",
+    socials: {
+      github: "https://github.com/yourusername",
+      linkedin: "https://linkedin.com/in/yourusername",
+      email: "your@email.dev",
+    },
+    roles: [
+      {
+        id: "engineer",
+        title: "Software Engineer",
+        specialties: ["TypeScript", "React"],
+        featured: true,
+      },
+    ],
   },
-  theme: {
-    primaryColor: "#3b82f6", // Customize your brand color
-    accentColor: "#8b5cf6",
+  siteTree: {
+    landing: {
+      sections: [
+        { id: "hero", enabled: true, order: 1 },
+        { id: "about", enabled: true, order: 2 },
+        { id: "skills", enabled: true, order: 3 },
+        { id: "projects", enabled: true, order: 4 },
+        { id: "contact", enabled: true, order: 5 },
+      ],
+    },
   },
-  analytics: {
-    provider: "plausible", // or "google"
-    plausibleDomain: "yoursite.com",
-  },
-} as const;
+};
 ```
 
 ## 📋 Creating New Apps
 
-This template is designed to be **app-extensible**. Changing the active app at build time produces a completely different SPA — different name, bio, skills, theme settings, and visible sections.
-
-### Quick App Creation (Legacy Profile Setup)
-
-1. **Create a profile directory**:
-
-   ```bash
-   mkdir -p src/profiles/your-name
-   ```
-
-2. **Create `src/profiles/your-name/site.config.ts`**:
-
-   ```typescript
-   import type { SiteConfig } from "../../types/profile.types";
-
-   export const siteConfig: SiteConfig = {
-     name: "Your Name",
-     title: "Your Name — Your Role",
-     description: "Your professional description",
-     author: "Your Name",
-     url: "https://your-domain.dev",
-     ogImage: "/og-image.png",
-     social: {
-       github: "https://github.com/yourusername",
-       linkedin: "https://linkedin.com/in/yourusername",
-       twitter: "https://twitter.com/yourusername",
-       email: "your@email.dev",
-     },
-     location: { city: "Your City", country: "Your Country" },
-     roles: [
-       {
-         id: "engineer",
-         title: "Software Engineer",
-         specialties: ["TypeScript", "React"],
-         featured: true,
-       },
-     ],
-     primaryRole: "engineer",
-     analytics: { plausibleDomain: "your-domain.dev" },
-   };
-   ```
-
-3. **Create `src/profiles/your-name/profile.config.ts`**:
-
-   ```typescript
-   import type { ProfileConfig } from "../../types/profile.types";
-
-   export const profileConfig: ProfileConfig = {
-     theme: {
-       style: "minimalist", // minimalist | modern-tech | professional | vaporwave
-       defaultMode: "system", // light | dark | system
-       enableStyleSwitcher: true, // show/hide theme switcher widget
-       enableModeToggle: true, // show/hide light/dark toggle widget
-     },
-     about: {
-       paragraphs: [
-         "Your first bio paragraph.",
-         "Your second bio paragraph.",
-         "Your third bio paragraph.",
-       ],
-     },
-     skills: [
-       { name: "Category 1", skills: ["Tech A", "Tech B", "Tech C"] },
-       { name: "Category 2", skills: ["Tech D", "Tech E", "Tech F"] },
-     ],
-     sections: [
-       { id: "hero", enabled: true, order: 1 },
-       { id: "about", enabled: true, order: 2 },
-       { id: "skills", enabled: true, order: 3 },
-       { id: "projects", enabled: true, order: 4, requiresContent: "projects" },
-       { id: "contact", enabled: true, order: 5 },
-     ],
-     contactMessage: "Your contact section message.",
-   };
-   ```
-
-4. **Register the app in `src/profiles/index.ts`** (legacy shim):
-
-   ```typescript
-   import { siteConfig as yourNameSite } from "./your-name/site.config";
-   import { profileConfig as yourNameProfile } from "./your-name/profile.config";
-
-   const PROFILES: Record<string, LoadedProfile> = {
-     // ... existing profiles ...
-     "your-name": {
-       siteConfig: yourNameSite,
-       profileConfig: yourNameProfile,
-     },
-   };
-   ```
-
-## 📋 Creating New Apps
-
-This template is designed to be **app-extensible**. Each app produces a completely different SPA with its own content and style.
+Each app lives entirely in `apps/{app-name}/` and produces a completely different SPA at build time — different name, bio, theme, and content.
 
 ### Quick App Creation
 
-1. **Create an app directory**:
+1. **Create `apps/your-app-name/`** with three config files:
 
-   ```bash
-   mkdir -p apps/your-app/
-   ```
-
-2. **Create profile config files** in `src/profiles/your-app/`:
-
-   Create `src/profiles/your-app/site.config.ts`:
+   `apps/your-app-name/app.config.ts`:
 
    ```typescript
-   import type { SiteConfig } from "../../types/profile.types";
+   import type { AppConfig } from "@fachada/core";
 
-   export const siteConfig: SiteConfig = {
-     name: "Your Name",
-     title: "Your Name — Your Role",
-     description: "Your professional description",
-     author: "Your Name",
-     url: "https://your-domain.dev",
-     ogImage: "/og-image.png",
-     social: {
-       github: "https://github.com/yourusername",
-       linkedin: "https://linkedin.com/in/yourusername",
-       twitter: "https://twitter.com/yourusername",
-       email: "your@email.dev",
-     },
-     location: { city: "Your City", country: "Your Country" },
-     roles: [
-       {
-         id: "engineer",
-         title: "Software Engineer",
-         specialties: ["TypeScript", "React"],
-         featured: true,
+   export const appConfig: AppConfig = {
+     seo: {
+       site: "https://your-domain.dev",
+       name: "Your Name",
+       author: "Your Name",
+       description: "Your professional description",
+       socials: {
+         github: "https://github.com/yourusername",
+         linkedin: "https://linkedin.com/in/yourusername",
+         email: "your@email.dev",
        },
-     ],
-     primaryRole: "engineer",
-     analytics: { plausibleDomain: "your-domain.dev" },
+       roles: [
+         {
+           id: "engineer",
+           title: "Software Engineer",
+           specialties: ["TypeScript", "React"],
+           featured: true,
+         },
+       ],
+     },
+     siteTree: {
+       landing: {
+         sections: [
+           { id: "hero", enabled: true, order: 1 },
+           { id: "about", enabled: true, order: 2 },
+           { id: "skills", enabled: true, order: 3 },
+           { id: "projects", enabled: true, order: 4 },
+           { id: "contact", enabled: true, order: 5 },
+         ],
+       },
+     },
    };
    ```
 
-   Create `src/profiles/your-app/profile.config.ts`:
+   `apps/your-app-name/profile.config.ts`:
 
    ```typescript
-   import type { ProfileConfig } from "../../types/profile.types";
+   import type { ProfileConfig } from "@fachada/core";
 
    export const profileConfig: ProfileConfig = {
-     theme: {
-       style: "minimalist", // minimalist | modern-tech | professional | vaporwave
-       defaultMode: "system", // light | dark | system
-       enableStyleSwitcher: true,
-       enableModeToggle: true,
-     },
-     about: {
-       paragraphs: [
-         "Your first bio paragraph.",
-         "Your second bio paragraph.",
-         "Your third bio paragraph.",
-       ],
-     },
-     skills: [{ name: "Category 1", skills: ["Tech A", "Tech B", "Tech C"] }],
+     about: "Your professional bio.",
+     skills: [
+       { name: "Category 1", skills: ["Tech A", "Tech B", "Tech C"] },
+     ],
      sections: [
        { id: "hero", enabled: true, order: 1 },
        { id: "about", enabled: true, order: 2 },
        { id: "skills", enabled: true, order: 3 },
-       { id: "projects", enabled: true, order: 4, requiresContent: "projects" },
+       { id: "projects", enabled: true, order: 4 },
        { id: "contact", enabled: true, order: 5 },
      ],
-   };
-   ```
-
-3. **Create `apps/your-app/app.config.ts`**:
-
-   ```typescript
-   import { siteConfig } from "../../src/profiles/your-app/site.config";
-   import { profileConfig } from "../../src/profiles/your-app/profile.config";
-   import type { AppConfig } from "../../src/types/app.types";
-
-   export const appConfig: AppConfig = {
-     seo: siteConfig,
-     theme: profileConfig.theme,
-     themes: {
-       globals: ["minimalist", "modern-tech", "professional", "vaporwave"],
-       default: "minimalist",
-     },
-     themeVariants: {},
-     assets: {
-       ogImage: siteConfig.ogImage,
-     },
-     page: {
-       sections: profileConfig.sections.map((s) => ({ ...s, widgets: [] })),
+     contactMessage: "I'd love to hear about your project.",
+     theme: {
+       style: "minimalista",
+       defaultMode: "system",
      },
    };
    ```
 
-4. **Build or dev with your app** — it's automatically discovered:
+2. **Register in `.fachadarc.json`**:
+
+   ```json
+   {
+     "defaultApp": "your-app-name"
+   }
+   ```
+
+3. **Start developing**:
+
    ```bash
-   APP=your-app yarn dev
-   APP=your-app yarn build
+   APP=your-app-name yarn dev
    ```
 
 ### Included Example Apps
@@ -389,29 +267,26 @@ See [docs/PROFILE-EXTENSIBILITY.md](docs/PROFILE-EXTENSIBILITY.md) for the full 
 
 ### Add Content
 
-**Projects** - Create `.md` files in `src/content/projects/`:
+**Pages** — Create `.md` files in `apps/your-app-name/pages/`:
 
 ```markdown
 ---
 title: "Project Name"
 description: "Short description"
-date: 2024-01-15
+date: 2026-04-13
 tags: ["React", "TypeScript", "Tailwind"]
-featured: true
-liveUrl: "https://project.com"
-githubUrl: "https://github.com/you/project"
 ---
 
-Your project case study content here...
+Your page content here...
 ```
 
-**Blog Posts** - Create `.md` files in `src/content/blog/`:
+**Blog Posts** — Create `.md` files in `apps/your-app-name/blog/`:
 
 ```markdown
 ---
 title: "Blog Post Title"
 description: "Post excerpt"
-date: 2024-01-15
+date: 2026-04-13
 tags: ["Development", "Tutorial"]
 ---
 
@@ -559,7 +434,7 @@ MIT License - feel free to use this template for your portfolio!
 
 - **Images**: Place in `public/` for static assets or use Astro's Image component for optimization
 - **Fonts**: Load via CDN in `BaseLayout.astro` or use `@fontsource` packages
-- **Analytics**: Configure in `src/config.ts` (supports Plausible and Google Analytics)
+- **Analytics**: Configure in `apps/your-app/app.config.ts`
 - **Performance**: Run Lighthouse audits (`yarn preview` then test in Chrome DevTools)
 
 ## 📚 Resources
