@@ -37,7 +37,7 @@ export interface FachadaRc {
 function discoverApps(cwd: string): Record<string, string> {
   const appsDir = resolve(cwd, "apps");
   let appFolders: string[] = [];
-  
+
   try {
     appFolders = readdirSync(appsDir);
   } catch {
@@ -58,15 +58,17 @@ function discoverApps(cwd: string): Record<string, string> {
   return apps;
 }
 
-export function readFachadarc(cwd: string = process.cwd()): FachadaRc & { apps: Record<string, string> } {
+export function readFachadarc(
+  cwd: string = process.cwd(),
+): FachadaRc & { apps: Record<string, string> } {
   const path = resolve(cwd, ".fachadarc.json");
   const config = JSON.parse(readFileSync(path, "utf-8")) as FachadaRc;
-  
+
   // Auto-discover apps if not explicitly provided
   if (!config.apps || Object.keys(config.apps).length === 0) {
     config.apps = discoverApps(cwd);
   }
-  
+
   return config as FachadaRc & { apps: Record<string, string> };
 }
 

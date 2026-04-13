@@ -1,4 +1,6 @@
 {
     "defaultApp": "default-fachada",
-    "disabled": ["engineer-single-role"]
+    "disabled": [
+        "engineer-single-role"
+    ]
 }
