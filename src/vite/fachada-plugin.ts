@@ -17,7 +17,7 @@
  * `.fachadarc.json`. No changes to core code required.
  */
 
-import { readFileSync } from "fs";
+import { readFileSync, readdirSync } from "fs";
 import { resolve } from "path";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
@@ -25,15 +25,49 @@ import { resolve } from "path";
 export interface FachadaRc {
   /** App name used when APP / PROFILE env vars are absent. */
   defaultApp: string;
-  /** Registry: app name → path relative to project root. */
-  apps: Record<string, string>;
+  /** Registry: app name → path relative to project root. Optional—auto-discovered if omitted. */
+  apps?: Record<string, string>;
 }
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────
 
-export function readFachadarc(cwd: string = process.cwd()): FachadaRc {
+/**
+ * Auto-discovers apps from the apps/ folder by looking for app.config.ts files.
+ */
+function discoverApps(cwd: string): Record<string, string> {
+  const appsDir = resolve(cwd, "apps");
+  let appFolders: string[] = [];
+  
+  try {
+    appFolders = readdirSync(appsDir);
+  } catch {
+    return {};
+  }
+
+  const apps: Record<string, string> = {};
+  for (const folder of appFolders) {
+    const appConfigPath = resolve(appsDir, folder, "app.config.ts");
+    try {
+      readFileSync(appConfigPath);
+      apps[folder] = `apps/${folder}/app.config.ts`;
+    } catch {
+      // Skip folders without app.config.ts
+    }
+  }
+
+  return apps;
+}
+
+export function readFachadarc(cwd: string = process.cwd()): FachadaRc & { apps: Record<string, string> } {
   const path = resolve(cwd, ".fachadarc.json");
-  return JSON.parse(readFileSync(path, "utf-8")) as FachadaRc;
+  const config = JSON.parse(readFileSync(path, "utf-8")) as FachadaRc;
+  
+  // Auto-discover apps if not explicitly provided
+  if (!config.apps || Object.keys(config.apps).length === 0) {
+    config.apps = discoverApps(cwd);
+  }
+  
+  return config as FachadaRc & { apps: Record<string, string> };
 }
 
 /**

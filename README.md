@@ -339,19 +339,7 @@ This template is designed to be **app-extensible**. Each app produces a complete
    };
    ```
 
-4. **Register the app in `.fachadarc.json`**:
-
-   ```json
-   {
-     "defaultApp": "default-fachada",
-     "apps": {
-       "default-fachada": "apps/default-fachada/app.config.ts",
-       "your-app": "apps/your-app/app.config.ts"
-     }
-   }
-   ```
-
-5. **Build or dev with your app**:
+4. **Build or dev with your app** — it's automatically discovered:
    ```bash
    APP=your-app yarn dev
    APP=your-app yarn build

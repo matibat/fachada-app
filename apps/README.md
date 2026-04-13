@@ -2,7 +2,7 @@
 
 Each subdirectory is a self-contained **app package**: it composes a `src/profiles/` entry into the canonical `AppConfig` aggregate used by Fachada v2.
 
-**The single source of truth for app registration is [`.fachadarc.json`](../.fachadarc.json)** at the project root. No core code changes are required to add or remove an app.
+**Apps are automatically discovered from the `/apps/` folder.** Each folder with an `app.config.ts` file is automatically registered. The [`.fachadarc.json`](../.fachadarc.json) only needs to specify the `defaultApp`. No core code changes are required to add or remove an app.
 
 ## Directory layout
 
@@ -26,22 +26,19 @@ The file is **pure data** — no domain logic, no conditional imports, no side e
 
 ## Registration: .fachadarc.json
 
-The `.fachadarc.json` file at the project root registers all available apps:
+The `.fachadarc.json` file at the project root specifies the default app:
 
 ```json
 {
   "defaultApp": "default-fachada",
-  "apps": {
-    "default-fachada": "apps/default-fachada/app.config.ts",
-    "artist-engineer": "apps/artist-engineer/app.config.ts"
-  }
+  "disabled": ["engineer-single-role"]
 }
 ```
 
 - **`defaultApp`** — the fallback app name when the `APP` env var is not set
-- **`apps`** — map of app name → path (relative to project root)
+- **`disabled`** — optional list of app names to hide from `AVAILABLE_APPS`
 
-This registry is read at build/test time by the **vite-plugin-fachada** Vite plugin (see [src/vite/fachada-plugin.ts](../src/vite/fachada-plugin.ts)).
+**Apps are auto-discovered** from the `/apps/` folder by the **vite-plugin-fachada** Vite plugin (see [src/vite/fachada-plugin.ts](../src/vite/fachada-plugin.ts)). Any folder containing an `app.config.ts` file is automatically registered.
 
 ## Selecting an app at build time
 
@@ -71,12 +68,8 @@ The plugin creates a virtual Vite module (`virtual:fachada/active-app`) that is 
 
 1. Create a profile in `src/profiles/<your-profile>/` with `site.config.ts` and `profile.config.ts`.
 2. Create `apps/<your-app>/app.config.ts` following the pattern of any existing app.
-3. Add **one line** to `.fachadarc.json` under the `apps` object:
-   ```json
-   "your-app": "apps/your-app/app.config.ts"
-   ```
 
-That's it. No changes to `AppLoader.ts`, no build config edits, no code coupling. The plugin automatically discovers it.
+That's it. The app is automatically discovered. No changes to `.fachadarc.json`, `AppLoader.ts`, or build config. The plugin automatically finds it.
 
 ## AppConfig shape (summary)
 
