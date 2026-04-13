@@ -5,9 +5,9 @@ import {
     ThemeProvider,
     useTheme,
     useThemeActions,
-} from '@fachada/core/context/ThemeContext';
-import { THEME_DEFINITIONS } from '@fachada/core/utils/theme.config';
-import { useThemeStore } from '@fachada/core/stores/themeStore';
+} from '@fachada/core';
+import { THEME_DEFINITIONS } from '@fachada/core';
+import { useThemeStore } from '@fachada/core';
 
 /**
  * Integration Test Suite: Theme System End-to-End

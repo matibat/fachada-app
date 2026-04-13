@@ -7,7 +7,7 @@
  *   3. module fallback string
  */
 import { describe, it, expect } from "vitest";
-import { resolveContactMessage } from "@fachada/core/utils/contact";
+import { resolveContactMessage } from "@fachada/core";
 
 describe("resolveContactMessage", () => {
   describe("Scenario 1: page-level override takes top priority", () => {

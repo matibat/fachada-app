@@ -11,7 +11,7 @@ import {
   collectMarkdownPages,
   type CollectionEntry,
   type CollectedPagesResult,
-} from "@fachada/core/site-tree/MarkdownPageCollector";
+} from "@fachada/core";
 
 // ─── Shared fixtures ──────────────────────────────────────────────────────────
 

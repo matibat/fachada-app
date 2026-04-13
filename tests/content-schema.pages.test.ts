@@ -5,7 +5,7 @@
  * Uses schema.safeParse() so the test runner never hits astro:content.
  */
 import { describe, it, expect } from "vitest";
-import { pagesSchema } from "@fachada/core/content/pages.schema";
+import { pagesSchema } from "@fachada/core";
 
 // ─── Fixtures ────────────────────────────────────────────────────────────────
 

@@ -11,9 +11,9 @@
  *   - [Title](path): Description
  */
 import { describe, it, expect } from "vitest";
-import { generateLlmTxt } from "@fachada/core/site-tree/LlmTextGenerator";
-import type { SiteConfig } from "@fachada/core/types/profile.types";
-import type { SiteTreeConfig } from "@fachada/core/types/site-tree.types";
+import { generateLlmTxt } from "@fachada/core";
+import type { SiteConfig } from "@fachada/core";
+import type { SiteTreeConfig } from "@fachada/core";
 
 // ─── Shared fixtures ──────────────────────────────────────────────────────────
 

@@ -2,15 +2,15 @@ import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import type { ReactNode } from 'react';
 import { useTheme as useSCTheme } from 'styled-components';
-import type { ThemeTokens } from '@fachada/core/utils/theme.config';
-import { THEME_DEFINITIONS } from '@fachada/core/utils/theme.config';
-import { useThemeStore, getThemeStore } from '@fachada/core/stores/themeStore';
+import type { ThemeTokens } from '@fachada/core';
+import { THEME_DEFINITIONS } from '@fachada/core';
+import { useThemeStore, getThemeStore } from '@fachada/core';
 import {
     ThemeProvider,
     useTheme,
     useThemeActions,
     useThemeContext,
-} from '@fachada/core/context/ThemeContext';
+} from '@fachada/core';
 
 /**
  * Test component that uses useTheme hook

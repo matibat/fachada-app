@@ -5,8 +5,8 @@
  * RED until src/site-tree/SiteTreeValidator.ts exists.
  */
 import { describe, it, expect } from "vitest";
-import { validateSiteTree } from "@fachada/core/site-tree/SiteTreeValidator";
-import type { SiteTreeConfig } from "@fachada/core/types/site-tree.types";
+import { validateSiteTree } from "@fachada/core";
+import type { SiteTreeConfig } from "@fachada/core";
 
 // ─── Shared fixtures ──────────────────────────────────────────────────────────
 

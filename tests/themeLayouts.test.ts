@@ -1,9 +1,9 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from "vitest";
-import { useThemeStore } from "@fachada/core/stores/themeStore";
-import { THEME_DEFINITIONS } from "@fachada/core/utils/theme.config";
-import { resolveWidgetLayout } from "@fachada/core/widgets/resolveWidgetLayout";
-import type { AppThemes } from "@fachada/core/types/app.types";
-import type { WidgetLayoutConfig } from "@fachada/core/types/layout.types";
+import { useThemeStore } from "@fachada/core";
+import { THEME_DEFINITIONS } from "@fachada/core";
+import { resolveWidgetLayout } from "@fachada/core";
+import type { AppThemes } from "@fachada/core";
+import type { WidgetLayoutConfig } from "@fachada/core";
 
 // ─── Fixtures ─────────────────────────────────────────────────────────────────
 

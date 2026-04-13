@@ -4,7 +4,7 @@
  * Mood: Intimate, professional, no distractions.
  */
 
-import type { ProfileConfig } from "@fachada/core/types/profile.types";
+import type { ProfileConfig } from "@fachada/core";
 
 export const profileConfig: ProfileConfig = {
   theme: {

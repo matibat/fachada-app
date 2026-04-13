@@ -18,9 +18,9 @@ vi.mock("@fachada/core/site-tree/MarkdownPageCollector", () => ({
     .mockReturnValue({ pages: [], skipped: [], errors: [] }),
 }));
 
-import { buildMergedStaticPaths } from "@fachada/core/site-tree/StaticPathBuilder";
+import { buildMergedStaticPaths } from "@fachada/core";
 import { collectMarkdownPages } from "@fachada/core/site-tree/MarkdownPageCollector";
-import type { SubsectionDefinition } from "@fachada/core/types/site-tree.types";
+import type { SubsectionDefinition } from "@fachada/core";
 import type { CollectionEntry } from "@fachada/core/site-tree/MarkdownPageCollector";
 
 // ─── Shared fixtures ──────────────────────────────────────────────────────────

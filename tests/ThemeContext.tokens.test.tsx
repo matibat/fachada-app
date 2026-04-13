@@ -6,9 +6,9 @@
 import { describe, it, expect, beforeEach } from "vitest";
 import { render, waitFor } from "@testing-library/react";
 import React from "react";
-import { ThemeProvider, useTheme } from "@fachada/core/context/ThemeContext";
-import { THEME_DEFINITIONS } from "@fachada/core/utils/theme.config";
-import { getThemeStore } from "@fachada/core/stores/themeStore";
+import { ThemeProvider, useTheme } from "@fachada/core";
+import { THEME_DEFINITIONS } from "@fachada/core";
+import { getThemeStore } from "@fachada/core";
 
 function TokensConsumer() {
     const state = useTheme();

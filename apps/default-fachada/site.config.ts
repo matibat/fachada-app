@@ -4,7 +4,7 @@
  * This page demonstrates what Fachada can do by literally being the thing it builds.
  */
 
-import type { SiteConfig } from "@fachada/core/types/profile.types";
+import type { SiteConfig } from "@fachada/core";
 
 export const siteConfig: SiteConfig = {
   name: "Fachada",

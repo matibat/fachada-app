@@ -4,7 +4,7 @@
  * Mode toggle is enabled so users can switch dark/light.
  */
 
-import type { ProfileConfig } from "@fachada/core/types/profile.types";
+import type { ProfileConfig } from "@fachada/core";
 
 export const profileConfig: ProfileConfig = {
   theme: {

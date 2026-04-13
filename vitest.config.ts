@@ -1,13 +1,13 @@
 import { defineConfig } from "vitest/config";
-import path from 'path';
+import path from "path";
 import { fachadaPlugin } from "../fachada-core/src/vite/fachada-plugin";
 
 export default defineConfig({
   plugins: [fachadaPlugin()],
   resolve: {
     alias: {
-      '@fachada/core': path.resolve('/Users/mati/workspace/fachada-core/src')
-    }
+      "@fachada/core": path.resolve("/Users/mati/workspace/fachada-core/src"),
+    },
   },
   test: {
     environment: "happy-dom",

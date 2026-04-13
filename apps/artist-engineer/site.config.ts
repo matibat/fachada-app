@@ -4,7 +4,7 @@
  * code as infrastructure and code as medium.
  */
 
-import type { SiteConfig } from "@fachada/core/types/profile.types";
+import type { SiteConfig } from "@fachada/core";
 
 export const siteConfig: SiteConfig = {
   name: "Matías Batista",

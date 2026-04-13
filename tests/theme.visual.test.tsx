@@ -12,9 +12,9 @@
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor, cleanup } from '@testing-library/react';
 import type { ReactNode } from 'react';
-import { ThemeProvider, useTheme, useThemeActions } from '@fachada/core/context/ThemeContext';
-import { THEME_DEFINITIONS } from '@fachada/core/utils/theme.config';
-import { useThemeStore } from '@fachada/core/stores/themeStore';
+import { ThemeProvider, useTheme, useThemeActions } from '@fachada/core';
+import { THEME_DEFINITIONS } from '@fachada/core';
+import { useThemeStore } from '@fachada/core';
 
 // ============================================================================
 // ThemeConsumer — reads activeTokens from context and exposes as text content

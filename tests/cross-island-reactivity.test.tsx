@@ -8,8 +8,8 @@
  */
 import { describe, it, expect, beforeEach, afterEach, vi } from 'vitest';
 import { render, screen, act } from '@testing-library/react';
-import { useThemeStore } from '@fachada/core/stores/themeStore';
-import { THEME_DEFINITIONS } from '@fachada/core/utils/theme.config';
+import { useThemeStore } from '@fachada/core';
+import { THEME_DEFINITIONS } from '@fachada/core';
 
 // ─── Shared reset ─────────────────────────────────────────────────────────────
 

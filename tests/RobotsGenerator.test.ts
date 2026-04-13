@@ -5,8 +5,8 @@
  * RED until src/site-tree/RobotsGenerator.ts exists.
  */
 import { describe, it, expect } from "vitest";
-import { generateRobotsTxt } from "@fachada/core/site-tree/RobotsGenerator";
-import type { SiteTreeConfig } from "@fachada/core/types/site-tree.types";
+import { generateRobotsTxt } from "@fachada/core";
+import type { SiteTreeConfig } from "@fachada/core";
 
 // ─── Shared fixtures ──────────────────────────────────────────────────────────
 

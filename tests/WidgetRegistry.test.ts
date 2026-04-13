@@ -8,7 +8,7 @@
  * It is the only place in the codebase that names concrete widget components.
  */
 import { describe, it, expect, vi } from "vitest";
-import { createWidgetRegistry } from "@fachada/core/widgets/WidgetRegistry";
+import { createWidgetRegistry } from "@fachada/core";
 
 // ─── Shared fixture — minimal component stub ──────────────────────────────────
 

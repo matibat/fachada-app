@@ -8,8 +8,8 @@
  * variant fallback, no side effects, no throws.
  */
 import { describe, it, expect } from "vitest";
-import { resolveAsset } from "@fachada/core/assets/AssetResolver";
-import type { AssetConfig } from "@fachada/core/types/app.types";
+import { resolveAsset } from "@fachada/core";
+import type { AssetConfig } from "@fachada/core";
 
 // ─── Scenario 1: resolves plain string asset with no variant ─────────────────
 

@@ -1,7 +1,7 @@
 import { defineCollection, z } from "astro:content";
 import { glob } from "astro/loaders";
-import { pagesSchema } from "@fachada/core/content/pages.schema";
-import { resolveAppContentPath } from "@fachada/core/content/AppContentPathResolver";
+import { pagesSchema } from "@fachada/core";
+import { resolveAppContentPath } from "@fachada/core";
 
 const activeApp = process.env.APP ?? "default-fachada";
 

@@ -4,7 +4,7 @@
  * Theme switching is disabled — the modern-tech theme is locked.
  */
 
-import type { SiteConfig } from "@fachada/core/types/profile.types";
+import type { SiteConfig } from "@fachada/core";
 
 export const siteConfig: SiteConfig = {
   name: "Matías Batista",

@@ -5,13 +5,13 @@
  * Renders a card grid linking to sibling pages. Apps declare the cards
  * via HubPageData in their siteTree subsection definition.
  */
-import type { HubPageData } from "@fachada/core/types/site-tree.types";
-import type { PageMeta } from "@fachada/core/types/site-tree.types";
+import type { HubPageData } from "@fachada/core";
+import type { PageMeta } from "@fachada/core";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import Header from "../components/Header.astro";
 import Footer from "../components/Footer.astro";
 import { siteConfig } from "../config";
-import { getBaseUrl } from "@fachada/core/utils/createLink";
+import { getBaseUrl } from "@fachada/core";
 
 interface Props {
   meta: PageMeta;

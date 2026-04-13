@@ -9,4 +9,4 @@ import { appConfig } from "virtual:fachada/active-app";
 
 export const siteConfig = appConfig.seo;
 
-export type { SiteConfig } from "@fachada/core/types/profile.types";
+export type { SiteConfig } from "@fachada/core";

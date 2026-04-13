@@ -5,7 +5,7 @@
  * Location: Young, Río Negro → Maldonado Tattoo Studio
  */
 
-import type { SiteConfig } from "@fachada/core/types/profile.types";
+import type { SiteConfig } from "@fachada/core";
 
 export const siteConfig: SiteConfig = {
   name: "UnBati",
