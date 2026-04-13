@@ -1,6 +1,6 @@
 import { defineConfig } from "vitest/config";
 import path from 'path';
-import { fachadaPlugin } from "./src/vite/fachada-plugin";
+import { fachadaPlugin } from "../fachada-core/src/vite/fachada-plugin";
 
 export default defineConfig({
   plugins: [fachadaPlugin()],

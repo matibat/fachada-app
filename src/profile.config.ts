@@ -13,4 +13,4 @@ export type {
   ProfileConfig,
   ThemeStyle,
   ColorMode,
-} from "./types/profile.types";
+} from "@fachada/core/types/profile.types";
