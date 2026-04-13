@@ -9,6 +9,10 @@
   ],
   "compilerOptions": {
     "jsx": "react-jsx",
-    "jsxImportSource": "react"
+    "jsxImportSource": "react",
+    "paths": {
+      "@fachada/core": ["../fachada-core/src/index.ts"],
+      "@fachada/core/*": ["../fachada-core/src/*"]
+    }
   }
 }

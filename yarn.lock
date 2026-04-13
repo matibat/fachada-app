@@ -751,6 +751,20 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@fachada/core@file:../fachada-core::locator=fachada%40workspace%3A.":
+  version: 0.1.0
+  resolution: "@fachada/core@file:../fachada-core#../fachada-core::hash=4d3d3d&locator=fachada%40workspace%3A."
+  dependencies:
+    styled-components: "npm:6"
+    zustand: "npm:^5"
+  peerDependencies:
+    astro: ">=4.0.0"
+    react: ">=18.0.0"
+    react-dom: ">=18.0.0"
+  checksum: 10c0/9f4980986d57b538b8fa4c53896d3ff1e9058169820f2a28c3b0f3a3d40ec1b9c001ff7ba2767e0eabd6c1f0d18c63a1d0d1ac4bd985790082669e690879ad8b
+  languageName: node
+  linkType: hard
+
 "@gar/promise-retry@npm:^1.0.0":
   version: 1.0.3
   resolution: "@gar/promise-retry@npm:1.0.3"
@@ -2831,6 +2845,7 @@ __metadata:
     "@astrojs/react": "npm:^5.0.3"
     "@astrojs/sitemap": "npm:^3.7.2"
     "@astrojs/tailwind": "npm:^6.0.2"
+    "@fachada/core": "file:../fachada-core"
     "@playwright/test": "npm:^1.59.1"
     "@testing-library/dom": "npm:^10.4.1"
     "@testing-library/react": "npm:^16.3.2"

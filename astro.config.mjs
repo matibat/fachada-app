@@ -3,7 +3,7 @@ import { defineConfig } from "astro/config";
 import react from "@astrojs/react";
 import sitemap from "@astrojs/sitemap";
 import tailwind from "@astrojs/tailwind";
-import { fachadaPlugin } from "./src/vite/fachada-plugin";
+import { fachadaPlugin } from "@fachada/core/vite/fachada-plugin";
 
 // APP environment variable selects the active app at build time.
 // Defaults to 'default-fachada' if not set.
