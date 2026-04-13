@@ -11,7 +11,8 @@ const activeApp = process.env.APP || "default-fachada";
 
 // https://astro.build/config
 export default defineConfig({
-  site: process.env.SITE_URL || "https://fachada.dev",
+  site: process.env.SITE_URL || "https://matibat.github.io",
+  base: process.env.BASE_URL || "/",
   integrations: [react(), sitemap(), tailwind({ applyBaseStyles: false })],
   vite: {
     plugins: [fachadaPlugin(activeApp)],
