@@ -32,6 +32,8 @@ jobs:
 
       - name: Build project
         run: yarn build
+        env:
+          BASE_URL: /fachada/
 
       - name: Setup Pages
         uses: actions/configure-pages@v5
