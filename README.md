@@ -13,7 +13,7 @@ A modern, SEO-optimized portfolio template built with Astro 6, React, and Tailwi
 - 🧪 **Vitest + Testing Library** - Comprehensive test coverage (15+ tests)
 - 📊 **SEO Optimized** - Meta tags, OG images, JSON-LD structured data, sitemap, robots.txt
 - 📝 **Content Collections** - Type-safe blog posts and projects with Astro v6 glob loaders
-- 🔄 **CI/CD** - GitHub Actions for automated testing and Firebase deployment
+- 🔄 **CI/CD** - GitHub Actions for automated testing and GitHub Pages deployment
 - ⚙️ **Configuration-Driven** - Rebrand from a single config file
 - 🏗️ **Makefile Automation** - Common tasks automated (dev, build, test, deploy)
 - 👥 **Multi-App Support** - Create entirely new SPAs for different people by extending apps
@@ -74,11 +74,8 @@ Visit `http://localhost:4321` to see your site.
 
 ```text
 /
-├── docs/
-│   ├── THEME-CONFIGURATION.md     # Theme system documentation
-│   └── PROFILE-EXTENSIBILITY.md  # Profile architecture guide
-├── public/                         # Static assets (images, favicons)
-├── src/
+├── docs/                         # Documentation
+├── dist/                          # Production build output
 │   ├── components/
 │   │   ├── islands/               # React interactive islands
 │   │   │   ├── ThemeToggle.tsx    # Light/dark mode toggle
@@ -119,13 +116,6 @@ Visit `http://localhost:4321` to see your site.
 └── package.json
 ```
 
-├── vitest.config.ts # Test configuration
-├── firebase.json # Firebase Hosting config
-├── Makefile # Development automation
-└── package.json
-
-````
-
 ## ⚙️ Configuration
 
 ### Rebrand the Template
@@ -154,7 +144,7 @@ export const siteConfig = {
     plausibleDomain: "yoursite.com",
   },
 } as const;
-````
+```
 
 ## 📋 Creating New Apps
 
@@ -453,8 +443,6 @@ make test-watch        # Run tests in watch mode
 make test-ui           # Open Vitest UI
 make preview           # Preview production build
 make clean             # Remove build artifacts
-make firebase-deploy   # Deploy to Firebase
-make firebase-preview  # Preview Firebase hosting
 ```
 
 Or use yarn directly:
@@ -466,55 +454,13 @@ yarn test         # Run tests
 yarn preview      # Preview build
 ```
 
-## 🚢 Deployment
+### Deployment
 
-### Firebase Hosting
+The static build (`dist/`) is automatically deployed to **GitHub Pages** on every push to `main` via GitHub Actions.
 
-#### 1. Setup Firebase Project
+**Access your site at**: `https://<username>.github.io/<repo>`
 
-```bash
-# Install Firebase CLI
-npm install -g firebase-tools
-
-# Login to Firebase
-firebase login
-
-# Initialize project (already configured)
-# Update .firebaserc with your project ID
-```
-
-#### 2. Configure GitHub Secrets
-
-For automated deployments, add to your GitHub repository:
-
-1. Go to **Settings > Secrets and variables > Actions**
-2. Add `FIREBASE_SERVICE_ACCOUNT`:
-   ```bash
-   # Generate service account key
-   firebase projects:list
-   # Visit Firebase Console > Project Settings > Service Accounts
-   # Generate new private key and copy the JSON
-   ```
-
-#### 3. Deploy
-
-```bash
-# Manual deployment
-make firebase-deploy
-
-# Or using Firebase CLI
-firebase deploy
-```
-
-GitHub Actions will automatically:
-
-- Run tests on all PRs
-- Deploy previews for PRs
-- Deploy to production on pushes to `main`
-
-### Other Platforms
-
-The static build (`dist/`) can be deployed to:
+To deploy to other platforms, you can also manually deploy the `dist/` directory to:
 
 - **Vercel**: Connect GitHub repo, set build command to `yarn build`
 - **Netlify**: Connect GitHub repo, set publish directory to `dist`

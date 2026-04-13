@@ -12,12 +12,10 @@ Use this checklist before deploying your portfolio to production.
   - [ ] Theme colors match your brand
   - [ ] Analytics configured (if using)
 
-- [ ] Updated `firebase.json` or deployment config
-  - [ ] Correct hosting settings
-  - [ ] Cache headers configured
-  - [ ] 404 redirects working
-
-- [ ] Updated `.firebaserc` with your Firebase project ID
+- [ ] Deployment configured
+  - [ ] GitHub repository created
+  - [ ] GitHub Pages enabled in repository settings (Settings > Pages > Source > GitHub Actions)
+  - [ ] Custom domain configured (if using)
 
 ## 📝 Content
 
@@ -130,6 +128,7 @@ Use this checklist before deploying your portfolio to production.
   - [ ] 10+ pages generated
 
 - [ ] Preview build locally
+
   ```bash
   make preview
   ```
@@ -174,15 +173,14 @@ Use this checklist before deploying your portfolio to production.
 
 - [ ] CI/CD configured
   - [ ] GitHub Actions workflows active
-  - [ ] `FIREBASE_SERVICE_ACCOUNT` secret added
   - [ ] Test job runs on PRs
-  - [ ] Deploy job runs on main pushes
+  - [ ] Deploy job runs on main pushes to GitHub Pages
 
-- [ ] Firebase setup
-  - [ ] Project created in Firebase Console
-  - [ ] Hosting enabled
+- [ ] GitHub Pages enabled
+  - [ ] GitHub repository created and pushed
+  - [ ] Pages enabled in repository settings (Settings > Pages > Source > GitHub Actions)
   - [ ] Custom domain connected (if using)
-  - [ ] SSL certificate active
+  - [ ] SSL certificate active (automatic via GitHub Pages)
 
 - [ ] Environment variables
   - [ ] No sensitive data in code

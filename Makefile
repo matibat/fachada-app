@@ -1,4 +1,4 @@
-.PHONY: help install dev build test test-watch test-ui test-e2e test-e2e-ui preview clean validate ci firebase-init firebase-deploy firebase-preview build-minimalista build-modern-tech build-profesional build-vaporwave
+.PHONY: help install dev build test test-watch test-ui test-e2e test-e2e-ui preview clean validate ci build-minimalista build-modern-tech build-profesional build-vaporwave
 
 help: ## Show this help message
 	@echo 'Usage: make [target]'
@@ -53,12 +53,3 @@ validate: test test-e2e build ## Run tests, E2E, and build (pre-deploy validatio
 
 ci: install test test-e2e build ## Complete CI pipeline (install, test, E2E, build)
 	@echo "✅ CI pipeline complete!"
-
-firebase-init: ## Initialize Firebase project (interactive)
-	@yarn firebase init
-
-firebase-deploy: ## Deploy to Firebase Hosting
-	@yarn firebase deploy --only hosting
-
-firebase-preview: ## Create Firebase preview channel
-	@yarn firebase hosting:channel:deploy preview
