@@ -9,6 +9,9 @@
     {
       "path": "../fachada-core",
     },
+    {
+      "path": "../fachada-unbati",
+    },
   ],
   "settings": {},
 }

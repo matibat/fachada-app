@@ -71,24 +71,24 @@ export const appConfig: AppConfig = {
 
 **`seo` fields:**
 
-| Field | Description |
-|---|---|
-| `site` | Canonical URL — used for sitemaps and OG tags |
-| `name` | Display name shown in the header and title |
-| `author` | Meta author tag |
-| `description` | Default page description and OG description |
-| `socials` | Links for footer and contact section |
-| `roles` | Role definitions; the first `featured: true` role is the default |
+| Field         | Description                                                      |
+| ------------- | ---------------------------------------------------------------- |
+| `site`        | Canonical URL — used for sitemaps and OG tags                    |
+| `name`        | Display name shown in the header and title                       |
+| `author`      | Meta author tag                                                  |
+| `description` | Default page description and OG description                      |
+| `socials`     | Links for footer and contact section                             |
+| `roles`       | Role definitions; the first `featured: true` role is the default |
 
 **`siteTree.landing.sections`** — controls which sections render:
 
-| `id` | Widget |
-|---|---|
-| `hero` | Hero banner with name, role, and CTAs |
-| `about` | About text from `profile.config.ts` |
-| `skills` | Skills list from `profile.config.ts` |
+| `id`       | Widget                                 |
+| ---------- | -------------------------------------- |
+| `hero`     | Hero banner with name, role, and CTAs  |
+| `about`    | About text from `profile.config.ts`    |
+| `skills`   | Skills list from `profile.config.ts`   |
 | `projects` | Pulls from `apps/your-app-name/pages/` |
-| `contact` | Contact message and social links |
+| `contact`  | Contact message and social links       |
 
 ---
 
@@ -290,13 +290,19 @@ There are no Astro files in the project root `src/`. The `fachadaIntegration()` 
 import { fachadaIntegration } from "@fachada/core/astro";
 
 export default defineConfig({
-  integrations: [fachadaIntegration(), react(), sitemap(), tailwind({ applyBaseStyles: false })],
+  integrations: [
+    fachadaIntegration(),
+    react(),
+    sitemap(),
+    tailwind({ applyBaseStyles: false }),
+  ],
 });
 ```
 
 > `fachadaIntegration` is imported from `@fachada/core/astro` (not the main barrel) to avoid triggering virtual module resolution at config load time.
 
 Routes injected automatically:
+
 - `/` — Landing page
 - `/[...slug]` — Dynamic pages
 - `/404` — Not found
@@ -333,6 +339,7 @@ yarn tsc --noEmit
 ```
 
 Common issues:
+
 - `ProfileConfig.about` is a `string`, not an object with `paragraphs`
 - Theme `style` must be one of: `minimalista`, `modern-tech`, `profesional`, `vaporwave`
 - All imports should use `import type { X } from "@fachada/core"`

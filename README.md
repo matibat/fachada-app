@@ -1,6 +1,6 @@
 # Fachada Portfolio Template
 
-A modern, SEO-optimized portfolio template built with Astro 6, React, and Tailwind CSS. Features **4 visual themes**, dark mode, comprehensive testing, and automated deployment. **App-extensible**: Create entirely new SPAs for different people with configuration alone.
+A modern, SEO-optimized portfolio template built with Astro 6, React, and Tailwind CSS. Features **4 visual themes**, dark mode, comprehensive testing, and automated deployment.
 
 ## ✨ Features
 
@@ -16,7 +16,6 @@ A modern, SEO-optimized portfolio template built with Astro 6, React, and Tailwi
 - 🔄 **CI/CD** - GitHub Actions for automated testing and GitHub Pages deployment
 - ⚙️ **Configuration-Driven** - Rebrand from a single config file
 - 🏗️ **Makefile Automation** - Common tasks automated (dev, build, test, deploy)
-- 👥 **Multi-App Support** - Create entirely new SPAs for different people by extending apps
 
 ## 🎨 Theme System
 
@@ -31,7 +30,7 @@ Each theme supports both light and dark modes. See [docs/THEME-CONFIGURATION.md]
 
 ### Quick Theme Setup
 
-Edit your app's `profile.config.ts` (located in `apps/your-app/`):
+Edit your app's `profile.config.ts` (located in `apps/default-fachada/`):
 
 ```typescript
 export const profileConfig = {
@@ -59,13 +58,9 @@ make dev
 make test
 # or: yarn test
 
-# Build for production (default app)
+# Build for production
 make build
 # or: yarn build
-
-# Build with a specific app
-APP=engineer yarn build
-APP=artist-engineer yarn build
 ```
 
 Visit `http://localhost:4321` to see your site.
@@ -74,19 +69,15 @@ Visit `http://localhost:4321` to see your site.
 
 ```text
 /
-├── .fachadarc.json               # App registry (defaultApp)
 ├── astro.config.mjs              # Astro config — uses fachadaIntegration()
 ├── package.json
 ├── apps/
-│   ├── default-fachada/          # Default developer portfolio
-│   │   ├── app.config.ts         # AppConfig — seo + siteTree
-│   │   ├── site.config.ts        # SiteConfig — SEO metadata
-│   │   ├── profile.config.ts     # ProfileConfig — theme, about, skills
-│   │   ├── blog/                 # Markdown blog posts
-│   │   └── pages/                # Markdown landing page content
-│   ├── artist-engineer/          # Multi-role: engineer + digital artist
-│   ├── engineer-single-role/     # Backend engineer, locked to modern-tech theme
-│   └── unbati/                   # Additional app
+│   └── default-fachada/          # Demo portfolio
+│       ├── app.config.ts         # AppConfig — seo + siteTree
+│       ├── site.config.ts        # SiteConfig — SEO metadata
+│       ├── profile.config.ts     # ProfileConfig — theme, about, skills
+│       ├── blog/                 # Markdown blog posts
+│       └── pages/                # Markdown landing page content
 ├── public/                       # Static assets (favicons, og-image, images/)
 ├── tests/                        # Vitest unit tests (526 passing)
 └── docs/                         # Documentation
@@ -137,15 +128,13 @@ export const appConfig: AppConfig = {
 };
 ```
 
-## 📋 Creating New Apps
+## 📋 Customization
 
-Each app lives entirely in `apps/{app-name}/` and produces a completely different SPA at build time — different name, bio, theme, and content.
+Edit the default app configuration in `apps/default-fachada/` to customize your portfolio:
 
-### Quick App Creation
+### App Configuration
 
-1. **Create `apps/your-app-name/`** with three config files:
-
-   `apps/your-app-name/app.config.ts`:
+1. **`apps/default-fachada/app.config.ts`** — Define SEO metadata and roles:
 
    ```typescript
    import type { AppConfig } from "@fachada/core";
@@ -184,16 +173,14 @@ Each app lives entirely in `apps/{app-name}/` and produces a completely differen
    };
    ```
 
-   `apps/your-app-name/profile.config.ts`:
+2. **`apps/default-fachada/profile.config.ts`** — Theme and content settings:
 
    ```typescript
    import type { ProfileConfig } from "@fachada/core";
 
    export const profileConfig: ProfileConfig = {
      about: "Your professional bio.",
-     skills: [
-       { name: "Category 1", skills: ["Tech A", "Tech B", "Tech C"] },
-     ],
+     skills: [{ name: "Category 1", skills: ["Tech A", "Tech B", "Tech C"] }],
      sections: [
        { id: "hero", enabled: true, order: 1 },
        { id: "about", enabled: true, order: 2 },
@@ -209,65 +196,9 @@ Each app lives entirely in `apps/{app-name}/` and produces a completely differen
    };
    ```
 
-2. **Register in `.fachadarc.json`**:
-
-   ```json
-   {
-     "defaultApp": "your-app-name"
-   }
-   ```
-
-3. **Start developing**:
-
-   ```bash
-   APP=your-app-name yarn dev
-   ```
-
-### Included Example Apps
-
-| App               | Description                                    | Theme Widget | Mode Toggle |
-| ----------------- | ---------------------------------------------- | ------------ | ----------- |
-| `default-fachada` | Default single-role engineer portfolio         | ✅ Enabled   | ✅ Enabled  |
-| `engineer`        | Backend engineer — locked to modern-tech theme | ❌ Disabled  | ✅ Enabled  |
-| `artist-engineer` | Multi-role: engineer + digital artist          | ✅ Enabled   | ✅ Enabled  |
-
-### Multi-Role Portfolios (Artist + Engineer, etc.)
-
-To represent someone with multiple professional identities, add multiple entries to `roles`:
-
-```typescript
-roles: [
-  {
-    id: "engineer",
-    title: "Software Engineer",
-    specialties: ["TypeScript", "React", "WebGL"],
-    featured: true,
-  },
-  {
-    id: "artist",
-    title: "Digital Artist",
-    specialties: ["3D Modeling", "Animation", "Generative Art"],
-    featured: true,
-  },
-],
-primaryRole: "engineer",
-```
-
-And enable the role switcher:
-
-```typescript
-// in profile.config.ts
-multiRoleDisplay: {
-  style: "tabs",
-  showRoleSwitcher: true,
-},
-```
-
-See [docs/PROFILE-EXTENSIBILITY.md](docs/PROFILE-EXTENSIBILITY.md) for the full architecture guide.
-
 ### Add Content
 
-**Pages** — Create `.md` files in `apps/your-app-name/pages/`:
+**Pages** — Create `.md` files in `apps/default-fachada/pages/`:
 
 ```markdown
 ---
@@ -280,7 +211,7 @@ tags: ["React", "TypeScript", "Tailwind"]
 Your page content here...
 ```
 
-**Blog Posts** — Create `.md` files in `apps/your-app-name/blog/`:
+**Blog Posts** — Create `.md` files in `apps/default-fachada/blog/`:
 
 ```markdown
 ---
@@ -434,7 +365,7 @@ MIT License - feel free to use this template for your portfolio!
 
 - **Images**: Place in `public/` for static assets or use Astro's Image component for optimization
 - **Fonts**: Load via CDN in `BaseLayout.astro` or use `@fontsource` packages
-- **Analytics**: Configure in `apps/your-app/app.config.ts`
+- **Analytics**: Configure in `apps/default-fachada/app.config.ts`
 - **Performance**: Run Lighthouse audits (`yarn preview` then test in Chrome DevTools)
 
 ## 📚 Resources

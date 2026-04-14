@@ -9,5 +9,10 @@ import { fachadaIntegration } from "@fachada/core/astro";
 export default defineConfig({
   site: process.env.SITE_URL || "https://matibat.github.io",
   base: process.env.BASE_URL || "/",
-  integrations: [fachadaIntegration(), react(), sitemap(), tailwind({ applyBaseStyles: false })],
+  integrations: [
+    fachadaIntegration(),
+    react(),
+    sitemap(),
+    tailwind({ applyBaseStyles: false }),
+  ],
 });
