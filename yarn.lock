@@ -751,9 +751,11 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@fachada/core@file:../fachada-core::locator=fachada%40workspace%3A.":
+"@fachada/core@npm:^0.1.0":
   version: 0.1.0
-  resolution: "@fachada/core@file:../fachada-core#../fachada-core::hash=45e2d5&locator=fachada%40workspace%3A."
+  resolution: "@fachada/core@npm:0.1.0"
+  dependencies:
+    zod: "npm:^4.3.6"
   peerDependencies:
     astro: ">=4.0.0"
     react: ">=18.0.0"
@@ -761,8 +763,8 @@ __metadata:
     styled-components: ">=5.0.0"
     zustand: ">=4.0.0"
   bin:
-    create-fachada-app: ./src/cli/create-app.ts
-  checksum: 10c0/28a222cf370cea8529b0af208172ef6f54a52f132fb1d43430ccd7c5c467d7179006c34ce8f741cdb72038a04ea4cb00af914efbee679b30e9737f991ec70a13
+    create-fachada-app: dist/cli/create-app.js
+  checksum: 10c0/a18531f90ff0e917a692af8e2e6dd16010db93d06427dbfa966390da180356625e35620fb1bc4786458f9ca2b5b835cf03492423f0a67fa878cab34f97877508
   languageName: node
   linkType: hard
 
@@ -2846,7 +2848,7 @@ __metadata:
     "@astrojs/react": "npm:^5.0.3"
     "@astrojs/sitemap": "npm:^3.7.2"
     "@astrojs/tailwind": "npm:^6.0.2"
-    "@fachada/core": "file:../fachada-core"
+    "@fachada/core": "npm:^0.1.0"
     "@playwright/test": "npm:^1.59.1"
     "@testing-library/dom": "npm:^10.4.1"
     "@testing-library/react": "npm:^16.3.2"
