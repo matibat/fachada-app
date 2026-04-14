@@ -3,8 +3,7 @@
  *
  * The active app is selected by the `APP` environment variable. Apps are
  * auto-discovered from `/apps/` and a single-app layout at `app/app.config.ts`
- * is also supported. You may optionally provide `defaultApp` in
- * `.fachadarc.json` for multi-app projects.
+ * is also supported.
  */
 
 import { profileConfig } from "virtual:fachada/active-app";

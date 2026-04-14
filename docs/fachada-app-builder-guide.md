@@ -164,17 +164,9 @@ export const profileConfig: ProfileConfig = {
 
 ---
 
-## Step 5: Register in `.fachadarc.json`
+## Step 5: Register the app (no RC required)
 
-Edit `.fachadarc.json` in the repo root:
-
-```json
-{
-  "defaultApp": "your-app-name"
-}
-```
-
-Apps are automatically discovered from the `apps/` directory. `defaultApp` determines which app runs when `APP` is not set.
+You generally do not need a repository RC file. Apps are automatically discovered from the `apps/` directory. The active app is chosen in priority order: `APP` env var → first discovered app → single-app at `app/app.config.ts`.
 
 ---
 

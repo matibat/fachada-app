@@ -202,18 +202,7 @@ export const appConfig: AppConfig = {
 
 ## Part 6: Register the App
 
-Edit `.fachadarc.json` in the repo root:
-
-```json
-{
-  "defaultApp": "default-fachada",
-  "apps": {
-    "default-fachada": "apps/default-fachada/app.config.ts",
-    "artist-engineer": "apps/artist-engineer/app.config.ts",
-    "your-app-name": "apps/your-app-name/app.config.ts"
-  }
-}
-```
+No repository RC is required. Apps are auto-discovered from `apps/`. The active app is chosen by `APP` → first discovered app → single-app at `app/app.config.ts`.
 
 ---
 

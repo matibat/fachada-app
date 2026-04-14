@@ -1,15 +1,19 @@
 {
   "folders": [
     {
-      "path": ".",
-    },
-    {
+      "name": "ai-experts",
       "path": "../ai-experts",
     },
     {
+      "name": "fachada",
+      "path": ".",
+    },
+    {
+      "name": "fachada-core",
       "path": "../fachada-core",
     },
     {
+      "name": "fachada-unbati",
       "path": "../fachada-unbati",
     },
   ],

@@ -17,8 +17,8 @@ at `app/app.config.ts` for projects that only need one app.
 
 ### Default App
 
-When `APP` is not set the plugin will use `defaultApp` from `.fachadarc.json`
-if present; otherwise a single-app layout at `app/app.config.ts` will be used
+When `APP` is not set the plugin will use the discovered default (first
+discovered app) and fall back to a single-app layout at `app/app.config.ts`
 when available.
 
 ### All Available Apps (example)
@@ -79,8 +79,7 @@ APP=artist-engineer yarn dev
 
 1. Create `apps/your-app/app.config.ts`
 2. Create profile configs in `src/profiles/your-app/`
-3. Add entry to `.fachadarc.json`
-4. Run: `APP=your-app yarn dev`
+3. Run: `APP=your-app yarn dev`
 
 See [README.md](../README.md#-creating-new-apps) for full instructions.
 

@@ -1,0 +1,4 @@
+---
+const { type, data } = Astro.props as { type: string; data: any };
+---
+<script type="application/ld+json">{JSON.stringify({ "@type": type, ...data })}</script>

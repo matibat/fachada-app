@@ -2,7 +2,7 @@
 
 Each subdirectory is a self-contained **app package**: it composes a `src/profiles/` entry into the canonical `AppConfig` aggregate used by Fachada v2.
 
-**Apps are automatically discovered from the `/apps/` folder.** Each folder with an `app.config.ts` file is automatically registered. The [`.fachadarc.json`](../.fachadarc.json) only needs to specify the `defaultApp`. No core code changes are required to add or remove an app.
+**Apps are automatically discovered from the `/apps/` folder.** Each folder with an `app.config.ts` file is automatically registered. For single-app projects you may instead place your app at `app/app.config.ts`. No core code changes are required to add or remove an app.
 
 ## Directory layout
 
@@ -28,10 +28,7 @@ The file is **pure data** — no domain logic, no conditional imports, no side e
 
 Apps are auto-discovered from the `/apps/` folder by the `vite-plugin-fachada` Vite
 plugin (see [src/vite/fachada-plugin.ts](../src/vite/fachadarc.ts)). Any folder
-containing an `app.config.ts` file is automatically registered. For single-app
-projects you may instead place your app at `app/app.config.ts` — the plugin
-will prefer an explicit `APP` env var, then `.fachadarc.json` `defaultApp` if
-present, and finally the single-app fallback.
+containing an `app.config.ts` file is automatically registered. For single-app projects you may instead place your app at `app/app.config.ts` — the plugin will prefer an explicit `APP` env var and otherwise will use the first discovered app (or the single-app fallback).
 
 ## Selecting an app at build time
 
@@ -44,14 +41,14 @@ APP=default-fachada yarn dev
 
 `APP` is resolved to `import.meta.env.APP` at build time by the plugin.
 
-When `APP` is not set, the `defaultApp` from `.fachadarc.json` is used.
+When `APP` is not set, the plugin uses the discovered default (first discovered app or single-app fallback).
 
 ## How it works: vite-plugin-fachada
 
 The plugin creates a virtual Vite module (`virtual:fachada/active-app`) that is resolved at build/test time:
 
-1. Reads `.fachadarc.json` from the project root
-2. Resolves the active app name from `APP` → `defaultApp`
+1. Discovers apps from `apps/` and optionally `app/app.config.ts`
+2. Resolves the active app name from `APP` → discovered default
 3. Generates ES module code that imports the matched `AppConfig`
 4. Exports it alongside `AVAILABLE_APPS`
 
@@ -60,9 +57,7 @@ The plugin creates a virtual Vite module (`virtual:fachada/active-app`) that is 
 ## Adding a new app
 
 1. Create a profile in `src/profiles/<your-profile>/` with `site.config.ts` and `profile.config.ts`.
-2. Create `apps/<your-app>/app.config.ts` following the pattern of any existing app.
-
-That's it. The app is automatically discovered. No changes to `.fachadarc.json`, `AppLoader.ts`, or build config. The plugin automatically finds it.
+2. Create `apps/<your-app>/app.config.ts` following the pattern of any existing app. That's it — the app is automatically discovered and no repo RC is required.
 
 ## AppConfig shape (summary)
 
