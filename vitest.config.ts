@@ -9,10 +9,10 @@ export default defineConfig({
       "@fachada/core": path.resolve("/Users/mati/workspace/fachada-core/src"),
       // Resolve fachada-core peer/direct deps from fachada's own node_modules
       // (fachada-core uses Yarn PnP which isn't traversable by Vite's resolver)
-      "zod": path.resolve("./node_modules/zod"),
-      "zustand": path.resolve("./node_modules/zustand"),
+      zod: path.resolve("./node_modules/zod"),
+      zustand: path.resolve("./node_modules/zustand"),
       "styled-components": path.resolve("./node_modules/styled-components"),
-      "react": path.resolve("./node_modules/react"),
+      react: path.resolve("./node_modules/react"),
       "react-dom": path.resolve("./node_modules/react-dom"),
     },
   },
