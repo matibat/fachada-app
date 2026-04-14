@@ -28,6 +28,7 @@ function collectFiles(
   extensions: string[],
   results: string[] = [],
 ): string[] {
+  if (!existsSync(dir)) return results;
   for (const entry of readdirSync(dir)) {
     const full = join(dir, entry);
     if (statSync(full).isDirectory()) {
@@ -40,9 +41,11 @@ function collectFiles(
 }
 
 const srcFiles = collectFiles(SRC_DIR, [".ts", ".astro", ".tsx"]);
-const appNames = readdirSync(APPS_DIR).filter((e) =>
-  statSync(join(APPS_DIR, e)).isDirectory(),
-);
+const appNames = existsSync(APPS_DIR)
+  ? readdirSync(APPS_DIR).filter((e) =>
+      statSync(join(APPS_DIR, e)).isDirectory(),
+    )
+  : [];
 
 // ─── Scenario 1: No src/ file imports directly from an apps/ directory ───────
 
@@ -103,20 +106,21 @@ describe("Scenario 3: Legacy profiles/index.ts static multi-app registry is dele
   });
 });
 
-// ─── Scenario 4: Each app config re-exports profileConfig ────────────────────
+// ─── Scenario 4: App config re-exports profileConfig ────────────────────────
 
-describe("Scenario 4: Each app config exports profileConfig for the virtual module", () => {
-  for (const appName of appNames) {
-    const appConfigPath = join(APPS_DIR, appName, "app.config.ts");
+describe("Scenario 4: App config exports profileConfig for the virtual module", () => {
+  const appConfigPath = join(ROOT, "app/app.config.ts");
 
-    it(`apps/${appName}/app.config.ts exports profileConfig`, () => {
-      if (!existsSync(appConfigPath)) return; // skip apps without app.config.ts
-      const content = readFileSync(appConfigPath, "utf-8");
-      expect(
-        content,
-        `apps/${appName}/app.config.ts must re-export profileConfig so it is ` +
-          "available via virtual:fachada/active-app",
-      ).toMatch(/export\s*\{[^}]*profileConfig[^}]*\}/);
-    });
-  }
+  it("app/app.config.ts exports profileConfig", () => {
+    if (!existsSync(appConfigPath)) {
+      // skip if structure changed
+      return;
+    }
+    const content = readFileSync(appConfigPath, "utf-8");
+    expect(
+      content,
+      "app/app.config.ts must re-export profileConfig so it is " +
+        "available via virtual:fachada/active-app",
+    ).toMatch(/export\s*\{[^}]*profileConfig[^}]*\}/);
+  });
 });

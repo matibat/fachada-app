@@ -13,11 +13,7 @@ import type { ProfileConfig, SiteConfig } from "@fachada/core";
 import {
   appConfig as defaultFachadaAppConfig,
   profileConfig as defaultFachadaProfile,
-} from "../apps/default-fachada/app.config";
-import {
-  appConfig as artistEngineerAppConfig,
-  profileConfig as artistEngineerProfile,
-} from "../apps/artist-engineer/app.config";
+} from "../app/app.config";
 
 function assertValidSiteConfig(site: SiteConfig) {
   expect(site.name).toBeDefined();
@@ -95,21 +91,5 @@ describe("default-fachada profile", () => {
 
   it("does not have multiRoleDisplay (single role)", () => {
     expect(defaultFachadaProfile.multiRoleDisplay).toBeUndefined();
-  });
-});
-
-// ─── artist-engineer profile ─────────────────────────────────────────────────
-
-describe("artist-engineer profile", () => {
-  it("loads a valid SiteConfig", () => {
-    assertValidSiteConfig(artistEngineerAppConfig.seo);
-  });
-
-  it("loads a valid ProfileConfig", () => {
-    assertValidProfileConfig(artistEngineerProfile);
-  });
-
-  it("is a multi-role profile", () => {
-    expect(artistEngineerAppConfig.seo.roles.length).toBeGreaterThan(1);
   });
 });

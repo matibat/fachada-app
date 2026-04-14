@@ -30,7 +30,7 @@ Each theme supports both light and dark modes. See [docs/THEME-CONFIGURATION.md]
 
 ### Quick Theme Setup
 
-Edit your app's `profile.config.ts` (located in `apps/default-fachada/`):
+Edit your app's `profile.config.ts` (located in `app/`):
 
 ```typescript
 export const profileConfig = {
@@ -71,15 +71,14 @@ Visit `http://localhost:4321` to see your site.
 /
 ├── astro.config.mjs              # Astro config — uses fachadaIntegration()
 ├── package.json
-├── apps/
-│   └── default-fachada/          # Demo portfolio
-│       ├── app.config.ts         # AppConfig — seo + siteTree
-│       ├── site.config.ts        # SiteConfig — SEO metadata
-│       ├── profile.config.ts     # ProfileConfig — theme, about, skills
-│       ├── blog/                 # Markdown blog posts
-│       └── pages/                # Markdown landing page content
+├── app/                          # Application configuration and content
+│   ├── app.config.ts             # AppConfig — seo + siteTree
+│   ├── site.config.ts            # SiteConfig — SEO metadata
+│   ├── profile.config.ts         # ProfileConfig — theme, about, skills
+│   ├── blog/                     # Markdown blog posts
+│   └── pages/                    # Markdown landing page content
 ├── public/                       # Static assets (favicons, og-image, images/)
-├── tests/                        # Vitest unit tests (526 passing)
+├── tests/                        # Vitest unit tests
 └── docs/                         # Documentation
 ```
 
@@ -89,7 +88,7 @@ Visit `http://localhost:4321` to see your site.
 
 ### Rebrand the Template
 
-Edit `apps/your-app-name/app.config.ts` to customize your portfolio:
+Edit `app/app.config.ts` to customize your portfolio:
 
 ```typescript
 import type { AppConfig } from "@fachada/core";
@@ -130,11 +129,11 @@ export const appConfig: AppConfig = {
 
 ## 📋 Customization
 
-Edit the default app configuration in `apps/default-fachada/` to customize your portfolio:
+Edit the app configuration in `app/` to customize your portfolio:
 
 ### App Configuration
 
-1. **`apps/default-fachada/app.config.ts`** — Define SEO metadata and roles:
+1. **`app/app.config.ts`** — Define SEO metadata and roles:
 
    ```typescript
    import type { AppConfig } from "@fachada/core";
@@ -173,7 +172,7 @@ Edit the default app configuration in `apps/default-fachada/` to customize your 
    };
    ```
 
-2. **`apps/default-fachada/profile.config.ts`** — Theme and content settings:
+2. **`app/profile.config.ts`** — Theme and content settings:
 
    ```typescript
    import type { ProfileConfig } from "@fachada/core";
@@ -198,7 +197,7 @@ Edit the default app configuration in `apps/default-fachada/` to customize your 
 
 ### Add Content
 
-**Pages** — Create `.md` files in `apps/default-fachada/pages/`:
+**Pages** — Create `.md` files in `app/pages/`:
 
 ```markdown
 ---
@@ -211,7 +210,7 @@ tags: ["React", "TypeScript", "Tailwind"]
 Your page content here...
 ```
 
-**Blog Posts** — Create `.md` files in `apps/default-fachada/blog/`:
+**Blog Posts** — Create `.md` files in `app/blog/`:
 
 ```markdown
 ---
@@ -365,7 +364,7 @@ MIT License - feel free to use this template for your portfolio!
 
 - **Images**: Place in `public/` for static assets or use Astro's Image component for optimization
 - **Fonts**: Load via CDN in `BaseLayout.astro` or use `@fontsource` packages
-- **Analytics**: Configure in `apps/default-fachada/app.config.ts`
+- **Analytics**: Configure in `app/app.config.ts`
 - **Performance**: Run Lighthouse audits (`yarn preview` then test in Chrome DevTools)
 
 ## 📚 Resources

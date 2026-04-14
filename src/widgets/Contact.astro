@@ -1,0 +1,16 @@
+---
+import type { ContactLayout } from "@fachada/core";
+import ContactCentered from "@fachada/core/astro/widgets/contact/ContactCentered.astro";
+import ContactSplit from "@fachada/core/astro/widgets/contact/ContactSplit.astro";
+
+export interface Props {
+  layout?: ContactLayout;
+  /** Page-level message override. Takes priority over profileConfig.contactMessage. */
+  message?: string;
+}
+
+const { layout = "centered", message } = Astro.props;
+---
+
+{layout === "centered" && <ContactCentered message={message} />}
+{layout === "split" && <ContactSplit message={message} />}

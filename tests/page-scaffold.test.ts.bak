@@ -1,0 +1,5 @@
+/**
+ * BDD: docs migration — template:"document" → template:"markdown"
+ *
+ * Verifies the structural migration of the three resource pages in the
+ * default-fachada app config from the legacy "document" template to the

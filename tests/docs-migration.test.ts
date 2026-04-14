@@ -6,7 +6,7 @@
  * content-collection "markdown" template.
  */
 import { describe, it, expect } from "vitest";
-import { appConfig } from "../apps/default-fachada/app.config";
+import { appConfig } from "../app/app.config";
 import type { MarkdownPageData } from "@fachada/core";
 
 // ─── Helpers ──────────────────────────────────────────────────────────────────

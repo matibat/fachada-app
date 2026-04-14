@@ -13,8 +13,8 @@ import {
   type ThemeOverride,
   type AssetConfig,
 } from "@fachada/core";
-import { siteConfig } from "../apps/default-fachada/site.config";
-import { profileConfig } from "../apps/default-fachada/profile.config";
+import { siteConfig } from "../app/site.config";
+import { profileConfig } from "../app/profile.config";
 import type { ThemeTokens } from "@fachada/core";
 
 // ─── Scenario 0: module is loadable ──────────────────────────────────────────
