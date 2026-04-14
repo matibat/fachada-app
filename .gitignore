@@ -32,4 +32,4 @@ playwright-report/
 
 
 # custom ai agents
-.agent-workspace/
+.agent-workspace/*.tgz
