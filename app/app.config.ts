@@ -20,18 +20,7 @@ export const appConfig: AppConfig = {
     default: "minimalist",
   },
   themeVariants: {},
-  themeLayouts: {
-    minimalist: {
-      hero: "centered",
-      skills: "grid-3",
-      about: "card",
-    } satisfies WidgetLayoutConfig,
-    "modern-tech": {
-      hero: "split",
-      skills: "list",
-      about: "plain",
-    } satisfies WidgetLayoutConfig,
-  },
+  themeLayouts: {},
   assets: {
     ogImage: siteConfig.ogImage,
   },
