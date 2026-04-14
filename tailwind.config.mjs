@@ -1,6 +1,10 @@
 /** @type {import('tailwindcss').Config} */
 export default {
-  content: ["./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}"],
+  content: [
+    "./app/**/*.{astro,html,js,jsx,md,mdx,ts,tsx}",
+    "./apps/**/*.{astro,html,js,jsx,md,mdx,ts,tsx}",
+    "../fachada-core/src/**/*.{astro,ts,tsx}",
+  ],
   darkMode: "class",
   theme: {
     extend: {
