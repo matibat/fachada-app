@@ -11,34 +11,21 @@ APP=app-name yarn build
 
 ## Available Apps
 
-Register all apps in `.fachadarc.json`:
-
-```json
-{
-  "defaultApp": "default-fachada",
-  "apps": {
-    "default-fachada": "apps/default-fachada/app.config.ts",
-    "engineer": "apps/engineer/app.config.ts",
-    "artist-engineer": "apps/artist-engineer/app.config.ts"
-  }
-}
-```
+Apps are discovered automatically by the build plugin. You can provide
+multiple apps under `apps/<name>/app.config.ts`, or use a single app layout
+at `app/app.config.ts` for projects that only need one app.
 
 ### Default App
 
-**`default-fachada`** — Used when `APP` is not set
+When `APP` is not set the plugin will use `defaultApp` from `.fachadarc.json`
+if present; otherwise a single-app layout at `app/app.config.ts` will be used
+when available.
 
-```bash
-yarn dev          # Uses default-fachada
-yarn build        # Uses default-fachada
-```
-
-### All Available Apps
+### All Available Apps (example)
 
 | App Name          | Description                                     | Location                             |
 | ----------------- | ----------------------------------------------- | ------------------------------------ |
 | `default-fachada` | Generic developer portfolio framework showcase  | `apps/default-fachada/app.config.ts` |
-| `engineer`        | Backend engineer role (restricted theme)        | Not currently in `.fachadarc.json`   |
 | `artist-engineer` | Multi-role portfolio: engineer + digital artist | `apps/artist-engineer/app.config.ts` |
 
 ## Usage Examples

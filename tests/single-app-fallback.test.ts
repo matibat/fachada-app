@@ -1,5 +1,8 @@
 import { describe, it, expect } from "vitest";
-import { readFachadarc, resolveAppName } from "@fachada/core/vite/fachada-plugin";
+import {
+  readFachadarc,
+  resolveAppName,
+} from "@fachada/core/vite/fachada-plugin";
 
 describe("Single-app layout fallback", () => {
   it("exposes 'app' when app/app.config.ts exists", () => {

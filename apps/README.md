@@ -24,21 +24,14 @@ apps/
 
 The file is **pure data** — no domain logic, no conditional imports, no side effects.
 
-## Registration: .fachadarc.json
+## Registration & Defaults
 
-The `.fachadarc.json` file at the project root specifies the default app:
-
-```json
-{
-  "defaultApp": "default-fachada",
-  "disabled": ["engineer-single-role"]
-}
-```
-
-- **`defaultApp`** — the fallback app name when the `APP` env var is not set
-- **`disabled`** — optional list of app names to hide from `AVAILABLE_APPS`
-
-**Apps are auto-discovered** from the `/apps/` folder by the **vite-plugin-fachada** Vite plugin (see [src/vite/fachada-plugin.ts](../src/vite/fachada-plugin.ts)). Any folder containing an `app.config.ts` file is automatically registered.
+Apps are auto-discovered from the `/apps/` folder by the `vite-plugin-fachada` Vite
+plugin (see [src/vite/fachada-plugin.ts](../src/vite/fachadarc.ts)). Any folder
+containing an `app.config.ts` file is automatically registered. For single-app
+projects you may instead place your app at `app/app.config.ts` — the plugin
+will prefer an explicit `APP` env var, then `.fachadarc.json` `defaultApp` if
+present, and finally the single-app fallback.
 
 ## Selecting an app at build time
 
