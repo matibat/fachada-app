@@ -37,7 +37,7 @@ test-ui: ## Open Vitest UI
 	@yarn test:ui
 
 test-e2e: ## Run E2E tests (headless)
-	@yarn test:e2e
+	@yarn test:e2e:ci
 
 test-e2e-ui: ## Run E2E tests with interactive UI
 	@yarn test:e2e:ui

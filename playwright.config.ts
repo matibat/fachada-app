@@ -12,32 +12,32 @@ export default defineConfig({
   },
   webServer: [
     {
-      command: "yarn dev",
-      url: "http://localhost:4321",
-      reuseExistingServer: !process.env.CI,
+      command: "yarn dev --port 5432",
+      url: "http://localhost:5432",
+      reuseExistingServer: false,
       timeout: 120000,
     },
     {
-      command: "APP=artist-engineer yarn dev --port 4322",
-      url: "http://localhost:4322",
-      reuseExistingServer: !process.env.CI,
+      command: "APP=artist-engineer yarn dev --port 5433",
+      url: "http://localhost:5433",
+      reuseExistingServer: false,
       timeout: 120000,
     },
   ],
   projects: [
     {
       name: "default-fachada-chromium",
-      use: { ...devices["Desktop Chrome"], baseURL: "http://localhost:4321" },
-      testMatch: "**/theme.spec.ts",
+      use: { ...devices["Desktop Chrome"], baseURL: "http://localhost:5432" },
+      testMatch: ["**/theme.spec.ts", "**/default-skin.spec.ts"],
     },
     {
       name: "default-fachada-firefox",
-      use: { ...devices["Desktop Firefox"], baseURL: "http://localhost:4321" },
-      testMatch: "**/theme.spec.ts",
+      use: { ...devices["Desktop Firefox"], baseURL: "http://localhost:5432" },
+      testMatch: ["**/theme.spec.ts", "**/default-skin.spec.ts"],
     },
     {
       name: "artist-engineer-chromium",
-      use: { ...devices["Desktop Chrome"], baseURL: "http://localhost:4322" },
+      use: { ...devices["Desktop Chrome"], baseURL: "http://localhost:5433" },
       testMatch: "**/theme-artist-engineer.spec.ts",
     },
   ],
